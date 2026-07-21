@@ -1,0 +1,63 @@
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
+import { memo, useContext } from 'react';
+
+const Modal = memo(() => {
+  const [context, setContext] = useContext(Context);
+  const { title, body, label, onClose } = context[ActionType.Modal];
+
+  return (
+    <dialog id='my_modal_4' className='modal modal-open fixed z-40'>
+      <div
+        className='modal-backdrop'
+        onClick={() => {
+          setContext({ type: ActionType.Modal, state: { enabled: false } });
+        }}
+      />
+
+      <div className='modal-box max-h-10/12 w-11/12 max-w-7xl'>
+        <h3 className='text-lg font-bold'>{title}</h3>
+        <div className='py-4'>{body}</div>
+        <div className='modal-action'>
+          <form method='dialog'>
+            <button
+              onClick={() => {
+                setContext({ type: ActionType.Modal, state: { enabled: false } });
+              }}
+              className='btn btn-circle btn-ghost btn-sm absolute top-2 right-2'
+            >
+              ✕
+            </button>
+            {typeof label === 'string' ? (
+              <button
+                onClick={() => {
+                  onClose(label);
+                  setContext({ type: ActionType.Modal, state: { enabled: false } });
+                }}
+                className='btn'
+              >
+                {label}
+              </button>
+            ) : (
+              label.map((l) => {
+                return (
+                  <button
+                    key={l}
+                    onClick={() => {
+                      onClose(l);
+                      setContext({ type: ActionType.Modal, state: { enabled: false } });
+                    }}
+                    className='btn mx-1'
+                  >
+                    {l}
+                  </button>
+                );
+              })
+            )}
+          </form>
+        </div>
+      </div>
+    </dialog>
+  );
+});
+export default Modal;
