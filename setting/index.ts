@@ -13,28 +13,16 @@ export const SETTING = {
         timestamp: { type: IType.Date, default: 'Date.now()' },
       },
     },
-    {
-      collection: 'editor',
-      schema: {
-        html: { type: IType.String, required: true },
-        timestamp: { type: IType.Date, default: 'Date.now()' },
-      },
-    },
   ],
 };
 
 // set type for mongodb
-export type TType =
-  | {
-      userName: string;
-      email: string;
-      type: string;
-      timestamp: string;
-    }
-  | {
-      html: string;
-      timestamp: Date;
-    };
+export type TType = {
+  userName: string;
+  email: string;
+  type: string;
+  timestamp: string;
+};
 
 // type for api respond
 export type IRespond = ReadyOnly<{
