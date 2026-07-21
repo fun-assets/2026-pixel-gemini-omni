@@ -18,6 +18,10 @@ export const messages = {
   searchSuccess: 'Search image successful',
   removeError: 'Remove image or folder failed',
   removeSuccess: 'Remove image or folder successful',
+  generateVideoError: 'Generate video failed',
+  generateVideoSuccess: 'Generate video task created',
+  getVideoOperationError: 'Get video operation failed',
+  getVideoOperationSuccess: 'Get video operation successful',
 };
 
 export const limit = '10mb';

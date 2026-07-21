@@ -3,6 +3,7 @@ import cloudinary from 'cloudinary';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Router } from 'express';
+import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 import Atobtoa from 'lesca-atobtoa';
 import serverless from 'serverless-http';
 import { SETTING, TType } from '../../../setting';
@@ -46,6 +47,27 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const router = Router();
+
+const createGeminiClient = () => {
+  return new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    vertexai: false,
+    // Veo predictLongRunning is available on v1alpha for Gemini Developer API.
+    apiVersion: process.env.GEMINI_API_VERSION || 'v1alpha',
+  });
+};
+
+const extractImageFromDataUrl = (dataUrl: string) => {
+  const matched = dataUrl.match(/^data:(.+);base64,(.+)$/);
+  if (!matched) {
+    return null;
+  }
+
+  return {
+    mimeType: matched[1],
+    imageBytes: matched[2],
+  };
+};
 
 router.post(`/${REST_PATH.login}`, async (req, res) => {
   const { body } = req;
@@ -299,6 +321,159 @@ router.post(`/${REST_PATH.removeMany}`, async (req, res) => {
     }
   } catch (error) {
     res.status(200).json({ res: false, msg: messages.uploadError, error });
+  }
+});
+
+router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
+  try {
+    const { image, prompt, model } = req.body as {
+      image?: string;
+      prompt?: string;
+      model?: string;
+    };
+
+    if (!process.env.GEMINI_API_KEY) {
+      res.status(200).json({ res: false, msg: 'GEMINI_API_KEY is missing' });
+      return;
+    }
+
+    if (!image) {
+      res.status(200).json({ res: false, msg: 'image is required' });
+      return;
+    }
+
+    if (!prompt) {
+      res.status(200).json({ res: false, msg: 'prompt is required' });
+      return;
+    }
+
+    const parsed = extractImageFromDataUrl(image);
+    if (!parsed) {
+      res.status(200).json({ res: false, msg: 'image must be a data URL' });
+      return;
+    }
+
+    const ai = createGeminiClient();
+    const preferredModel = model || process.env.GEMINI_VIDEO_MODEL || 'veo-3.1-generate-preview';
+
+    const candidateModels = [
+      preferredModel,
+      'veo-3.1-generate-preview',
+      'veo-3.1-fast-generate-preview',
+      'veo-3.1-lite-generate-preview',
+    ].filter((item, index, arr) => {
+      if (!item) {
+        return false;
+      }
+
+      // generateVideos does not support gemini-* models.
+      if (/^gemini-/i.test(item)) {
+        return false;
+      }
+
+      return arr.indexOf(item) === index;
+    });
+
+    let operation: unknown;
+    let selectedModel = '';
+    let lastError: unknown;
+
+    for (const candidateModel of candidateModels) {
+      try {
+        operation = await ai.models.generateVideos({
+          model: candidateModel,
+          source: {
+            prompt,
+            image: {
+              imageBytes: parsed.imageBytes,
+              mimeType: parsed.mimeType,
+            },
+          },
+          config: {
+            numberOfVideos: 1,
+          },
+        });
+        selectedModel = candidateModel;
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    if (!operation) {
+      throw lastError;
+    }
+
+    const generated = operation as GenerateVideosOperation;
+
+    res.status(200).json({
+      res: true,
+      msg: messages.generateVideoSuccess,
+      data: {
+        model: preferredModel,
+        selectedModel,
+        operationName: generated.name,
+        done: generated.done,
+        operation: generated,
+      },
+    });
+  } catch (error) {
+    const e = error as {
+      name?: string;
+      message?: string;
+      status?: number;
+      details?: unknown;
+    };
+
+    res.status(200).json({
+      res: false,
+      msg: e?.message || messages.generateVideoError,
+      error: {
+        name: e?.name,
+        status: e?.status,
+        details: e?.details,
+      },
+    });
+  }
+});
+
+router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
+  try {
+    const { operation } = req.body as {
+      operation?: Record<string, unknown>;
+    };
+
+    if (!process.env.GEMINI_API_KEY) {
+      res.status(200).json({ res: false, msg: 'GEMINI_API_KEY is missing' });
+      return;
+    }
+
+    if (!operation) {
+      res.status(200).json({ res: false, msg: 'operation is required' });
+      return;
+    }
+
+    const ai = createGeminiClient();
+    const operationObject = new GenerateVideosOperation();
+    Object.assign(operationObject, operation);
+
+    const nextOperation = await ai.operations.getVideosOperation({ operation: operationObject });
+
+    const firstVideo =
+      (nextOperation as any)?.response?.generatedVideos?.[0]?.video ||
+      (nextOperation as any)?.response?.generatedVideos?.[0];
+
+    res.status(200).json({
+      res: true,
+      msg: messages.getVideoOperationSuccess,
+      data: {
+        done: nextOperation.done,
+        operation: nextOperation,
+        video: firstVideo || null,
+      },
+    });
+  } catch (error) {
+    res.status(200).json({ res: false, msg: messages.getVideoOperationError, error });
   }
 });
 
