@@ -1,8 +1,8 @@
-import { memo, use, useContext, useEffect, useRef } from 'react';
-import { GameContext } from '../../config';
-import { startWebcam } from './misc';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
+import { memo, useContext, useEffect, useRef } from 'react';
+import { GameContext } from '../../config';
+import { startWebcam } from './misc';
 
 const Video = memo(() => {
   const [, setContext] = useContext(Context);

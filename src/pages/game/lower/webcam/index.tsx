@@ -1,15 +1,11 @@
-import { memo, useContext, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useContext, useMemo } from 'react';
 import { GameContext, GameStepType } from '../../config';
-import './index.less';
 import Controller from './controller';
+import './index.less';
 import Video from './video';
 
 const Webcam = memo(() => {
-  const [state, setState] = useContext(GameContext);
-
-  useEffect(() => {
-    setState((S) => ({ ...S, step: GameStepType.chooseWebcam }));
-  }, []);
+  const [state] = useContext(GameContext);
 
   const components = useMemo(() => {
     switch (state.step) {
@@ -20,6 +16,17 @@ const Webcam = memo(() => {
     }
   }, [state.step]);
 
-  return <div className='Webcam'>{components}</div>;
+  const onCapture = useCallback(() => {}, []);
+
+  return (
+    <div className='Webcam'>
+      <div>{components}</div>
+      <div>
+        <button className='btn' onClick={onCapture}>
+          capture
+        </button>
+      </div>
+    </div>
+  );
 });
 export default Webcam;
