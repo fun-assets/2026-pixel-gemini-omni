@@ -1,0 +1,11 @@
+@import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
+.Webcam {
+  @apply bg-canyon-dark h-full w-1/2 overflow-hidden rounded-2xl;
+
+  & > video {
+    object-position: center;
+    @apply block h-full w-full object-cover;
+  }
+}
