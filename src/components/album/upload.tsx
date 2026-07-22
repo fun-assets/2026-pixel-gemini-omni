@@ -4,7 +4,7 @@ import { CAPTURE_PROPERTY } from '@/settings/config';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
 import CaptureProvider from 'lesca-react-capture-button';
-import { TResult } from 'lesca-react-capture-button/lib/type';
+import { TResult } from 'lesca-react-capture-button';
 import { Dispatch, SetStateAction, memo, useContext, useEffect, useRef, useState } from 'react';
 import { FaImage } from 'react-icons/fa6';
 
