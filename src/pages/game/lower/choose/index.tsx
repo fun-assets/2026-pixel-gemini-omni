@@ -1,10 +1,9 @@
-import { memo, useContext, useEffect } from 'react';
-import './index.less';
+import { memo, useContext } from 'react';
 import { GameContext, GamePagesType } from '../../config';
+import './index.less';
 
 const Choose = memo(() => {
   const [, setState] = useContext(GameContext);
-  useEffect(() => {}, []);
   return (
     <div className='Choose'>
       <button
