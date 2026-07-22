@@ -24,7 +24,7 @@ const Information = memo(({ data, onComplete }: { data: TResult; onComplete?: ()
 
   return (
     <>
-      <img src={data.image} alt='' className='max-w-full' />
+      <img src={data.base64} alt='' className='max-w-full' />
       <div className='my-5 text-base'>
         size:
         <span className='px-2'>
@@ -37,7 +37,7 @@ const Information = memo(({ data, onComplete }: { data: TResult; onComplete?: ()
           className='join-item'
           onClick={() => {
             const folder = folderRef.current?.value || '';
-            upload({ image: data.image, folder });
+            upload({ image: data.base64, folder });
           }}
         >
           upload now
@@ -48,14 +48,14 @@ const Information = memo(({ data, onComplete }: { data: TResult; onComplete?: ()
 });
 
 const Upload = memo(({ reload }: { reload: Dispatch<SetStateAction<number>> }) => {
-  const [result, setResult] = useState<TResult>({ image: '', width: 0, height: 0 });
+  const [result, setResult] = useState<TResult>();
   return (
     <div className='w-full'>
-      {result.image && (
+      {result && (
         <Information
           data={result}
           onComplete={() => {
-            setResult({ image: '', width: 0, height: 0 });
+            setResult(undefined);
             setTimeout(() => {
               document.querySelector<HTMLInputElement>('#Manage')?.click();
               reload((prev) => prev + 1);
@@ -63,12 +63,12 @@ const Upload = memo(({ reload }: { reload: Dispatch<SetStateAction<number>> }) =
           }}
         />
       )}
-      {!result.image && (
+      {!result && (
         <CaptureProvider
           maxWidth={CAPTURE_PROPERTY.maxWidth}
           compress={CAPTURE_PROPERTY.compress}
           onCapture={(e) => {
-            setResult(e);
+            setResult(Array.isArray(e) ? e[0] : e);
           }}
         >
           <Button className='btn-block'>

@@ -1,4 +1,11 @@
 @import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
 .Game {
-  @apply h-full w-full bg-red-500;
+  padding: @OuterBorder;
+  @apply h-full w-full bg-white;
+
+  .inner {
+    @apply h-full w-full bg-gray-200;
+  }
 }
