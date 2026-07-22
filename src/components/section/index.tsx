@@ -1,5 +1,5 @@
 import { IReactProps } from '@/settings/type';
-import { memo, useMemo } from 'react';
+import { Children, memo, useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './index.less';
 
@@ -7,7 +7,7 @@ type TSectionProps = IReactProps & {
   width?: 'w-full' | '70%' | 'flex-1';
 };
 
-const Section = memo(({ width }: TSectionProps) => {
+const Section = memo(({ children, width }: TSectionProps) => {
   const currentWidth = useMemo(() => {
     switch (width) {
       case 'w-full':
@@ -21,6 +21,6 @@ const Section = memo(({ width }: TSectionProps) => {
     }
   }, [width]);
 
-  return <div className={twMerge(`Section`, currentWidth)}>Section</div>;
+  return <div className={twMerge(`Section`, currentWidth)}>{children}</div>;
 });
 export default Section;
