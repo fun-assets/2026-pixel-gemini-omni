@@ -1,10 +1,10 @@
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
-import { memo, useContext, useEffect, useRef } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef } from 'react';
 import { GameContext } from '../../config';
 import { startWebcam } from './misc';
 
-const Video = memo(() => {
+const Video = forwardRef((_, ref) => {
   const [, setContext] = useContext(Context);
   const [state] = useContext(GameContext);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,6 +27,12 @@ const Video = memo(() => {
       },
     }).then(() => {});
   }, [state]);
+
+  useImperativeHandle(ref, () => ({
+    getVideo() {
+      return videoRef.current;
+    },
+  }));
 
   return (
     <div className='video'>
