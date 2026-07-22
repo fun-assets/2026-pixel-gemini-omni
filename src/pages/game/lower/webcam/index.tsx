@@ -1,21 +1,25 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef } from 'react';
+import { GameContext, GameStepType } from '../../config';
 import './index.less';
-import { startWebcam } from './misc';
+import Controller from './controller';
+import Video from './video';
 
 const Webcam = memo(() => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [state, setState] = useContext(GameContext);
+
   useEffect(() => {
-    if (videoRef.current) {
-      startWebcam({
-        video: videoRef.current,
-        onError: (err) => console.error('Webcam error: ', err),
-      });
-    }
+    setState((S) => ({ ...S, step: GameStepType.chooseWebcam }));
   }, []);
-  return (
-    <div className='Webcam'>
-      <video ref={videoRef} autoPlay playsInline muted></video>
-    </div>
-  );
+
+  const components = useMemo(() => {
+    switch (state.step) {
+      case GameStepType.chooseWebcam:
+        return <Controller />;
+      case GameStepType.startGame:
+        return <Video />;
+    }
+  }, [state.step]);
+
+  return <div className='Webcam'>{components}</div>;
 });
 export default Webcam;

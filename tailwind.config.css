@@ -4,6 +4,13 @@
 }
 
 @theme {
+  --color-primary: #ff6c5a;
+  --color-secondary: #889765;
+  --color-accent: #6f82ff;
+  --color-base-100: #edceca;
+  --color-base-200: #cbd1c2;
+  --color-base-300: #d5d4e7;
+
   /* Pixel Campaign Palette */
   --color-canyon-light: #edceca;
   --color-olive-light: #cbd1c2;

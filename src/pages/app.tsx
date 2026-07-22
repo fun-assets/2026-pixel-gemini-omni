@@ -47,6 +47,7 @@ const UserApp = () => {
         </BrowserRouter>
       </div>
       {value[0][ActionType.LoadingProcess]?.enabled && <LoadingProcess />}
+      {value[0][ActionType.Modal].enabled && <Modal />}
     </Context.Provider>
   );
 };
