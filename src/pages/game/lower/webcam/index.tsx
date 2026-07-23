@@ -4,6 +4,8 @@ import Controller from './controller';
 import './index.less';
 import Video from './video';
 
+const CAPTURE_SCALE = 3;
+
 const Webcam = memo(() => {
   const videoRef = useRef<{ getVideo: () => HTMLVideoElement | null }>(null);
 
@@ -45,11 +47,20 @@ const Webcam = memo(() => {
           sy = (sourceHeight - sHeight) / 2;
         }
 
+        const maxScaleFromSource = Math.min(sWidth / targetWidth, sHeight / targetHeight);
+        const actualScale = Math.min(CAPTURE_SCALE, maxScaleFromSource);
+
+        const outputWidth = Math.max(1, Math.round(targetWidth * actualScale));
+        const outputHeight = Math.max(1, Math.round(targetHeight * actualScale));
+
         const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
+        canvas.width = outputWidth;
+        canvas.height = outputHeight;
         const ctx = canvas.getContext('2d');
         if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
           // Keep capture direction consistent with preview transform: scaleX(-1).
           ctx.translate(canvas.width, 0);
           ctx.scale(-1, 1);

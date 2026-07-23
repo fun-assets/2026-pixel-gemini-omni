@@ -22,8 +22,15 @@ export const startWebcam = async ({
 }) => {
   try {
     stopWebcam(video);
+    const videoConstraints: MediaTrackConstraints = {
+      width: { ideal: 3840 },
+      height: { ideal: 2160 },
+      frameRate: { ideal: 30, max: 60 },
+      ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+    };
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: deviceId ? { deviceId: { exact: deviceId } } : true,
+      video: videoConstraints,
     });
     video.srcObject = stream;
     video.onloadedmetadata = () => {
