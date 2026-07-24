@@ -1,8 +1,8 @@
 import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePagesType } from '../config';
 import { getVideoDevices, startWebcam } from '../main/lower/webcam/misc';
-import { ActionType } from '@/settings/type';
 
 const WebcamDisplay = memo(() => {
   const [, setContext] = useContext(Context);
