@@ -4,27 +4,5 @@
 .Webcam {
   gap: @InnerBorder;
 
-  @apply relative flex h-full w-full flex-row overflow-hidden rounded-2xl;
-
-  & > div {
-    @apply h-full w-1/2;
-  }
-
-  .intro {
-    background-image: url('../img/bg.jpg');
-    @apply h-full w-full bg-cover bg-center bg-no-repeat;
-  }
-
-  .controller {
-    @apply w-full p-5;
-  }
-
-  .video {
-    @apply flex h-full w-full items-center justify-center overflow-hidden rounded-2xl bg-white;
-
-    & > video {
-      transform: scaleX(-1);
-      @apply block h-full w-auto max-w-full object-cover object-center;
-    }
-  }
+  @apply relative flex h-full w-full flex-row;
 }

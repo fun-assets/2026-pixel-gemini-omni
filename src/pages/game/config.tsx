@@ -18,11 +18,15 @@ export type TGameState = {
   page: GamePagesType;
   webcamDeviceId?: string;
   step: GameLowerStepType;
-  styleSelected?: number;
+  styleSelected: number;
 };
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
-export const GameState = { page: GamePagesType.game, step: GameLowerStepType.entry };
+export const GameState = {
+  page: GamePagesType.game,
+  step: GameLowerStepType.webcam,
+  styleSelected: 0,
+};
 export const GameContext = createContext<TGameContext>([GameState, () => {}]);
 
 export const GameStyles = [

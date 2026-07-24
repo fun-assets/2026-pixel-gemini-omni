@@ -29,7 +29,7 @@ const Intro = () => {
       <div className='mt-[4%] flex w-full justify-center'>
         <TweenProvider
           initStyle={{ opacity: 0, x: -50 }}
-          options={{ duration: 500, delay: 1000, onEnd: () => setCtaEnd(true) }}
+          options={{ duration: 500, delay: 1000 }}
           tweenStyle={{ opacity: 1, x: 0 }}
         >
           <button
@@ -44,7 +44,7 @@ const Intro = () => {
       <div className='relative mt-[15%] flex w-full justify-center'>
         <TweenProvider
           initStyle={{ opacity: 0 }}
-          options={{ duration: 800, delay: 2500 }}
+          options={{ duration: 800, delay: 1400, onEnd: () => setCtaEnd(true) }}
           tweenStyle={{ opacity: 1 }}
         >
           <div className='description' />

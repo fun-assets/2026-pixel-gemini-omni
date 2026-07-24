@@ -2,12 +2,15 @@
 @import url('@/settings/config.less');
 
 .ChooseStyle {
-  padding-top: 3%;
   @apply relative flex h-full w-full justify-center;
 
   & > div {
     width: 65%;
     @apply flex h-full flex-col items-center justify-center;
+
+    & > div {
+      @apply w-full;
+    }
 
     .h1 {
       width: 100%;
@@ -38,8 +41,8 @@
     }
 
     .styles {
-      padding-top: 2%;
-      padding-bottom: 4%;
+      padding-top: 1%;
+      padding-bottom: 2%;
       width: 105%;
       @apply grid grid-cols-3;
 
@@ -50,7 +53,7 @@
           @apply flex w-full flex-col overflow-hidden rounded-2xl bg-white;
 
           & > span {
-            margin-bottom: 5%;
+            margin-bottom: 2%;
             transform: scale(0.8);
             @apply text-canyon-medium font-noto-sans-tc text-xs font-black tracking-widest;
           }
@@ -102,6 +105,8 @@
       width: 80%;
 
       @img: '../../../img/logo.svg';
+
+      @apply flex justify-center;
 
       &::before {
         padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
