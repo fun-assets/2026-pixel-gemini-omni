@@ -1,15 +1,17 @@
-import { memo, useContext } from 'react';
-import { GameContext } from '../../../config';
-import './index.less';
 import Columns from '@/components/columns';
-import Video from './video';
+import { memo, useState } from 'react';
+import { GameWebcamStepsContext, GameWebcamStepsState } from './config';
+import './index.less';
+import Steps from './steps';
+import Video from './video/video';
 
 const Webcam = memo(() => {
-  const [state] = useContext(GameContext);
-
+  const value = useState(GameWebcamStepsState);
   return (
     <div className='Webcam'>
-      <Columns leftNode={<Video />} rightNode={<div className='w-full'>asd</div>} />
+      <GameWebcamStepsContext.Provider value={value}>
+        <Columns leftNode={<Video />} rightNode={<Steps />} gap='0' />
+      </GameWebcamStepsContext.Provider>
     </div>
   );
 });
