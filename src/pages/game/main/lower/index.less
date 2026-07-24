@@ -2,5 +2,23 @@
 @import url('@/settings/config.less');
 .Lower {
   padding: @InnerBorder;
-  @apply bg-canyon-medium h-full w-full;
+  @apply bg-canyon-medium relative h-full w-full;
+
+  .home {
+    padding-top: 3%;
+    padding-left: 3%;
+    width: 10.714285714285714%;
+
+    @img: './img/home.svg';
+
+    @apply absolute right-0 bottom-0 rounded-tl-3xl bg-white;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
 }

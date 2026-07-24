@@ -35,4 +35,8 @@
 
   --height-upper: calc(492 / 1820 * 100%);
   --height-medium: calc(460 / 1820 * 100%);
+
+  --font-noto-sans-tc: 'Noto Sans TC', sans-serif;
+
+  --animate-entry: entry 1s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }

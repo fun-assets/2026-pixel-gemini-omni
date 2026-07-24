@@ -4,10 +4,94 @@
 .Entry {
   gap: @InnerBorder;
 
-  @apply flex h-full w-full flex-row;
+  @apply relative flex h-full w-full flex-row;
 
   .mobile {
     background-image: url('../img/bg.jpg');
     @apply h-full w-full rounded-2xl bg-white bg-cover bg-center bg-no-repeat;
+  }
+
+  .h1 {
+    width: (unit(image-width(@img))) / 450 * 100%;
+
+    @img: './img/h1.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .h2 {
+    width: (unit(image-width(@img))) / 450 * 100%;
+
+    @img: './img/h2.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .cta {
+    padding-right: 9%;
+    padding-left: 12%;
+    width: (unit(image-width(@img))) / 450 * 100%;
+
+    padding-block: 2%;
+    gap: 5%;
+    @img: './img/h1.svg';
+
+    @apply flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
+
+    & > div:nth-child(1) {
+      width: 65%;
+
+      @img: './img/cta.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+        transform: translateY(13%);
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    & > div:nth-child(2) {
+      width: 35%;
+
+      @img: './img/arrow.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+        transform: translateY(-13%);
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+  }
+
+  .description {
+    width: 90%;
+
+    @img: './img/d.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
   }
 }

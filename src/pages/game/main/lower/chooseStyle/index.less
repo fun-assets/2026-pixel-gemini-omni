@@ -1,0 +1,115 @@
+@import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
+.ChooseStyle {
+  padding-top: 3%;
+  @apply relative flex h-full w-full justify-center;
+
+  & > div {
+    width: 65%;
+    @apply flex h-full flex-col items-center justify-center;
+
+    .h1 {
+      width: 100%;
+
+      @img: './img/h1.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    .h2 {
+      width: 100%;
+
+      @img: './img/h2.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    .styles {
+      padding-top: 2%;
+      padding-bottom: 4%;
+      width: 105%;
+      @apply grid grid-cols-3;
+
+      .item {
+        padding: 5%;
+
+        & > button {
+          @apply flex w-full flex-col overflow-hidden rounded-2xl bg-white;
+
+          & > span {
+            margin-bottom: 5%;
+            transform: scale(0.8);
+            @apply text-canyon-medium font-noto-sans-tc text-xs font-black tracking-widest;
+          }
+
+          .cover {
+            padding: 3%;
+            @apply aspect-square w-full;
+
+            & > div {
+              @apply bg-canyon-light h-full w-full overflow-hidden rounded-2xl bg-cover bg-center bg-no-repeat;
+            }
+
+            .style-1 {
+              background-image: url('./img/style-1.jpg');
+            }
+
+            .style-2 {
+              background-image: url('./img/style-2.jpg');
+            }
+
+            .style-3 {
+              background-image: url('./img/style-3.jpg');
+            }
+
+            .style-4 {
+              background-image: url('./img/style-4.jpg');
+            }
+
+            .style-5 {
+              background-image: url('./img/style-5.jpg');
+            }
+
+            .style-6 {
+              background-image: url('./img/style-6.jpg');
+            }
+          }
+        }
+
+        .selected {
+          @apply bg-base-100;
+          & > span {
+            @apply text-white;
+          }
+        }
+      }
+    }
+
+    .productName {
+      width: 80%;
+
+      @img: '../../../img/logo.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+  }
+}
