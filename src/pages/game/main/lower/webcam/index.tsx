@@ -1,5 +1,5 @@
 import { memo, useCallback, useContext, useMemo, useRef } from 'react';
-import { GameContext, GameStepType } from '../../config';
+import { GameContext, GamePagesType } from '../../../config';
 import Controller from './controller';
 import './index.less';
 import Video from './video';
@@ -13,9 +13,9 @@ const Webcam = memo(() => {
 
   const components = useMemo(() => {
     switch (state.step) {
-      case GameStepType.chooseWebcam:
+      case GamePagesType.chooseWebcam:
         return <Controller />;
-      case GameStepType.startGame:
+      case GamePagesType.startGame:
         return <Video ref={videoRef} />;
     }
   }, [state.step]);

@@ -1,5 +1,5 @@
 import { memo, useContext } from 'react';
-import { GameContext, GamePagesType } from '../../config';
+import { GameContext, GameLowerStepType } from '../../../config';
 import './index.less';
 
 const Choose = memo(() => {
@@ -9,7 +9,7 @@ const Choose = memo(() => {
       <button
         className='btn'
         onClick={() => {
-          setState((S) => ({ ...S, page: GamePagesType.webcam }));
+          setState((S) => ({ ...S, page: GameLowerStepType.webcam }));
         }}
       >
         選filter

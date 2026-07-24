@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect } from 'react';
 import './index.less';
-import { GameContext, GamePagesType } from '../../config';
+import { GameContext, GameLowerStepType } from '../../../config';
 
 const Entry = memo(() => {
   const [, setState] = useContext(GameContext);
@@ -12,7 +12,7 @@ const Entry = memo(() => {
         <button
           className='btn btn-accent'
           onClick={() => {
-            setState((S) => ({ ...S, page: GamePagesType.choose }));
+            setState((S) => ({ ...S, page: GameLowerStepType.choose }));
           }}
         >
           Start

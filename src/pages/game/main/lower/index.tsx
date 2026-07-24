@@ -1,5 +1,5 @@
 import { memo, useContext, useMemo } from 'react';
-import { GameContext, GamePagesType } from '../config';
+import { GameContext, GameLowerStepType } from '../../config';
 import Choose from './choose';
 import Entry from './entry';
 import './index.less';
@@ -9,11 +9,11 @@ const Lower = memo(() => {
   const [state] = useContext(GameContext);
   const page = useMemo(() => {
     switch (state.page) {
-      case GamePagesType.entry:
+      case GameLowerStepType.entry:
         return <Entry />;
-      case GamePagesType.choose:
+      case GameLowerStepType.choose:
         return <Choose />;
-      case GamePagesType.webcam:
+      case GameLowerStepType.webcam:
         return <Webcam />;
     }
   }, [state]);

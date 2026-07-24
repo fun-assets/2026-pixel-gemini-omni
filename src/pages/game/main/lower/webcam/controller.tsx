@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { getVideoDevices } from './misc';
-import { GameContext, GameStepType } from '../../config';
+import { GameContext, GamePagesType } from '../../../config';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
 
@@ -32,23 +32,9 @@ const Controller = memo(() => {
 
   useEffect(() => {
     if (!webcamDeviceId) return;
-    setState((S) => ({ ...S, webcamDeviceId, step: GameStepType.startGame }));
+    setState((S) => ({ ...S, webcamDeviceId, step: GamePagesType.startGame }));
   }, [webcamDeviceId]);
 
-  return (
-    <div className='controller'>
-      <fieldset className='fieldset'>
-        <legend className='fieldset-legend'>Webcam select</legend>
-        <select defaultValue='Pick a webcam' className='select' onChange={onChange}>
-          <option disabled={true}>Pick a webcam</option>
-          {devices.map((device, index) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label || `Camera ${index + 1}`}
-            </option>
-          ))}
-        </select>
-      </fieldset>
-    </div>
-  );
+  return <div className='controller'></div>;
 });
 export default Controller;

@@ -1,12 +1,21 @@
-import Blockquote from '@/components/blockquote';
-import Section from '@/components/section';
-import { memo, useState } from 'react';
-import { GameContext, GameState } from './config';
-import './index.less';
-import Lower from './lower';
-import Medium from './medium';
-import Upper from './upper';
 import Container from '@/components/container';
+import { memo, useContext, useState } from 'react';
+import { GameContext, GamePagesType, GameState } from './config';
+import './index.less';
+import Main from './main';
+import WebcamPicker from './webcamPicker';
+
+const Router = memo(() => {
+  const [state] = useContext(GameContext);
+
+  switch (state.page) {
+    default:
+    case GamePagesType.webcamPicker:
+      return <WebcamPicker />;
+    case GamePagesType.game:
+      return <Main />;
+  }
+});
 
 const Game = memo(() => {
   const value = useState(GameState);
@@ -15,24 +24,7 @@ const Game = memo(() => {
       <Container>
         <div className='Game'>
           <div className='inner'>
-            <Blockquote height='upper'>
-              <Section width='w-full'>
-                <Upper />
-              </Section>
-            </Blockquote>
-            <Blockquote height='medium'>
-              <Section width='70%'>
-                <Medium.Left />
-              </Section>
-              <Section width='flex-1'>
-                <Medium.Right />
-              </Section>
-            </Blockquote>
-            <Blockquote height='lower'>
-              <Section width='w-full'>
-                <Lower />
-              </Section>
-            </Blockquote>
+            <Router />
           </div>
         </div>
       </Container>
