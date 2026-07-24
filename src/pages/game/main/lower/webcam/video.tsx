@@ -36,7 +36,14 @@ const Video = forwardRef((_, ref) => {
 
   return (
     <div className='video'>
-      <video ref={videoRef} autoPlay playsInline muted></video>
+      <div className='skeleton h-full w-full' />
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className='absolute top-0 h-full w-full object-cover'
+      ></video>
     </div>
   );
 });

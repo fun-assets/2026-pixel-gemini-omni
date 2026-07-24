@@ -1,13 +1,25 @@
 import Blockquote from '@/components/blockquote';
 import Section from '@/components/section';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import Lower from './lower';
 import Medium from './medium';
 import Upper from './upper';
 import './index.less';
+import { GameContext } from '../config';
+import { getVideoDevices } from './lower/webcam/misc';
 
 const Main = () => {
-  useEffect(() => {}, []);
+  const [, setState] = useContext(GameContext);
+  useEffect(() => {
+    getVideoDevices().then((devices) => {
+      if (devices.length > 0) {
+        setState((prev) => ({
+          ...prev,
+          webcamDeviceId: prev.webcamDeviceId || devices[0].deviceId,
+        }));
+      }
+    });
+  }, []);
   return (
     <div className='Main'>
       <Blockquote height='upper'>

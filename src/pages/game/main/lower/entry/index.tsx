@@ -1,9 +1,9 @@
 import Columns from '@/components/columns';
+import TweenerProvider from '@/components/tweenProvider';
 import { useContext, useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 import { GameContext, GameLowerStepType } from '../../../config';
 import './index.less';
-import { TweenProvider } from 'lesca-use-tween';
-import { twMerge } from 'tailwind-merge';
 
 const Intro = () => {
   const [, setState] = useContext(GameContext);
@@ -11,26 +11,33 @@ const Intro = () => {
   return (
     <div className='flex h-full w-full flex-col items-center justify-center pt-[5%]'>
       <div className='flex w-full flex-col items-center'>
-        <TweenProvider
-          initStyle={{ opacity: 0, y: 50 }}
+        <TweenerProvider
+          className='flex w-full flex-row justify-center'
+          initialStyle={{ opacity: 0, y: 50 }}
           options={{ duration: 500, delay: 0 }}
-          tweenStyle={{ opacity: 1, y: 0 }}
+          tweenTo={{ opacity: 1, y: 0 }}
+          shouldFadeIn={true}
         >
           <div className='h1' />
-        </TweenProvider>
-        <TweenProvider
-          initStyle={{ opacity: 0, y: 50 }}
-          options={{ duration: 500, delay: 100 }}
-          tweenStyle={{ opacity: 1, y: 0 }}
+        </TweenerProvider>
+        <TweenerProvider
+          className='flex w-full flex-row justify-center'
+          initialStyle={{ opacity: 0, y: 50 }}
+          options={{ duration: 500, delay: 50 }}
+          tweenTo={{ opacity: 1, y: 0 }}
+
+          shouldFadeIn
         >
           <div className='h2' />
-        </TweenProvider>
+        </TweenerProvider>
       </div>
       <div className='mt-[4%] flex w-full justify-center'>
-        <TweenProvider
-          initStyle={{ opacity: 0, x: -50 }}
-          options={{ duration: 500, delay: 1000 }}
-          tweenStyle={{ opacity: 1, x: 0 }}
+        <TweenerProvider
+          className='flex w-full justify-center'
+          initialStyle={{ opacity: 0, x: -50 }}
+          options={{ duration: 500, delay: 400 }}
+          tweenTo={{ opacity: 1, x: 0 }}
+          shouldFadeIn
         >
           <button
             className='cta'
@@ -39,16 +46,17 @@ const Intro = () => {
             <div />
             <div className={twMerge(ctaEnd && 'animate-entry')} />
           </button>
-        </TweenProvider>
+        </TweenerProvider>
       </div>
-      <div className='relative mt-[15%] flex w-full justify-center'>
-        <TweenProvider
-          initStyle={{ opacity: 0 }}
-          options={{ duration: 800, delay: 1400, onEnd: () => setCtaEnd(true) }}
-          tweenStyle={{ opacity: 1 }}
+      <div className='relative mt-[15%] flex w-full justify-center [&>div]:w-full'>
+        <TweenerProvider
+          initialStyle={{ opacity: 0 }}
+          options={{ duration: 200, delay: 0 }}
+          tweenTo={{ opacity: 1 }}
+          shouldFadeIn
         >
           <div className='description' />
-        </TweenProvider>
+        </TweenerProvider>
       </div>
     </div>
   );
