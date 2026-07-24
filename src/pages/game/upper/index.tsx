@@ -1,8 +1,5 @@
 import { memo, useEffect } from 'react';
 import './index.less';
 
-const Upper = memo(() => {
-  useEffect(() => {}, []);
-  return <div className='Upper'>Upper</div>;
-});
+const Upper = memo(() => <div className='Upper'></div>);
 export default Upper;
