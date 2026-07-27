@@ -2,7 +2,7 @@
 @import url('@/settings/config.less');
 
 .Prompt {
-  @apply flex h-full w-full items-center justify-center;
+  @apply flex h-full w-full items-center justify-center overflow-hidden;
 
   .dialog {
     min-height: 50%;
@@ -18,7 +18,7 @@
 
     & > div:nth-child(1) {
       padding: 8%;
-      @apply flex-1;
+      @apply flex-1 whitespace-break-spaces;
     }
 
     & > div:nth-child(2) {
@@ -31,7 +31,7 @@
         @apply flex flex-1 flex-row items-center justify-start;
 
         .add {
-          width: 8%;
+          width: 7%;
 
           @img: './img/add.svg';
 
@@ -45,7 +45,7 @@
         }
 
         .type {
-          width: 40%;
+          width: 36%;
 
           @img: './img/type.svg';
 

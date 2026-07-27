@@ -82,7 +82,7 @@ const NavBar = memo(() => {
             type='checkbox'
             className='theme-controller'
             value='luxury'
-            defaultChecked={Storage.get('theme') ? Storage.get('theme').data.checked : true}
+            defaultChecked={true}
             onChange={onChange}
           />
           <svg
