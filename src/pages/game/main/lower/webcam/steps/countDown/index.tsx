@@ -2,8 +2,10 @@ import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import './index.less';
 import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../../config';
+import { GameContext } from '@/pages/game/config';
 
 const Num = memo(({ index, idx }: { index: number; idx: number }) => {
+  const [{ capture }] = useContext(GameContext);
   const [, setState] = useContext(GameWebcamStepsContext);
   const [style, setStyle] = useTween({ opacity: 0, scale: 3 });
   useEffect(() => {
@@ -27,6 +29,7 @@ const Num = memo(({ index, idx }: { index: number; idx: number }) => {
                       easing: Bezier.inQuart,
                       onEnd: () => {
                         if (index === 3) {
+                          capture?.();
                           setState((S) => ({
                             ...S,
                             step: GameWebcamStepsStepType.captureAndConfirm,

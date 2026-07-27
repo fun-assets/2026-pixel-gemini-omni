@@ -1,0 +1,77 @@
+@import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
+.Prompt {
+  @apply flex h-full w-full items-center justify-center;
+
+  .dialog {
+    min-height: 50%;
+    width: 85%;
+    height: auto;
+    background-color: #222322;
+
+    @apply flex flex-col items-center justify-center overflow-hidden rounded-2xl;
+
+    & > div {
+      @apply font-noto-sans-tc w-full text-xs font-light text-white;
+    }
+
+    & > div:nth-child(1) {
+      padding: 8%;
+      @apply flex-1;
+    }
+
+    & > div:nth-child(2) {
+      padding: 0% 5%;
+      @apply flex flex-row items-center justify-between;
+
+      .menu {
+        gap: 4%;
+
+        @apply flex flex-1 flex-row items-center justify-start;
+
+        .add {
+          width: 8%;
+
+          @img: './img/add.svg';
+
+          &::before {
+            padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+            background-image: url(@img);
+            content: '';
+
+            @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+          }
+        }
+
+        .type {
+          width: 40%;
+
+          @img: './img/type.svg';
+
+          &::before {
+            padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+            background-image: url(@img);
+            content: '';
+
+            @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+          }
+        }
+      }
+
+      .mic {
+        width: 5%;
+
+        @img: './img/mic.svg';
+
+        &::before {
+          padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+          background-image: url(@img);
+          content: '';
+
+          @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+        }
+      }
+    }
+  }
+}

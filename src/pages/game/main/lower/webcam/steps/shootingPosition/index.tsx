@@ -17,7 +17,7 @@ const ShootingPosition = memo(() => {
         <TweenerProvider
           className='flex w-full flex-row justify-center'
           initialStyle={{ opacity: 0, y: 50 }}
-          options={{ duration: 500, delay: 0 }}
+          options={{ duration: 500, delay: 500 }}
           tweenTo={{ opacity: 1, y: 0 }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
@@ -26,7 +26,7 @@ const ShootingPosition = memo(() => {
         <TweenerProvider
           className='flex w-full flex-row justify-center'
           initialStyle={{ opacity: 0, y: 50 }}
-          options={{ duration: 500, delay: 50 }}
+          options={{ duration: 500, delay: 550 }}
           tweenTo={{ opacity: 1, y: 0 }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
@@ -36,7 +36,7 @@ const ShootingPosition = memo(() => {
           className='flex w-full flex-row justify-center'
           initialStyle={{ opacity: 0, x: -50 }}
           tweenTo={{ opacity: 1, x: 0 }}
-          options={{ duration: 500, delay: 500, onEnd: () => setCtaEnd(true) }}
+          options={{ duration: 500, delay: 1000, onEnd: () => setCtaEnd(true) }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
           <button

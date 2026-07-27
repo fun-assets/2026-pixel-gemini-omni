@@ -19,6 +19,8 @@ export type TGameState = {
   webcamDeviceId?: string;
   step: GameLowerStepType;
   styleSelected: number;
+  capture?: () => string | undefined;
+  resultBase64?: string;
 };
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
@@ -55,3 +57,5 @@ export const GameStyles = [
     prompt: '',
   },
 ];
+
+export const WebcamForceOpen = false;

@@ -5,7 +5,7 @@ import Lower from './lower';
 import Medium from './medium';
 import Upper from './upper';
 import './index.less';
-import { GameContext } from '../config';
+import { GameContext, WebcamForceOpen } from '../config';
 import { getVideoDevices } from './lower/webcam/misc';
 
 const Main = () => {
@@ -15,7 +15,7 @@ const Main = () => {
       if (devices.length > 0) {
         setState((prev) => ({
           ...prev,
-          webcamDeviceId: prev.webcamDeviceId || devices[0].deviceId,
+          webcamDeviceId: WebcamForceOpen ? prev.webcamDeviceId || devices[0].deviceId : undefined,
         }));
       }
     });
