@@ -35,7 +35,7 @@ const Intro = () => {
         <TweenerProvider
           className='flex w-full justify-center'
           initialStyle={{ opacity: 0, x: -50 }}
-          options={{ duration: 500, delay: 400 }}
+          options={{ duration: 500, delay: 400, onEnd: () => setCtaEnd(true) }}
           tweenTo={{ opacity: 1, x: 0 }}
           shouldFadeIn
         >
@@ -63,11 +63,11 @@ const Intro = () => {
 };
 
 const Entry = () => {
-  const [, setState] = useContext(GameContext);
-  useEffect(() => {}, []);
   return (
-    <div className='Entry h-full w-full'>
-      <Columns leftNode={<div className='mobile' />} rightNode={<Intro />} />
+    <div className='lower-inner'>
+      <div className='Entry h-full w-full'>
+        <Columns leftNode={<div className='mobile' />} rightNode={<Intro />} />
+      </div>
     </div>
   );
 };

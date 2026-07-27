@@ -2,10 +2,10 @@
 @import url('@/settings/config.less');
 
 .ChooseStyle {
-  @apply relative flex h-full w-full justify-center;
+  @apply relative flex h-full w-full flex-col items-center justify-center;
 
   & > div {
-    width: 65%;
+    width: 55%;
     @apply flex h-full flex-col items-center justify-center;
 
     & > div {
@@ -41,29 +41,38 @@
     }
 
     .styles {
-      padding-top: 1%;
-      padding-bottom: 2%;
-      width: 105%;
-      @apply grid grid-cols-3;
+      padding-top: 4%;
+      padding-bottom: 7%;
+      min-height: 0;
+      width: 100%;
+
+      gap: 4%;
+      @apply flex flex-row flex-wrap content-center items-center justify-between;
+
+      & > div {
+        width: 25%;
+      }
 
       .item {
-        padding: 5%;
+        @apply w-full;
 
         & > button {
-          @apply flex w-full flex-col overflow-hidden rounded-2xl bg-white;
+          @apply flex w-full flex-col overflow-hidden rounded-xl bg-white;
 
           & > span {
             margin-bottom: 2%;
-            transform: scale(0.8);
-            @apply text-canyon-medium font-noto-sans-tc text-xs font-black tracking-widest;
+            transform: scale(0.7);
+            @apply text-canyon-medium font-noto-sans-tc text-xs font-black tracking-widest whitespace-nowrap;
           }
 
           .cover {
-            padding: 3%;
-            @apply aspect-square w-full;
+            padding: 4%;
+
+            aspect-ratio: 133/203;
+            @apply w-full;
 
             & > div {
-              @apply bg-canyon-light h-full w-full overflow-hidden rounded-2xl bg-cover bg-center bg-no-repeat;
+              @apply bg-canyon-light h-full w-full overflow-hidden rounded-xl bg-cover bg-center bg-no-repeat;
             }
 
             .style-1 {

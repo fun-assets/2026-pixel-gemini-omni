@@ -1,8 +1,12 @@
 @import url('@/settings/global.css');
 @import url('@/settings/config.less');
 .Lower {
-  padding: @InnerBorder;
   @apply bg-canyon-medium relative h-full w-full overflow-hidden;
+
+  .lower-inner {
+    padding: @InnerBorder;
+    @apply h-full w-full;
+  }
 
   .home {
     padding-top: 3%;

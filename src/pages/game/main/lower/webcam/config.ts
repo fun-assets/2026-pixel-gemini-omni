@@ -15,7 +15,7 @@ export type TGameWebcamStepsContext = [
   Dispatch<SetStateAction<TGameWebcamStepsState>>,
 ];
 
-export const GameWebcamStepsState = { step: GameWebcamStepsStepType.shootingPosition };
+export const GameWebcamStepsState = { step: GameWebcamStepsStepType.logoShowing };
 export const GameWebcamStepsContext = createContext<TGameWebcamStepsContext>([
   GameWebcamStepsState,
   () => {},

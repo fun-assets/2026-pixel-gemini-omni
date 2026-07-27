@@ -7,9 +7,13 @@ import ShootingPosition from './shootingPosition';
 const Steps = memo(() => {
   const [state] = useContext(GameWebcamStepsContext);
   const page = useMemo(() => {
+    console.log(state.step);
+
     switch (state.step) {
       case GameWebcamStepsStepType.shootingPosition:
         return <ShootingPosition />;
+      default:
+        return null;
     }
   }, [state]);
   return (
