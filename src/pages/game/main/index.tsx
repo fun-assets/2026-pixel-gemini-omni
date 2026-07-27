@@ -15,7 +15,7 @@ const Main = () => {
       if (devices.length > 0) {
         setState((prev) => ({
           ...prev,
-          webcamDeviceId: prev.webcamDeviceId || devices[0].deviceId,
+          //  webcamDeviceId: prev.webcamDeviceId || devices[0].deviceId,
         }));
       }
     });

@@ -2,8 +2,21 @@
 @import url('@/settings/config.less');
 
 .Steps {
-  @apply flex h-full w-full flex-col items-center justify-center;
+  @apply relative flex h-full w-full flex-col items-center justify-center;
 
   .logo {
+    width: 312 / 494 * 100%;
+
+    @img: '../../../../img/logo.svg';
+    @apply absolute bottom-0;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+      transform: translateX(-5%);
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
   }
 }

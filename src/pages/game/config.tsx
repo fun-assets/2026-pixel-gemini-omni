@@ -1,5 +1,4 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
-import { getVideoDevices } from './main/lower/webcam/misc';
 
 export enum GameLowerStepType {
   entry,

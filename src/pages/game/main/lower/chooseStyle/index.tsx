@@ -96,6 +96,7 @@ const ChooseStyle = memo(() => {
             ))}
           </div>
           <TweenerProvider
+            className='flex w-full justify-center'
             initialStyle={{ opacity: 0 }}
             options={{ duration: 300, delay: 0 }}
             tweenTo={{ opacity: 1 }}
