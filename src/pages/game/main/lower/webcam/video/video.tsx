@@ -19,12 +19,30 @@ const Video = forwardRef((_, ref) => {
   const [state, setState] = useContext(GameContext);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [captured, setCaptured] = useState(false);
+  const [isStreamReady, setIsStreamReady] = useState(false);
 
   useEffect(() => {
     if (!state.webcamDeviceId) return;
     if (!videoRef.current) return;
     const videoElement = videoRef.current;
+    let isDisposed = false;
+
+    const handleReady = () => {
+      if (isDisposed) return;
+      setIsStreamReady(true);
+    };
+
+    const handleNotReady = () => {
+      if (isDisposed) return;
+      setIsStreamReady(false);
+    };
+
+    videoElement.addEventListener('playing', handleReady);
+    videoElement.addEventListener('waiting', handleNotReady);
+    videoElement.addEventListener('stalled', handleNotReady);
+
     setCaptured(false);
+    setIsStreamReady(false);
     startWebcam({
       video: videoElement,
       deviceId: state.webcamDeviceId || undefined,
@@ -41,6 +59,10 @@ const Video = forwardRef((_, ref) => {
     }).then(() => {});
 
     return () => {
+      isDisposed = true;
+      videoElement.removeEventListener('playing', handleReady);
+      videoElement.removeEventListener('waiting', handleNotReady);
+      videoElement.removeEventListener('stalled', handleNotReady);
       stopWebcam(videoElement);
     };
   }, [state.webcamDeviceId, setContext]);
@@ -113,7 +135,7 @@ const Video = forwardRef((_, ref) => {
 
   return (
     <div className='video'>
-      <div className='skeleton h-full w-full' />
+      {!captured && !isStreamReady && <div className='skeleton absolute top-0 h-full w-full' />}
       {captured ? (
         <div
           className='absolute top-0 h-full w-full bg-cover bg-center'
@@ -125,7 +147,9 @@ const Video = forwardRef((_, ref) => {
           autoPlay
           playsInline
           muted
-          className='absolute top-0 h-full w-full object-cover'
+          className={`absolute top-0 h-full w-full object-cover transition-opacity duration-200 ${
+            isStreamReady ? 'opacity-100' : 'opacity-0'
+          }`}
         />
       )}
     </div>
