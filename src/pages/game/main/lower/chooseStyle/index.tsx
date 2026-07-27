@@ -30,10 +30,12 @@ const StyleItem = memo(
               setStyleSelected((prev) => (prev === index ? undefined : index));
             }}
           >
-            <div className={twMerge('cover')}>
+            <div className='cover'>
               <div className={`style-${index + 1}`} />
             </div>
-            <span>{data.name}</span>
+            <div className='name'>
+              <div className={`name-${index + 1}`} />
+            </div>
           </button>
         </div>
       </TweenerProvider>

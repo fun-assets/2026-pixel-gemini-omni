@@ -57,13 +57,7 @@
         @apply w-full;
 
         & > button {
-          @apply flex w-full flex-col overflow-hidden rounded-xl bg-white;
-
-          & > span {
-            margin-bottom: 2%;
-            transform: scale(0.7);
-            @apply text-canyon-medium font-noto-sans-tc text-xs font-black tracking-widest whitespace-nowrap;
-          }
+          @apply relative flex w-full flex-col overflow-hidden rounded-xl bg-white;
 
           .cover {
             padding: 4%;
@@ -97,6 +91,40 @@
 
             .style-6 {
               background-image: url('./img/style-6.jpg');
+            }
+          }
+
+          .name {
+            @apply relative flex w-full justify-center;
+
+            .name-1 {
+              width: 80%;
+
+              @img: './img/t1.svg';
+              @apply relative;
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+                background-image: url(@img);
+                content: '';
+
+                @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+              }
+            }
+
+            .name-2 {
+              width: 50%;
+
+              @img: './img/t2.svg';
+              @apply relative;
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+                background-image: url(@img);
+                content: '';
+
+                @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+              }
             }
           }
         }
