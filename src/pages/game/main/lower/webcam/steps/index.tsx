@@ -6,7 +6,7 @@ import ShootingPosition from './shootingPosition';
 import CountDown from './countDown';
 import CaptureAndConfirm from './captureAndConfirm';
 
-const Steps = memo(() => {
+const Steps = memo(({ onCapture }: { onCapture: () => ImageData | undefined }) => {
   const [state] = useContext(GameWebcamStepsContext);
   const page = useMemo(() => {
     switch (state.step) {
@@ -17,7 +17,7 @@ const Steps = memo(() => {
         return <CountDown />;
 
       case GameWebcamStepsStepType.captureAndConfirm:
-        return <CaptureAndConfirm />;
+        return <CaptureAndConfirm onCapture={onCapture} />;
 
       default:
         return null;
