@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { GameContext } from '../../../../config';
-import { startWebcam } from '../misc';
+import { startWebcam, stopWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
 
@@ -23,8 +23,10 @@ const Video = forwardRef((_, ref) => {
   useEffect(() => {
     if (!state.webcamDeviceId) return;
     if (!videoRef.current) return;
+    const videoElement = videoRef.current;
+    setCaptured(false);
     startWebcam({
-      video: videoRef.current,
+      video: videoElement,
       deviceId: state.webcamDeviceId || undefined,
       onError: (err) => {
         setContext({
@@ -37,7 +39,11 @@ const Video = forwardRef((_, ref) => {
         });
       },
     }).then(() => {});
-  }, [state]);
+
+    return () => {
+      stopWebcam(videoElement);
+    };
+  }, [state.webcamDeviceId, setContext]);
 
   const capture = useCallback(() => {
     if (videoRef.current) {

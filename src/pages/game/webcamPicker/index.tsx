@@ -12,8 +12,9 @@ const WebcamDisplay = memo(() => {
   useEffect(() => {
     if (!state.webcamDeviceId) return;
     if (!videoRef.current) return;
+    const videoElement = videoRef.current;
     startWebcam({
-      video: videoRef.current,
+      video: videoElement,
       deviceId: state.webcamDeviceId || undefined,
       onError: (err) => {
         setContext({
@@ -26,7 +27,11 @@ const WebcamDisplay = memo(() => {
         });
       },
     }).then(() => {});
-  }, [state]);
+
+    return () => {
+      stopWebcam(videoElement);
+    };
+  }, [state.webcamDeviceId, setContext]);
 
   return (
     <video

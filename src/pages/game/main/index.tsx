@@ -15,7 +15,8 @@ const Main = () => {
       if (devices.length > 0) {
         setState((prev) => ({
           ...prev,
-          webcamDeviceId: WebcamForceOpen ? prev.webcamDeviceId || devices[0].deviceId : undefined,
+          webcamDeviceId:
+            prev.webcamDeviceId || (WebcamForceOpen ? devices[0].deviceId : undefined),
         }));
       }
     });
