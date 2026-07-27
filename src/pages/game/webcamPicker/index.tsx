@@ -2,7 +2,7 @@ import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePagesType } from '../config';
-import { getVideoDevices, startWebcam } from '../main/lower/webcam/misc';
+import { getVideoDevices, startWebcam, stopWebcam } from '../main/lower/webcam/misc';
 
 const WebcamDisplay = memo(() => {
   const [, setContext] = useContext(Context);
@@ -27,6 +27,7 @@ const WebcamDisplay = memo(() => {
       },
     }).then(() => {});
   }, [state]);
+
   return (
     <video
       ref={videoRef}

@@ -95,20 +95,33 @@
           }
 
           .name {
-            @apply relative flex w-full justify-center;
+            padding-bottom: 5%;
+            line-height: 0;
+            @apply relative flex w-full items-start justify-center;
+
+            & > div {
+              @apply relative;
+              &::before {
+                display: block;
+                content: '';
+
+                mask-position: center;
+                mask-repeat: no-repeat;
+                mask-size: contain;
+
+                @apply bg-canyon-medium inline-block w-full;
+              }
+            }
 
             .name-1 {
-              width: 80%;
+              width: 78%;
 
               @img: './img/t1.svg';
-              @apply relative;
 
               &::before {
                 padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-                background-image: url(@img);
-                content: '';
 
-                @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+                mask-image: url(@img);
               }
             }
 
@@ -116,14 +129,59 @@
               width: 50%;
 
               @img: './img/t2.svg';
-              @apply relative;
 
               &::before {
                 padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-                background-image: url(@img);
-                content: '';
 
-                @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+                mask-image: url(@img);
+              }
+            }
+
+            .name-3 {
+              width: 44%;
+
+              @img: './img/t3.svg';
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+
+                mask-image: url(@img);
+              }
+            }
+
+            .name-4 {
+              width: 38%;
+
+              @img: './img/t4.svg';
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+
+                mask-image: url(@img);
+              }
+            }
+
+            .name-5 {
+              width: 38%;
+
+              @img: './img/t5.svg';
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+
+                mask-image: url(@img);
+              }
+            }
+
+            .name-6 {
+              width: 44%;
+
+              @img: './img/t6.svg';
+
+              &::before {
+                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+
+                mask-image: url(@img);
               }
             }
           }
@@ -131,8 +189,13 @@
 
         .selected {
           @apply bg-base-100;
-          & > span {
-            @apply text-white;
+
+          .name {
+            & > div {
+              &::before {
+                @apply bg-white;
+              }
+            }
           }
         }
       }
