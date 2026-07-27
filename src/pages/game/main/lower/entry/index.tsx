@@ -1,6 +1,6 @@
 import Columns from '@/components/columns';
 import TweenerProvider from '@/components/tweenProvider';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { GameContext, GameLowerStepType } from '../../../config';
 import './index.less';

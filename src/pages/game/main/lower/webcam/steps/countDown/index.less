@@ -1,0 +1,46 @@
+@import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
+.CountDown {
+  @apply flex h-full w-full items-center justify-center;
+
+  & > div {
+    @apply absolute w-5/6;
+  }
+
+  .n1 {
+    @img: './img/n1.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .n2 {
+    @img: './img/n2.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .n3 {
+    @img: './img/n3.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+}

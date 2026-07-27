@@ -50,6 +50,14 @@
 
     @apply flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
 
+    &:active {
+      @apply bg-canyon-light;
+    }
+
+    & > * {
+      @apply pointer-events-none;
+    }
+
     & > div:nth-child(1) {
       width: 65%;
 

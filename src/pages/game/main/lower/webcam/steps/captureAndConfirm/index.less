@@ -1,37 +1,8 @@
 @import url('@/settings/global.css');
 @import url('@/settings/config.less');
 
-.ShootingPosition {
-  gap: 3%;
-  @apply flex h-full w-full flex-col items-center justify-center;
-
-  .h1 {
-    width: 400 / 494 * 100%;
-
-    @img: './img/h1.svg';
-
-    &::before {
-      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-      background-image: url(@img);
-      content: '';
-
-      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
-    }
-  }
-
-  .h2 {
-    width: 450 / 494 * 100%;
-
-    @img: './img/h2.svg';
-
-    &::before {
-      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-      background-image: url(@img);
-      content: '';
-
-      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
-    }
-  }
+.CaptureAndConfirm {
+  @apply flex h-full w-full items-center justify-center;
 
   .cta {
     padding-right: 9%;
@@ -49,7 +20,7 @@
     }
 
     & > div:nth-child(1) {
-      width: 213 / 403 * 100%;
+      width: 276 / 403 * 100%;
 
       @img: './img/cta.svg';
 
