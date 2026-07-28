@@ -31,7 +31,11 @@ const Processing = memo(() => {
 
   useEffect(() => {
     if (resultBase64) {
-      saveImage({ image: resultBase64 });
+      if (window.location.origin.includes('localhost')) {
+        saveImage({ image: resultBase64 });
+      } else {
+        videoAIFetch();
+      }
     }
   }, [resultBase64]);
 
