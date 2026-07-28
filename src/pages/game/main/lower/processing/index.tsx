@@ -13,6 +13,8 @@ const Processing = memo(() => {
     if (saveImageResponse) {
       if (saveImageResponse.res) {
         videoAIFetch();
+      } else {
+        setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
     }
   }, [saveImageResponse]);
@@ -20,9 +22,9 @@ const Processing = memo(() => {
   useEffect(() => {
     if (videoAIResponse) {
       if (videoAIResponse.res) {
-        console.log('a');
-
-        setState((S) => ({ ...S, step: GameLowerStepType.result }));
+        setState((S) => ({ ...S, step: GameLowerStepType.preview }));
+      } else {
+        setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
     }
   }, [videoAIResponse]);

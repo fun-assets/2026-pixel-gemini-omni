@@ -23,7 +23,7 @@ const Main = () => {
   }, []);
   return (
     <div className='Main'>
-      {step !== GameLowerStepType.result && (
+      {step !== GameLowerStepType.preview && (
         <>
           <Blockquote height='upper'>
             <Section width='w-full'>

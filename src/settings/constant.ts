@@ -17,8 +17,8 @@ import {
 
 export const LoadingProcessState: TLoadingProcessState = {
   enabled: false,
-  type: LoadingProcessType.Spokes,
-  body: 'loading',
+  type: LoadingProcessType.Bars,
+  body: '',
 };
 
 export const StatusState: TStatusState = {

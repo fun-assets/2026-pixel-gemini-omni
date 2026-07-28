@@ -5,9 +5,10 @@ export enum GameLowerStepType {
   chooseStyle,
   webcam,
   processing,
-  result,
+  preview,
   guide,
   qrcode,
+  error,
 }
 
 export enum GamePagesType {
@@ -22,15 +23,17 @@ export type TGameState = {
   styleSelected: number;
   capture?: () => string | undefined;
   resultBase64?: string;
+  videoURL?: string;
 };
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState: TGameState = {
   page: GamePagesType.game,
-  step: GameLowerStepType.processing,
+  step: GameLowerStepType.preview,
   styleSelected: 0,
   resultBase64:
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAr0lEQVR4nO3RQQ0AIBDAsAP/nuGNAvZoFSzZOjNnyNi/A3gZEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmD5ppYB4l7cEBoAAAAASUVORK5CYII=',
+  videoURL: '12540789_1080_1920_30fps.mp4',
 };
 export const GameContext = createContext<TGameContext>([GameState, () => {}]);
 
