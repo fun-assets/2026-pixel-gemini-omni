@@ -7,7 +7,7 @@ type TVideoOperationState = {
 };
 
 const useVideoOperation = () => {
-  const [state, setState] = useState<TVideoOperationState>({ res: false });
+  const [state, setState] = useState<TVideoOperationState>();
 
   const fetch = async () => {
     setTimeout(() => {

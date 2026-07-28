@@ -1,0 +1,35 @@
+@import url('@/settings/global.css');
+
+.Error {
+  @apply relative flex h-full w-full items-center justify-center;
+
+  .h1 {
+    width: 331 / 980 * 100%;
+
+    @img: './img/text.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .logo {
+    bottom: 3%;
+    width: 273/980 * 100%;
+
+    @img: './img/logo.svg';
+    @apply absolute;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+}
