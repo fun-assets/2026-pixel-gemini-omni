@@ -8,6 +8,7 @@ import Processing from './processing';
 import Preview from './preview';
 import Error from './error';
 import Guide from './guide';
+import Qrcode from './qrcode';
 
 const Lower = memo(() => {
   const [state, setState] = useContext(GameContext);
@@ -35,7 +36,7 @@ const Lower = memo(() => {
         return <Guide />;
 
       case GameLowerStepType.qrcode:
-        return <div>qrcode</div>;
+        return <Qrcode />;
     }
   }, [state]);
   return (
