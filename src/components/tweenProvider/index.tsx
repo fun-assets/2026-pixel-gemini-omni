@@ -25,6 +25,7 @@ export type Options = {
 
 type TTweenerProvider = IReactProps & {
   className?: string;
+  style?: CSSProperties;
   initialStyle: CSS;
   tweenTo: CSS;
   fadeOutStyle?: CSS;
@@ -62,7 +63,7 @@ const TweenerProvider = memo((props: TTweenerProvider) => {
   }, [shouldFadeOut]);
 
   return (
-    <div className={props.className} style={style}>
+    <div className={props.className} style={{ ...props.style, ...style }}>
       {children}
     </div>
   );

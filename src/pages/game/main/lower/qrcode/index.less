@@ -5,6 +5,111 @@
 
   .inner {
     width: 680 / 980 * 100%;
-    @apply h-full flex-col items-center justify-center bg-yellow-200;
+    @apply h-full flex-col items-center justify-center;
+
+    & > div {
+      @apply w-full;
+    }
+
+    .codes {
+      @apply flex flex-row items-center justify-between gap-4;
+
+      & > div {
+        width: 295 / 680 * 100%;
+
+        .txt {
+          @apply relative flex w-full flex-col items-center justify-center;
+
+          & > div:nth-child(1) {
+            width: 85 / 295 * 100%;
+
+            @img: './img/d.svg';
+
+            &::before {
+              padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+              background-image: url(@img);
+              content: '';
+
+              @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+            }
+          }
+
+          .t1 {
+            width: 258 / 295 * 100%;
+
+            @img: './img/t1.svg';
+
+            &::before {
+              padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+              background-image: url(@img);
+              content: '';
+
+              @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+            }
+          }
+
+          .t2 {
+            width: 192 / 295 * 100%;
+
+            @img: './img/t2.svg';
+
+            &::before {
+              padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+              background-image: url(@img);
+              content: '';
+
+              @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+            }
+          }
+        }
+      }
+    }
+
+    .welcomeTo {
+      line-height: 0;
+
+      padding-block: 2%;
+      @apply animate-fade-in flex w-full justify-center overflow-hidden border-t border-b border-white;
+
+      & > div {
+        width: 652 / 680 * 100%;
+
+        @img: './img/t3.svg';
+
+        &::before {
+          padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+          background-image: url(@img);
+          content: '';
+
+          @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+        }
+      }
+    }
+
+    .countDown {
+      @apply flex w-full justify-center;
+
+      & > div {
+        @apply font-google-sans text-7xl font-black text-white;
+      }
+    }
+
+    .footer {
+      @apply flex w-full justify-center;
+
+      & > div {
+        width: 258 / 680 * 100%;
+
+        @img: '../../../img/google-logo.svg';
+
+        &::before {
+          padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+          background-image: url(@img);
+          content: '';
+
+          @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+        }
+      }
+    }
   }
 }
