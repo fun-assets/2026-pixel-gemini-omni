@@ -14,34 +14,32 @@ type StyleItemProps = {
   transition: TransitionType;
 };
 
-const StyleItem = memo(
-  ({ data, index, styleSelected, setStyleSelected, transition }: StyleItemProps) => {
-    return (
-      <TweenerProvider
-        initialStyle={{ opacity: 0, y: 50, rotate: -90 }}
-        options={{ duration: 500, delay: 300 + index * 100 }}
-        tweenTo={{ opacity: 1, y: 0, rotate: 0 }}
-        shouldFadeIn={transition === TransitionType.FadeIn}
-      >
-        <div className='item'>
-          <button
-            className={twMerge(styleSelected === index ? 'selected' : '')}
-            onClick={() => {
-              setStyleSelected((prev) => (prev === index ? undefined : index));
-            }}
-          >
-            <div className='cover'>
-              <div className={`style-${index + 1}`} />
-            </div>
-            <div className='name'>
-              <div className={`name-${index + 1}`} />
-            </div>
-          </button>
-        </div>
-      </TweenerProvider>
-    );
-  },
-);
+const StyleItem = memo(({ index, styleSelected, setStyleSelected, transition }: StyleItemProps) => {
+  return (
+    <TweenerProvider
+      initialStyle={{ opacity: 0, y: 50, rotate: -90 }}
+      options={{ duration: 500, delay: 300 + index * 100 }}
+      tweenTo={{ opacity: 1, y: 0, rotate: 0 }}
+      shouldFadeIn={transition === TransitionType.FadeIn}
+    >
+      <div className='item'>
+        <button
+          className={twMerge(styleSelected === index ? 'selected' : '')}
+          onClick={() => {
+            setStyleSelected((prev) => (prev === index ? undefined : index));
+          }}
+        >
+          <div className='cover'>
+            <div className={`style-${index + 1}`} />
+          </div>
+          <div className='name'>
+            <div className={`name-${index + 1}`} />
+          </div>
+        </button>
+      </div>
+    </TweenerProvider>
+  );
+});
 
 const ChooseStyle = memo(() => {
   const [, setState] = useContext(GameContext);
