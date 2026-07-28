@@ -3,8 +3,10 @@ import cloudinary from 'cloudinary';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Router } from 'express';
+import fs from 'fs/promises';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 import Atobtoa from 'lesca-atobtoa';
+import path from 'path';
 import serverless from 'serverless-http';
 import { SETTING, TType } from '../../../setting';
 import { REST_PATH } from '../../../src/settings/config';
@@ -66,6 +68,48 @@ const extractImageFromDataUrl = (dataUrl: string) => {
   return {
     mimeType: matched[1],
     imageBytes: matched[2],
+  };
+};
+
+const getExtensionByMimeType = (mimeType: string) => {
+  const mapping: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+    'image/gif': 'gif',
+    'image/bmp': 'bmp',
+    'image/svg+xml': 'svg',
+  };
+
+  return mapping[mimeType.toLowerCase()] || 'png';
+};
+
+const formatDateFolder = (date: Date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+const formatTimestamp = (date: Date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+  const ms = String(date.getMilliseconds()).padStart(3, '0');
+  return `${y}${m}${d}${hh}${mm}${ss}${ms}`;
+};
+
+const createSortableRandomFileName = (extension: string) => {
+  const now = new Date();
+  const timestamp = formatTimestamp(now);
+  const random = Math.random().toString(36).slice(2, 10);
+  return {
+    fileName: `${timestamp}-${random}.${extension}`,
+    dateFolder: formatDateFolder(now),
   };
 };
 
@@ -474,6 +518,55 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
     });
   } catch (error) {
     res.status(200).json({ res: false, msg: messages.getVideoOperationError, error });
+  }
+});
+
+router.post(`/${REST_PATH.saveImage}`, async (req, res) => {
+  try {
+    const { image } = req.body as { image?: string };
+
+    if (!image) {
+      res.status(200).json({ res: false, msg: 'image is required' });
+      return;
+    }
+
+    let mimeType = 'image/png';
+    let imageBytes = image;
+
+    const parsed = extractImageFromDataUrl(image);
+    if (parsed) {
+      mimeType = parsed.mimeType;
+      imageBytes = parsed.imageBytes;
+    }
+
+    const extension = getExtensionByMimeType(mimeType);
+    const { fileName: finalFileName, dateFolder } = createSortableRandomFileName(extension);
+
+    const baseLocalPath = process.env.SAVE_IMAGE_BASE_PATH
+      ? path.resolve(process.env.SAVE_IMAGE_BASE_PATH)
+      : path.resolve(process.cwd(), 'saved-images');
+
+    const outputDir = path.join(baseLocalPath, dateFolder);
+    await fs.mkdir(outputDir, { recursive: true });
+
+    const filePath = path.join(outputDir, finalFileName);
+    const buffer = Buffer.from(imageBytes, 'base64');
+    await fs.writeFile(filePath, buffer);
+
+    res.status(200).json({
+      res: true,
+      msg: 'Save image successful',
+      data: {
+        baseLocalPath,
+        subfolder: dateFolder,
+        fileName: finalFileName,
+        filePath,
+        mimeType,
+        bytes: buffer.byteLength,
+      },
+    });
+  } catch (error) {
+    res.status(200).json({ res: false, msg: 'Save image failed', error });
   }
 });
 

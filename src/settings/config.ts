@@ -14,6 +14,7 @@ export const REST_PATH = {
   removeMany: 'removeMany',
   generateVideo: 'generateVideo',
   getVideoOperation: 'getVideoOperation',
+  saveImage: 'saveImage',
 };
 
 export const CAPTURE_PROPERTY = {
