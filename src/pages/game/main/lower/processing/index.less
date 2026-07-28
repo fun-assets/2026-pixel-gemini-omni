@@ -1,0 +1,54 @@
+@import url('@/settings/global.css');
+
+.Processing {
+  padding-bottom: 10%;
+
+  gap: 3%;
+  @apply flex h-full w-full flex-col items-center justify-center;
+
+  .h1 {
+    width: 523 / 978 * 100%;
+
+    @img: './img/h1.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .h2 {
+    width: 250 / 978 * 100%;
+
+    @img: './img/h2.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .bar {
+    margin-top: 3%;
+    width: 780 / 978 * 100%;
+    @apply flex h-4 justify-center overflow-hidden rounded-l-full rounded-r-full border border-white;
+
+    & > div {
+      width: 300%;
+      background-color: transparent;
+      background-image: linear-gradient(
+        105deg,
+        #0000 0% 20%,
+        var(--color-white) 50%,
+        #0000 70% 100%
+      );
+      @apply skeleton h-full;
+    }
+  }
+}

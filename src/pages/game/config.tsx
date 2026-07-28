@@ -5,6 +5,7 @@ export enum GameLowerStepType {
   chooseStyle,
   webcam,
   processing,
+  result,
   guide,
   qrcode,
 }
@@ -25,8 +26,8 @@ export type TGameState = {
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState = {
-  page: GamePagesType.webcamPicker,
-  step: GameLowerStepType.entry,
+  page: GamePagesType.game,
+  step: GameLowerStepType.processing,
   styleSelected: 0,
 };
 export const GameContext = createContext<TGameContext>([GameState, () => {}]);

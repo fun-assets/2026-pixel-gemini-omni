@@ -6,7 +6,6 @@ export enum GameWebcamStepsStepType {
   countDown,
   captureAndConfirm,
   prompt,
-  fetching,
 }
 
 export type TGameWebcamStepsState = { step: GameWebcamStepsStepType };

@@ -4,6 +4,7 @@ import ChooseStyle from './chooseStyle';
 import Entry from './entry';
 import './index.less';
 import Webcam from './webcam';
+import Processing from './processing';
 
 const Lower = memo(() => {
   const [state, setState] = useContext(GameContext);
@@ -17,6 +18,9 @@ const Lower = memo(() => {
 
       case GameLowerStepType.webcam:
         return <Webcam />;
+
+      case GameLowerStepType.processing:
+        return <Processing />;
 
       case GameLowerStepType.qrcode:
         return <div>qrcode</div>;

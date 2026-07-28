@@ -1,18 +1,17 @@
 import TweenerProvider from '@/components/tweenProvider';
-import { GameContext, GameStyles } from '@/pages/game/config';
+import { GameContext, GameLowerStepType, GameStyles } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import CharTransition from 'lesca-react-char-transition';
 import OnloadProvider from 'lesca-react-onload';
 import { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useState } from 'react';
-import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../../config';
 import './index.less';
 
 const CharTransitionComponent =
   (CharTransition as unknown as { default?: typeof CharTransition }).default ?? CharTransition;
 
 const Prompt = memo(() => {
-  const [, setState] = useContext(GameWebcamStepsContext);
+  const [, setState] = useContext(GameContext);
   const [{ styleSelected }] = useContext(GameContext);
   const promptText = GameStyles[styleSelected]?.prompt ?? GameStyles[0].prompt;
   const [transition, setTransition] = useState(TransitionType.Unset);
@@ -38,7 +37,7 @@ const Prompt = memo(() => {
             easing: Bezier.inQuart,
             delay: 2000,
             onEnd: () => {
-              setState((S) => ({ ...S, step: GameWebcamStepsStepType.fetching }));
+              setState((S) => ({ ...S, step: GameLowerStepType.processing }));
             },
           }}
         >

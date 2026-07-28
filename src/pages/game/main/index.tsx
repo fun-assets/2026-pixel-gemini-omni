@@ -5,11 +5,11 @@ import Lower from './lower';
 import Medium from './medium';
 import Upper from './upper';
 import './index.less';
-import { GameContext, WebcamForceOpen } from '../config';
+import { GameContext, GameLowerStepType, WebcamForceOpen } from '../config';
 import { getVideoDevices } from './lower/webcam/misc';
 
 const Main = () => {
-  const [, setState] = useContext(GameContext);
+  const [{ step }, setState] = useContext(GameContext);
   useEffect(() => {
     getVideoDevices().then((devices) => {
       if (devices.length > 0) {
@@ -23,19 +23,23 @@ const Main = () => {
   }, []);
   return (
     <div className='Main'>
-      <Blockquote height='upper'>
-        <Section width='w-full'>
-          <Upper />
-        </Section>
-      </Blockquote>
-      <Blockquote height='medium'>
-        <Section width='70%'>
-          <Medium.Left />
-        </Section>
-        <Section width='flex-1'>
-          <Medium.Right />
-        </Section>
-      </Blockquote>
+      {step !== GameLowerStepType.result && (
+        <>
+          <Blockquote height='upper'>
+            <Section width='w-full'>
+              <Upper />
+            </Section>
+          </Blockquote>
+          <Blockquote height='medium'>
+            <Section width='70%'>
+              <Medium.Left />
+            </Section>
+            <Section width='flex-1'>
+              <Medium.Right />
+            </Section>
+          </Blockquote>
+        </>
+      )}
       <Blockquote height='lower'>
         <Section width='w-full'>
           <Lower />
