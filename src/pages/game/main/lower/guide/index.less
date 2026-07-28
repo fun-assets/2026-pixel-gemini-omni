@@ -1,0 +1,96 @@
+@import url('@/settings/global.css');
+
+.Guide {
+  gap: 2%;
+  @apply flex h-full w-full flex-col items-center justify-center;
+
+  .h1 {
+    width: 397 / 980 * 100%;
+
+    @img: './img/h1.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .h2 {
+    width: 693 / 980 * 100%;
+
+    @img: './img/h2.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .logo {
+    bottom: 3%;
+    width: 273/980 * 100%;
+
+    @img: '../../../img/google-logo.svg';
+    @apply absolute;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .cta {
+    width: 481 / 980 * 100%;
+
+    padding-inline: 5%;
+    padding-block: 2%;
+    gap: 10%;
+
+    @apply relative flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
+
+    & > * {
+      @apply pointer-events-none flex items-center justify-center;
+    }
+
+    & > div:nth-child(1) {
+      width: 100%;
+
+      @img: './img/btn.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    & > div:nth-child(2) {
+      width: 7%;
+
+      @img: '../../../img/arrow.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    &:active {
+      @apply bg-canyon-light;
+    }
+  }
+}

@@ -7,6 +7,7 @@ import Webcam from './webcam';
 import Processing from './processing';
 import Preview from './preview';
 import Error from './error';
+import Guide from './guide';
 
 const Lower = memo(() => {
   const [state, setState] = useContext(GameContext);
@@ -29,6 +30,9 @@ const Lower = memo(() => {
 
       case GameLowerStepType.error:
         return <Error />;
+
+      case GameLowerStepType.guide:
+        return <Guide />;
 
       case GameLowerStepType.qrcode:
         return <div>qrcode</div>;

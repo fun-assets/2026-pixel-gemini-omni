@@ -1,15 +1,11 @@
-import { memo, useEffect, useState } from 'react';
-import './index.less';
-import OnloadProvider from 'lesca-react-onload';
-import { TransitionType } from '@/settings/type';
 import TweenerProvider from '@/components/tweenProvider';
+import { TransitionType } from '@/settings/type';
+import OnloadProvider from 'lesca-react-onload';
+import { memo, useState } from 'react';
+import './index.less';
 
 const Error = memo(() => {
   const [transition, setTransition] = useState(TransitionType.Unset);
-
-  useEffect(() => {
-    console.log(transition);
-  }, [transition]);
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
