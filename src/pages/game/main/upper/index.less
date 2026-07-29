@@ -2,6 +2,12 @@
 @import url('@/settings/config.less');
 
 .Upper {
-  background-image: url('./img/tmp.jpg');
-  @apply h-full w-full bg-cover bg-center;
+  @apply relative h-full w-full;
+
+  &::before {
+    background-image: url('./img/tmp.jpg');
+    content: '';
+
+    @apply inline-block h-full w-full bg-cover bg-center bg-no-repeat;
+  }
 }

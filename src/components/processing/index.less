@@ -1,0 +1,31 @@
+@import url('@/settings/global.css');
+@import url('@/settings/config.less');
+
+.Process {
+  @apply bg-base-100 absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center;
+
+  .balls {
+    mask-image: url('./svg/loading-balls.svg');
+  }
+  .bars {
+    mask-image: url('./svg/loading-bars.svg');
+  }
+  .bubbles {
+    mask-image: url('./svg/loading-bubbles.svg');
+  }
+  .cubes {
+    mask-image: url('./svg/loading-cubes.svg');
+  }
+  .cylon {
+    mask-image: url('./svg/loading-cylon.svg');
+  }
+  .spin {
+    mask-image: url('./svg/loading-spin.svg');
+  }
+  .spinningBubbles {
+    mask-image: url('./svg/loading-spinning-bubbles.svg');
+  }
+  .spokes {
+    mask-image: url('./svg/loading-spokes.svg');
+  }
+}

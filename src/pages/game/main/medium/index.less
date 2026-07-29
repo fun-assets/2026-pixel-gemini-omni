@@ -2,12 +2,24 @@
 @import url('@/settings/config.less');
 
 .MediumLeft {
-  background-image: url('./img/tmp-left.jpg');
+  @apply relative h-full w-full bg-cover bg-center;
 
-  @apply h-full w-full bg-cover bg-center;
+  &::before {
+    background-image: url('./img/tmp-left.jpg');
+    content: '';
+
+    @apply inline-block h-full w-full bg-cover bg-center bg-no-repeat;
+  }
 }
 
 .MediumRight {
-  background-image: url('./img/tmp-right.jpg');
-  @apply h-full w-full bg-cover bg-center;
+  line-height: 0;
+  @apply relative h-full w-full bg-cover bg-center;
+
+  &::before {
+    background-image: url('./img/tmp-right.jpg');
+    content: '';
+
+    @apply inline-block h-full w-full bg-cover bg-center bg-no-repeat;
+  }
 }

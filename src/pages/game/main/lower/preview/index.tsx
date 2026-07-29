@@ -22,6 +22,13 @@ const Preview = memo(() => {
     setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
   };
 
+  useEffect(() => {
+    setContext({ type: ActionType.LoadingProcess, state: { enabled: true } });
+    return () => {
+      setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
+    };
+  }, []);
+
   return (
     <div className='Preview'>
       <video

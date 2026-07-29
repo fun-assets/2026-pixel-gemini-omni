@@ -10,14 +10,15 @@ const Text = ({ children }: IReactProps) => (
   <span className='text-textColor relative'>{children}</span>
 );
 
-const LoadingSvg = ({ className, type }: { className: string; type?: string }) => {
+export const LoadingSvg = ({ className, type }: { className: string; type?: string }) => {
   return (
     <div
       className={twMerge(
         className,
+        'mask',
         'mask-contain mask-center',
         'h-16 w-16',
-        'bg-primary-content',
+        'bg-canyon-dark',
         type || LoadingProcessType.Spin,
       )}
     />

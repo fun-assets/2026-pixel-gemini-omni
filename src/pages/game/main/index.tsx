@@ -1,12 +1,12 @@
 import Blockquote from '@/components/blockquote';
 import Section from '@/components/section';
 import { useContext, useEffect } from 'react';
+import { GameContext, GameLowerStepType, WebcamForceOpen } from '../config';
+import './index.less';
 import Lower from './lower';
+import { getVideoDevices } from './lower/webcam/misc';
 import Medium from './medium';
 import Upper from './upper';
-import './index.less';
-import { GameContext, GameLowerStepType, WebcamForceOpen } from '../config';
-import { getVideoDevices } from './lower/webcam/misc';
 
 const Main = () => {
   const [{ step }, setState] = useContext(GameContext);
