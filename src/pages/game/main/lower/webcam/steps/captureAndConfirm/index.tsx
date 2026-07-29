@@ -21,6 +21,18 @@ const CaptureAndConfirm = memo(() => {
           options={{ duration: 500, delay: 500, onEnd: () => setCtaEnd(true) }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
+          <button className='retake'>
+            <div />
+            <div className={twMerge(ctaEnd && 'animate-entry')} />
+          </button>
+        </TweenerProvider>
+        <TweenerProvider
+          className='flex w-full flex-row justify-center'
+          initialStyle={{ opacity: 0, x: -50 }}
+          tweenTo={{ opacity: 1, x: 0 }}
+          options={{ duration: 500, delay: 550, onEnd: () => setCtaEnd(true) }}
+          shouldFadeIn={transition === TransitionType.FadeIn}
+        >
           <button
             className='cta'
             onClick={() => {

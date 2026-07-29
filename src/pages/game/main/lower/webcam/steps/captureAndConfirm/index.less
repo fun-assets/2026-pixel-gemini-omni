@@ -2,7 +2,9 @@
 @import url('@/settings/config.less');
 
 .CaptureAndConfirm {
-  @apply flex h-full w-full items-center justify-center;
+  gap: 5%;
+
+  @apply flex h-full w-full flex-col items-center justify-center;
 
   .cta {
     padding-right: 9%;
@@ -23,6 +25,55 @@
       width: 276 / 403 * 100%;
 
       @img: './img/cta.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+        transform: translateY(13%);
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    & > div:nth-child(2) {
+      width: 6%;
+
+      @img: '../../../../../img/arrow.svg';
+
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
+
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+      }
+    }
+
+    &:active {
+      @apply bg-canyon-light;
+    }
+  }
+
+  .retake {
+    padding-right: 9%;
+    padding-left: 12%;
+    width: 403 / 521 * 100%;
+
+    padding-block: 2%;
+    gap: 10%;
+    @img: './img/h1.svg';
+
+    @apply relative flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
+
+    & > * {
+      @apply pointer-events-none;
+    }
+
+    & > div:nth-child(1) {
+      width: 206 / 403 * 100%;
+
+      @img: './img/retake.svg';
 
       &::before {
         padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
