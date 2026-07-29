@@ -1,10 +1,6 @@
 @import url('@/settings/global.css');
 @import url('@/settings/config.less');
 .Lower {
-  background-image: url('./img/corner.jpg');
-  background-position: right bottom;
-  background-size: 16%;
-  background-repeat: no-repeat;
   @apply bg-canyon-medium relative h-full w-full overflow-hidden;
 
   .lower-inner {
@@ -15,16 +11,21 @@
   .home {
     padding-top: 3%;
     padding-left: 3%;
-    width: 10.714285714285714%;
+    width: 14.714285714285714%;
 
+    mask-image: url('./img/mask.png');
+    mask-position: right bottom;
+    mask-size: 100% 100%;
     @img: './img/home.svg';
 
-    @apply absolute right-0 bottom-0;
+    @apply absolute right-0 bottom-0 bg-white;
 
     &::before {
       padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
       background-image: url(@img);
       content: '';
+      transform: scale(0.7);
+      transform-origin: right bottom;
 
       @apply inline-block w-full bg-contain bg-center bg-no-repeat;
     }

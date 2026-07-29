@@ -35,6 +35,7 @@ const Preview = memo(() => {
         src={videoURL}
         className='h-full w-full object-cover'
         autoPlay
+        muted
         playsInline
         onPlay={handleVideoStart}
         onTimeUpdate={({ currentTarget }) => {

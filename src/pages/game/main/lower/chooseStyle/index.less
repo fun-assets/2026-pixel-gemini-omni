@@ -6,7 +6,19 @@
 
   & > div {
     width: 55%;
+
+    gap: 2%;
+
+    @media only screen and (max-width: 650px) {
+      & {
+        width: 53%;
+      }
+    }
     @apply flex h-full flex-col items-center justify-center;
+
+    & > * {
+      line-height: 0;
+    }
 
     & > div {
       @apply w-full;
@@ -41,11 +53,11 @@
     }
 
     .styles {
-      padding-top: 4%;
-      padding-bottom: 7%;
       min-height: 0;
       width: 100%;
       column-gap: 4%;
+
+      padding-block: 3%;
 
       @apply flex flex-row flex-wrap content-center items-center justify-between;
 

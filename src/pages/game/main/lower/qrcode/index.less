@@ -4,7 +4,9 @@
   @apply flex h-full w-full justify-center;
 
   .inner {
-    width: 680 / 980 * 100%;
+    width: 670 / 980 * 100%;
+
+    gap: 2%;
     @apply h-full flex-col items-center justify-center;
 
     & > div {
@@ -68,7 +70,7 @@
     .welcomeTo {
       line-height: 0;
 
-      padding-block: 2%;
+      padding-block: 3%;
       @apply animate-fade-in flex w-full justify-center overflow-hidden border-t border-b border-white;
 
       & > div {
@@ -90,11 +92,14 @@
       @apply flex w-full justify-center;
 
       & > div {
-        @apply font-google-sans text-7xl font-black text-white;
+        font-size: 5vh;
+        line-height: 5vh;
+        @apply font-google-sans font-black text-white;
       }
     }
 
     .footer {
+      margin-top: 3%;
       @apply flex w-full justify-center;
 
       & > div {
