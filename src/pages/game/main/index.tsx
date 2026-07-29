@@ -23,6 +23,7 @@ const Main = () => {
       })
       .catch(() => {
         // The picker handles camera permission errors and user-facing messaging.
+        setState((prev) => ({ ...prev, step: GameLowerStepType.error }));
       });
   }, []);
   return (

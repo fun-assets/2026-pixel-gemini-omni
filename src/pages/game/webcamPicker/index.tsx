@@ -118,6 +118,10 @@ const WebcamPicker = memo(() => {
           disabled={!webcamDeviceId}
           onClick={() => {
             setState((S) => ({ ...S, page: GamePagesType.game }));
+            // full screen
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen();
+            }
           }}
         >
           Sure, let's go

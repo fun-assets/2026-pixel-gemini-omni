@@ -4,6 +4,7 @@ import { GameContext, GamePagesType, GameState } from './config';
 import './index.less';
 import Main from './main';
 import WebcamPicker from './webcamPicker';
+import OnloadProvider from 'lesca-react-onload';
 
 const Router = () => {
   const [state] = useContext(GameContext);
