@@ -43,7 +43,7 @@ const Prompt = memo(() => {
         >
           <div className='dialog'>
             <div>
-              {(transition === TransitionType.Loop || transition === TransitionType.FadeOut) && (
+              {transition === TransitionType.Loop || transition === TransitionType.FadeOut ? (
                 <CharTransitionComponent
                   duration={promptText.length * 50}
                   delay={0}
@@ -57,6 +57,12 @@ const Prompt = memo(() => {
                 >
                   {promptText}
                 </CharTransitionComponent>
+              ) : (
+                <span className='hidden'>
+                  {promptText.split('').map((char, index) => (
+                    <span key={char + index}>{char}</span>
+                  ))}
+                </span>
               )}
               <div className='w-2' />
             </div>

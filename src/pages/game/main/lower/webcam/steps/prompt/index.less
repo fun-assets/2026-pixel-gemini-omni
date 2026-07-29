@@ -10,15 +10,20 @@
     height: auto;
     background-color: #222322;
 
+    container-type: inline-size;
+
     @apply flex flex-col items-center justify-center overflow-hidden rounded-2xl;
 
     & > div {
-      @apply font-noto-sans-tc w-full text-xs font-light text-white;
+      font-size: clamp(12px, 1.9vw, 28px);
+      font-size: clamp(12px, 2.4cqw, 28px);
+      line-height: 1.4;
+      @apply font-noto-sans-tc w-full font-light text-white;
     }
 
     & > div:nth-child(1) {
       padding: 8%;
-      @apply flex-1 whitespace-break-spaces;
+      @apply flex flex-1 flex-wrap items-start justify-start whitespace-normal;
     }
 
     & > div:nth-child(2) {

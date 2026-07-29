@@ -45,13 +45,18 @@
       padding-bottom: 7%;
       min-height: 0;
       width: 100%;
-
-      gap: 4%;
+      column-gap: 4%;
 
       @apply flex flex-row flex-wrap content-center items-center justify-between;
 
       & > div {
+        // Safari 對 flex-wrap 的百分比 row-gap 支援不穩，改用 margin 做垂直間距。
+        margin-top: 4%;
         width: 25%;
+
+        &:nth-child(-n + 3) {
+          margin-top: 0;
+        }
       }
 
       .item {
