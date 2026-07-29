@@ -38,18 +38,15 @@
     padding-left: 12%;
     width: 403 / 521 * 100%;
 
-    padding-block: 2%;
+    padding-block: 3%;
     gap: 10%;
     @img: './img/h1.svg';
 
     @apply relative flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
 
-    & > * {
-      @apply pointer-events-none;
-    }
-
     & > div:nth-child(1) {
       width: 213 / 403 * 100%;
+      line-height: 0;
 
       @img: './img/cta.svg';
 
@@ -57,14 +54,13 @@
         padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
         background-image: url(@img);
         content: '';
-        transform: translateY(13%);
-
         @apply inline-block w-full bg-contain bg-center bg-no-repeat;
       }
     }
 
     & > div:nth-child(2) {
       width: 6%;
+      line-height: 0;
 
       @img: '../../../../../img/arrow.svg';
 

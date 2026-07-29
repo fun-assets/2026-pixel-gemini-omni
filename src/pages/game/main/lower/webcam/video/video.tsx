@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { GameContext } from '../../../../config';
+import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../config';
 import { normalizeDeviceId, startWebcam, stopWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
@@ -17,9 +18,11 @@ const CAPTURE_SCALE = 3;
 const Video = forwardRef((_, ref) => {
   const [, setContext] = useContext(Context);
   const [state, setState] = useContext(GameContext);
+  const [webcamState] = useContext(GameWebcamStepsContext);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [captured, setCaptured] = useState(false);
   const [isStreamReady, setIsStreamReady] = useState(false);
+  const showsCapturedFrame =
+    webcamState.step >= GameWebcamStepsStepType.captureAndConfirm && !!state.resultBase64;
 
   useEffect(() => {
     if (!state.webcamDeviceId) return;
@@ -41,7 +44,6 @@ const Video = forwardRef((_, ref) => {
     videoElement.addEventListener('waiting', handleNotReady);
     videoElement.addEventListener('stalled', handleNotReady);
 
-    setCaptured(false);
     setIsStreamReady(false);
     startWebcam({
       video: videoElement,
@@ -115,7 +117,6 @@ const Video = forwardRef((_, ref) => {
           const imageData = canvas.toDataURL('image/png');
           // window.open(imageData, '_blank')?.document.write(`<img src="${imageData}" />`);
           setState((prev) => ({ ...prev, resultBase64: imageData }));
-          setCaptured(true);
           return imageData;
         }
       }
@@ -135,21 +136,22 @@ const Video = forwardRef((_, ref) => {
 
   return (
     <div className='video'>
-      {!captured && !isStreamReady && <div className='skeleton absolute top-0 h-full w-full' />}
-      {captured ? (
+      {!showsCapturedFrame && !isStreamReady && (
+        <div className='skeleton absolute top-0 h-full w-full' />
+      )}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className={`absolute top-0 h-full w-full object-cover transition-opacity duration-200 ${
+          showsCapturedFrame ? 'opacity-0' : isStreamReady ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      {showsCapturedFrame && (
         <div
           className='absolute top-0 h-full w-full bg-cover bg-center'
           style={{ backgroundImage: `url(${state.resultBase64})` }}
-        />
-      ) : (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className={`absolute top-0 h-full w-full object-cover transition-opacity duration-200 ${
-            isStreamReady ? 'opacity-100' : 'opacity-0'
-          }`}
         />
       )}
     </div>

@@ -11,7 +11,7 @@
     padding-left: 12%;
     width: 403 / 521 * 100%;
 
-    padding-block: 2%;
+    padding-block: 3%;
     gap: 10%;
     @img: './img/h1.svg';
 
@@ -23,6 +23,7 @@
 
     & > div:nth-child(1) {
       width: 276 / 403 * 100%;
+      line-height: 0;
 
       @img: './img/cta.svg';
 
@@ -30,7 +31,6 @@
         padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
         background-image: url(@img);
         content: '';
-        transform: translateY(13%);
 
         @apply inline-block w-full bg-contain bg-center bg-no-repeat;
       }
@@ -38,6 +38,7 @@
 
     & > div:nth-child(2) {
       width: 6%;
+      line-height: 0;
 
       @img: '../../../../../img/arrow.svg';
 
@@ -58,9 +59,9 @@
   .retake {
     padding-right: 9%;
     padding-left: 12%;
-    width: 403 / 521 * 100%;
+    width: 423 / 521 * 100%;
 
-    padding-block: 2%;
+    padding-block: 3%;
     gap: 10%;
     @img: './img/h1.svg';
 
@@ -72,6 +73,7 @@
 
     & > div:nth-child(1) {
       width: 206 / 403 * 100%;
+      line-height: 0;
 
       @img: './img/retake.svg';
 
@@ -79,7 +81,6 @@
         padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
         background-image: url(@img);
         content: '';
-        transform: translateY(13%);
 
         @apply inline-block w-full bg-contain bg-center bg-no-repeat;
       }
@@ -87,6 +88,7 @@
 
     & > div:nth-child(2) {
       width: 6%;
+      line-height: 0;
 
       @img: '../../../../../img/arrow.svg';
 

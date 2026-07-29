@@ -45,7 +45,9 @@ const Intro = () => {
           >
             <button
               className='cta'
-              onClick={() => setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle }))}
+              onClick={() =>
+                setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }))
+              }
             >
               <div />
               <div className={twMerge(ctaEnd && 'animate-entry')} />
