@@ -29,7 +29,7 @@ export type TGameState = {
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState: TGameState = {
-  page: GamePagesType.game,
+  page: GamePagesType.webcamPicker,
   step: GameLowerStepType.entry,
   styleSelected: 0,
   resultBase64:

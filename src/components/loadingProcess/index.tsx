@@ -18,7 +18,7 @@ export const LoadingSvg = ({ className, type }: { className: string; type?: stri
         'mask',
         'mask-contain mask-center',
         'h-16 w-16',
-        'bg-canyon-dark',
+        'bg-canyon-medium',
         type || LoadingProcessType.Spin,
       )}
     />
