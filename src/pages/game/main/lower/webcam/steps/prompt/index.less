@@ -5,6 +5,7 @@
   @apply flex h-full w-full items-center justify-center overflow-hidden;
 
   .dialog {
+    padding-top: 2%;
     min-height: 50%;
     width: 85%;
     height: auto;
@@ -16,8 +17,12 @@
 
     & > div {
       font-size: clamp(12px, 1.9vw, 28px);
-      font-size: clamp(12px, 2.4cqw, 28px);
+      font-size: clamp(12px, 5.8cqw, 28px);
+      line-height: 1.4;
       @apply font-noto-sans-tc w-full font-light text-white;
+      span {
+        line-height: 0;
+      }
     }
 
     & > div:nth-child(1) {

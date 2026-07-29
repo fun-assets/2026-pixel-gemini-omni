@@ -1,6 +1,10 @@
 @import url('@/settings/global.css');
 @import url('@/settings/config.less');
 .Lower {
+  background-image: url('./img/corner.jpg');
+  background-position: right bottom;
+  background-size: 16%;
+  background-repeat: no-repeat;
   @apply bg-canyon-medium relative h-full w-full overflow-hidden;
 
   .lower-inner {
@@ -15,7 +19,7 @@
 
     @img: './img/home.svg';
 
-    @apply absolute right-0 bottom-0 rounded-tl-3xl bg-white;
+    @apply absolute right-0 bottom-0;
 
     &::before {
       padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);

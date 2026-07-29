@@ -46,7 +46,7 @@ const Main = () => {
         </>
       )}
       <Blockquote height='lower'>
-        <Section width='w-full'>
+        <Section width='w-full' isButton>
           <Lower />
         </Section>
       </Blockquote>

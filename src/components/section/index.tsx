@@ -5,9 +5,10 @@ import './index.less';
 
 type TSectionProps = IReactProps & {
   width?: 'w-full' | '70%' | 'flex-1';
+  isButton?: boolean;
 };
 
-const Section = memo(({ children, width }: TSectionProps) => {
+const Section = memo(({ children, width, isButton }: TSectionProps) => {
   const currentWidth = useMemo(() => {
     switch (width) {
       case 'w-full':
@@ -21,6 +22,16 @@ const Section = memo(({ children, width }: TSectionProps) => {
     }
   }, [width]);
 
-  return <div className={twMerge(`Section`, currentWidth)}>{children}</div>;
+  return (
+    <div
+      className={twMerge(
+        `Section`,
+        currentWidth,
+        isButton ? 'rounded-t-3xl rounded-bl-3xl' : 'rounded-3xl',
+      )}
+    >
+      {children}
+    </div>
+  );
 });
 export default Section;
