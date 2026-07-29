@@ -2,7 +2,13 @@ import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePagesType } from '../config';
-import { getVideoDevices, startWebcam, stopWebcam } from '../main/lower/webcam/misc';
+import {
+  AUTO_DEVICE_ID,
+  getVideoDevices,
+  normalizeDeviceId,
+  startWebcam,
+  stopWebcam,
+} from '../main/lower/webcam/misc';
 
 const WebcamDisplay = memo(() => {
   const [, setContext] = useContext(Context);
@@ -15,7 +21,7 @@ const WebcamDisplay = memo(() => {
     const videoElement = videoRef.current;
     startWebcam({
       video: videoElement,
-      deviceId: state.webcamDeviceId || undefined,
+      deviceId: normalizeDeviceId(state.webcamDeviceId),
       onError: (err) => {
         setContext({
           type: ActionType.Modal,
@@ -56,19 +62,25 @@ const WebcamPicker = memo(() => {
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
     (async () => {
       try {
         const videoDevices = await getVideoDevices();
         if (!isMountedRef.current) return;
         setDevices(videoDevices);
+        setWebcamDeviceId((prev) => prev || videoDevices[0]?.deviceId || AUTO_DEVICE_ID);
       } catch (err) {
+        const message = err instanceof Error ? err.message : 'Error loading webcam devices';
         setContext({
           type: ActionType.Modal,
-          state: { enabled: true, title: 'Error', body: 'Error loading webcam devices' },
+          state: { enabled: true, title: 'Error', body: message },
         });
       }
     })();
-  }, []);
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, [setContext]);
 
   useEffect(() => {
     if (!webcamDeviceId) return;
@@ -89,12 +101,16 @@ const WebcamPicker = memo(() => {
         <fieldset className='fieldset w-full'>
           <legend className='fieldset-legend'>Webcam selection</legend>
           <select defaultValue='Pick a webcam' className='select w-full' onChange={onChange}>
-            <option disabled={true}>Pick a webcam</option>
-            {devices.map((device, index) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label || `Camera ${index + 1}`}
-              </option>
-            ))}
+            {devices.map((device, index) => {
+              return (
+                <option
+                  key={`${device.deviceId || 'camera'}-${index}`}
+                  value={device.deviceId || AUTO_DEVICE_ID}
+                >
+                  {device.label || `Camera ${index + 1}`}
+                </option>
+              );
+            })}
           </select>
         </fieldset>
         <button

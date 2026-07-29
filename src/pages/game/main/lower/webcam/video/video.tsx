@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { GameContext } from '../../../../config';
-import { startWebcam, stopWebcam } from '../misc';
+import { normalizeDeviceId, startWebcam, stopWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
 
@@ -45,7 +45,7 @@ const Video = forwardRef((_, ref) => {
     setIsStreamReady(false);
     startWebcam({
       video: videoElement,
-      deviceId: state.webcamDeviceId || undefined,
+      deviceId: normalizeDeviceId(state.webcamDeviceId),
       onError: (err) => {
         setContext({
           type: ActionType.Modal,

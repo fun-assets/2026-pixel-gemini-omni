@@ -11,15 +11,19 @@ import { getVideoDevices } from './lower/webcam/misc';
 const Main = () => {
   const [{ step }, setState] = useContext(GameContext);
   useEffect(() => {
-    getVideoDevices().then((devices) => {
-      if (devices.length > 0) {
-        setState((prev) => ({
-          ...prev,
-          webcamDeviceId:
-            prev.webcamDeviceId || (WebcamForceOpen ? devices[0].deviceId : undefined),
-        }));
-      }
-    });
+    getVideoDevices()
+      .then((devices) => {
+        if (devices.length > 0) {
+          setState((prev) => ({
+            ...prev,
+            webcamDeviceId:
+              prev.webcamDeviceId || (WebcamForceOpen ? devices[0].deviceId : undefined),
+          }));
+        }
+      })
+      .catch(() => {
+        // The picker handles camera permission errors and user-facing messaging.
+      });
   }, []);
   return (
     <div className='Main'>
