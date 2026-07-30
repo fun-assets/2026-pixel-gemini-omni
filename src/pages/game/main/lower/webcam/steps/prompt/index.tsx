@@ -1,11 +1,12 @@
 import TweenerProvider from '@/components/tweenProvider';
-import { GameContext, GameLowerStepType, GameStyles } from '@/pages/game/config';
+import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import CharTransition from 'lesca-react-char-transition';
 import OnloadProvider from 'lesca-react-onload';
 import { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useState } from 'react';
 import './index.less';
+import { GameStyles } from '@/settings/config';
 
 const CharTransitionComponent =
   (CharTransition as unknown as { default?: typeof CharTransition }).default ?? CharTransition;
@@ -58,11 +59,13 @@ const Prompt = memo(() => {
                   {promptText}
                 </CharTransitionComponent>
               ) : (
-                <span className='hidden'>
+                <>
                   {promptText.split('').map((char, index) => (
-                    <span key={char + index}>{char}</span>
+                    <span className='invisible opacity-0' key={char + index}>
+                      {char}
+                    </span>
                   ))}
-                </span>
+                </>
               )}
               <div className='w-2' />
             </div>

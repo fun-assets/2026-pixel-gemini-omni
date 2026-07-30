@@ -11,18 +11,12 @@
     height: auto;
     background-color: #222322;
 
-    container-type: inline-size;
-
     @apply flex flex-col items-center justify-center overflow-hidden rounded-2xl;
 
     & > div {
-      font-size: clamp(12px, 1.9vw, 28px);
-      font-size: clamp(12px, 5.8cqw, 28px);
-      line-height: 1.4;
-      @apply font-noto-sans-tc w-full font-light text-white;
-      span {
-        line-height: 0;
-      }
+      font-size: 1.3vh;
+      line-height: 1.7vh;
+      @apply font-noto-sans-tc flex w-full flex-row items-start justify-start font-light text-white;
     }
 
     & > div:nth-child(1) {

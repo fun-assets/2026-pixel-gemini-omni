@@ -1,10 +1,11 @@
 import TweenerProvider from '@/components/tweenProvider';
-import { GameContext, GameLowerStepType, GameStyles } from '@/pages/game/config';
+import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './index.less';
+import { GameStyles } from '@/settings/config';
 
 type StyleItemProps = {
   data: { name: string; prompt: string };

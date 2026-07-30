@@ -15,7 +15,7 @@ export type TGameWebcamStepsContext = [
 ];
 
 export const GameWebcamStepsState = {
-  step: GameWebcamStepsStepType.logoShowing,
+  step: GameWebcamStepsStepType.prompt,
 };
 export const GameWebcamStepsContext = createContext<TGameWebcamStepsContext>([
   GameWebcamStepsState,
