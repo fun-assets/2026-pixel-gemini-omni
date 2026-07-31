@@ -1,11 +1,12 @@
 import Columns from '@/components/columns';
+import LiquidGlassButton from '@/components/LiquidGlassButton';
 import TweenerProvider from '@/components/tweenProvider';
-import { useContext, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
-import { GameContext, GameLowerStepType } from '../../../config';
-import './index.less';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
+import { useContext, useState } from 'react';
+import './index.less';
+import { GameContext, GameLowerStepType } from '@/pages/game/config';
+import { twMerge } from 'tailwind-merge';
 
 const Intro = () => {
   const [, setState] = useContext(GameContext);
@@ -39,19 +40,30 @@ const Intro = () => {
           <TweenerProvider
             className='flex w-full justify-center'
             initialStyle={{ opacity: 0, x: -50 }}
-            options={{ duration: 500, delay: 400, onEnd: () => setCtaEnd(true) }}
+            options={{ duration: 600, delay: 400, onEnd: () => setCtaEnd(true) }}
             tweenTo={{ opacity: 1, x: 0 }}
             shouldFadeIn={transition === TransitionType.FadeIn}
           >
-            <button
-              className='cta'
-              onClick={() =>
-                setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }))
-              }
+            <LiquidGlassButton
+              shape='pill'
+              size={40}
+              width={190}
+              wobbleAmount={0.05}
+              wobbleSpeed={2}
+              shadow
+              blur={0}
+              tint={0}
+              onClick={() => {
+                setTimeout(() => {
+                  setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }));
+                }, 500);
+              }}
             >
-              <div />
-              <div className={twMerge(ctaEnd && 'animate-entry')} />
-            </button>
+              <div className='cta'>
+                <div className='cta-name' />
+                <div className={twMerge('cta-arrow', ctaEnd && 'animate-entry')} />
+              </div>
+            </LiquidGlassButton>
           </TweenerProvider>
         </div>
         <div className='relative mt-[15%] flex w-full justify-center [&>div]:w-full'>

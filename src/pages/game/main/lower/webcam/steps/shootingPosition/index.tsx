@@ -1,3 +1,4 @@
+import LiquidGlassButton from '@/components/LiquidGlassButton';
 import TweenerProvider from '@/components/tweenProvider';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
@@ -39,15 +40,26 @@ const ShootingPosition = memo(() => {
           options={{ duration: 500, delay: 1000, onEnd: () => setCtaEnd(true) }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
-          <button
-            className='cta'
+          <LiquidGlassButton
+            shape='pill'
+            size={40}
+            width={200}
+            wobbleAmount={0.05}
+            wobbleSpeed={2}
+            shadow
+            blur={0}
+            tint={0}
             onClick={() => {
-              setStepState((S) => ({ ...S, step: GameWebcamStepsStepType.countDown }));
+              setTimeout(() => {
+                setStepState((S) => ({ ...S, step: GameWebcamStepsStepType.countDown }));
+              }, 500);
             }}
           >
-            <div />
-            <div className={twMerge(ctaEnd && 'animate-entry')} />
-          </button>
+            <div className='cta'>
+              <div />
+              <div className={twMerge(ctaEnd && 'animate-entry')} />
+            </div>
+          </LiquidGlassButton>
         </TweenerProvider>
       </div>
     </OnloadProvider>

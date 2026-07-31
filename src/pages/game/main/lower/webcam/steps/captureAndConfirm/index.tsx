@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../../config';
 import './index.less';
 import { GameContext } from '@/pages/game/config';
+import LiquidGlassButton from '@/components/LiquidGlassButton';
 
 const CaptureAndConfirm = memo(() => {
   const [{ retakeAmount }, setState] = useContext(GameContext);
@@ -24,19 +25,30 @@ const CaptureAndConfirm = memo(() => {
             options={{ duration: 500, delay: 500, onEnd: () => setCtaEnd(true) }}
             shouldFadeIn={transition === TransitionType.FadeIn}
           >
-            <button
-              className='retake'
+            <LiquidGlassButton
+              shape='pill'
+              size={40}
+              width={210}
+              wobbleAmount={0.05}
+              wobbleSpeed={2}
+              shadow
+              blur={0}
+              tint={0}
               onClick={() => {
-                setState((S) => ({ ...S, retakeAmount: S.retakeAmount - 1, resultBase64: '' }));
-                setStepState((S) => ({
-                  ...S,
-                  step: GameWebcamStepsStepType.shootingPosition,
-                }));
+                setTimeout(() => {
+                  setState((S) => ({ ...S, retakeAmount: S.retakeAmount - 1, resultBase64: '' }));
+                  setStepState((S) => ({
+                    ...S,
+                    step: GameWebcamStepsStepType.shootingPosition,
+                  }));
+                }, 500);
               }}
             >
-              <div />
-              <div className={twMerge(ctaEnd && 'animate-entry')} />
-            </button>
+              <div className='retake'>
+                <div />
+                <div className={twMerge(ctaEnd && 'animate-entry')} />
+              </div>
+            </LiquidGlassButton>
           </TweenerProvider>
         )}
         <TweenerProvider
@@ -50,15 +62,26 @@ const CaptureAndConfirm = memo(() => {
           }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
-          <button
-            className='cta'
+          <LiquidGlassButton
+            shape='pill'
+            size={40}
+            width={210}
+            wobbleAmount={0.05}
+            wobbleSpeed={2}
+            shadow
+            blur={0}
+            tint={0}
             onClick={() => {
-              setStepState((S) => ({ ...S, step: GameWebcamStepsStepType.prompt }));
+              setTimeout(() => {
+                setStepState((S) => ({ ...S, step: GameWebcamStepsStepType.prompt }));
+              }, 500);
             }}
           >
-            <div />
-            <div className={twMerge(ctaEnd && 'animate-entry')} />
-          </button>
+            <div className='cta'>
+              <div />
+              <div className={twMerge(ctaEnd && 'animate-entry')} />
+            </div>
+          </LiquidGlassButton>
         </TweenerProvider>
       </div>
     </OnloadProvider>

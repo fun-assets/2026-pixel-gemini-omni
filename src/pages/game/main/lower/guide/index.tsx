@@ -1,13 +1,16 @@
+import LiquidGlassButton from '@/components/LiquidGlassButton';
 import TweenerProvider from '@/components/tweenProvider';
+import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
 import { memo, useContext, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 import './index.less';
-import { GameContext, GameLowerStepType } from '@/pages/game/config';
 
 const Guide = memo(() => {
   const [, setState] = useContext(GameContext);
   const [transition, setTransition] = useState(TransitionType.Unset);
+  const [ctaEnd, setCtaEnd] = useState(false);
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
       <div className='Guide'>
@@ -42,18 +45,29 @@ const Guide = memo(() => {
           className='flex w-full justify-center'
           initialStyle={{ opacity: 0, x: -50 }}
           tweenTo={{ opacity: 1, x: 0 }}
-          options={{ duration: 500, delay: 1000 }}
+          options={{ duration: 500, delay: 1000, onEnd: () => setCtaEnd(true) }}
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
-          <button
-            className='cta'
+          <LiquidGlassButton
+            shape='pill'
+            size={40}
+            width={240}
+            wobbleAmount={0.05}
+            wobbleSpeed={2}
+            shadow
+            blur={0}
+            tint={0}
             onClick={() => {
-              setState((S) => ({ ...S, step: GameLowerStepType.qrcode }));
+              setTimeout(() => {
+                setState((S) => ({ ...S, step: GameLowerStepType.qrcode }));
+              }, 500);
             }}
           >
-            <div />
-            <div />
-          </button>
+            <div className='cta'>
+              <div />
+              <div className={twMerge(ctaEnd && 'animate-entry')} />
+            </div>
+          </LiquidGlassButton>
         </TweenerProvider>
       </div>
     </OnloadProvider>

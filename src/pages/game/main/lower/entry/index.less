@@ -48,18 +48,10 @@
     gap: 10%;
     @img: './img/h1.svg';
 
-    @apply flex flex-row items-center justify-center rounded-l-full rounded-r-full bg-white;
+    @apply flex h-full w-full flex-row items-center justify-center;
 
-    &:active {
-      @apply bg-canyon-light;
-    }
-
-    & > * {
-      @apply pointer-events-none;
-    }
-
-    & > div:nth-child(1) {
-      width: 65%;
+    .cta-name {
+      width: 55%;
       line-height: 0;
 
       @img: './img/cta.svg';
@@ -73,8 +65,8 @@
       }
     }
 
-    & > div:nth-child(2) {
-      width: 6%;
+    .cta-arrow {
+      width: 5%;
       line-height: 0;
 
       @img: '../../../img/arrow.svg';

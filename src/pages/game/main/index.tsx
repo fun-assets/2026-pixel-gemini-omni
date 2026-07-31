@@ -35,14 +35,6 @@ const Main = () => {
               <Upper />
             </Section>
           </Blockquote>
-          <Blockquote height='medium'>
-            <Section width='70%'>
-              <Medium.Left />
-            </Section>
-            <Section width='flex-1'>
-              <Medium.Right />
-            </Section>
-          </Blockquote>
         </>
       )}
       <Blockquote height='lower'>

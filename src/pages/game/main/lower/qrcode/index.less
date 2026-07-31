@@ -3,6 +3,22 @@
 .Qrcode {
   @apply flex h-full w-full justify-center;
 
+  .logo {
+    bottom: 3%;
+    width: 273/980 * 100%;
+
+    @img: '../../../img/google-logo.svg';
+    @apply absolute;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
   .inner {
     width: 670 / 980 * 100%;
 
@@ -89,6 +105,7 @@
     }
 
     .countDown {
+      margin-bottom: 2%;
       @apply flex w-full justify-center;
 
       & > div {
@@ -99,21 +116,18 @@
     }
 
     .footer {
-      margin-top: 3%;
-      @apply flex w-full justify-center;
+      bottom: 3%;
+      width: 273/980 * 100%;
 
-      & > div {
-        width: 258 / 680 * 100%;
+      @img: '../../../img/google-logo.svg';
+      @apply absolute;
 
-        @img: '../../../img/google-logo.svg';
+      &::before {
+        padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+        background-image: url(@img);
+        content: '';
 
-        &::before {
-          padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-          background-image: url(@img);
-          content: '';
-
-          @apply inline-block w-full bg-contain bg-center bg-no-repeat;
-        }
+        @apply inline-block w-full bg-contain bg-center bg-no-repeat;
       }
     }
   }

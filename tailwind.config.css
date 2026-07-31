@@ -33,7 +33,7 @@
   --color-black: #000000;
   --color-white: #ffffff;
 
-  --height-upper: calc(492 / 1820 * 100%);
+  --height-upper: calc(956 / 1820 * 100%);
   --height-medium: calc(460 / 1820 * 100%);
 
   --font-noto-sans-tc: 'Noto Sans TC', sans-serif;

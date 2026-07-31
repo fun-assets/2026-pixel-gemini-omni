@@ -65,6 +65,15 @@ const Qrcode = memo(() => {
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
       <div className='Qrcode'>
+        <TweenerProvider
+          className='absolute flex h-full w-full justify-center'
+          initialStyle={{ opacity: 0 }}
+          tweenTo={{ opacity: 1 }}
+          options={{ duration: 500 }}
+          shouldFadeIn={transition === TransitionType.FadeIn}
+        >
+          <div className='logo' />
+        </TweenerProvider>
         <div className='inner'>
           <div className='codes'>
             <div>
@@ -135,9 +144,6 @@ const Qrcode = memo(() => {
           </div>
           <div className='countDown animate-fade-in'>
             <CountDown transition={transition} setTransition={setTransition} />
-          </div>
-          <div className='footer animate-fade-in'>
-            <div />
           </div>
         </div>
       </div>
