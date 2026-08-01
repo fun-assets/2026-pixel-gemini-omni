@@ -6,6 +6,7 @@ import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import './index.less';
+import useTracker from '@/hooks/useTracker';
 
 type CountDownProps = {
   transition: TransitionType;
@@ -61,6 +62,8 @@ const CountDown = memo(({ transition, setTransition }: CountDownProps) => {
 const Qrcode = memo(() => {
   const [{ cloudVideoURL }] = useContext(GameContext);
   const [transition, setTransition] = useState(TransitionType.Unset);
+
+  useTracker({ pageName: '下載影片', type: 'pageView' });
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>

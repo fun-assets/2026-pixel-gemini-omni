@@ -1,20 +1,24 @@
 import Columns from '@/components/columns';
 import LiquidGlassButton from '@/components/LiquidGlassButton';
 import TweenerProvider from '@/components/tweenProvider';
+import useTracker, { track } from '@/hooks/useTracker';
+import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
-import { useContext, useState } from 'react';
-import './index.less';
-import { GameContext, GameLowerStepType } from '@/pages/game/config';
+import { useCallback, useContext, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import useTracker from '@/hooks/useTracker';
+import './index.less';
 
 const Intro = () => {
   const [, setState] = useContext(GameContext);
   const [ctaEnd, setCtaEnd] = useState(false);
   const [transition, setTransition] = useState(TransitionType.Unset);
-
   useTracker({ pageName: '首頁', type: 'pageView' });
+
+  const onClick = useCallback(() => {
+    setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }));
+    track({ pageName: '首頁-開始體驗', type: 'event' });
+  }, [setState]);
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
@@ -56,11 +60,7 @@ const Intro = () => {
               shadow
               blur={0}
               tint={0}
-              onClick={() => {
-                setTimeout(() => {
-                  setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }));
-                }, 500);
-              }}
+              onClick={() => onClick()}
             >
               <div className='cta'>
                 <div className='cta-name' />

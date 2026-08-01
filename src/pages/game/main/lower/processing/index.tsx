@@ -3,11 +3,14 @@ import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { memo, useContext, useEffect } from 'react';
 import './index.less';
 import useVideoOperation from '@/hooks/useVideoOperation';
+import useTracker from '@/hooks/useTracker';
 
 const Processing = memo(() => {
   const [{ resultBase64 }, setState] = useContext(GameContext);
   const [saveImageResponse, saveImage] = useSaveImage();
   const [videoAIResponse, videoAIFetch] = useVideoOperation();
+
+  useTracker({ pageName: '生成動態中', type: 'pageView' });
 
   useEffect(() => {
     if (saveImageResponse) {

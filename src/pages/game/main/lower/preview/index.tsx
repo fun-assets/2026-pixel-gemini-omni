@@ -3,11 +3,14 @@ import { memo, useContext, useEffect, useRef } from 'react';
 import './index.less';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
+import useTracker from '@/hooks/useTracker';
 
 const Preview = memo(() => {
   const [, setContext] = useContext(Context);
   const [{ videoURL }, setState] = useContext(GameContext);
   const hasTriggeredStart = useRef(false);
+
+  useTracker({ pageName: '預覽成品', type: 'pageView' });
 
   useEffect(() => {
     hasTriggeredStart.current = false;

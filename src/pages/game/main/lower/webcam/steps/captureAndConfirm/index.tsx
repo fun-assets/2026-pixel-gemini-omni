@@ -7,12 +7,15 @@ import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../../config';
 import './index.less';
 import { GameContext } from '@/pages/game/config';
 import LiquidGlassButton from '@/components/LiquidGlassButton';
+import useTracker, { track } from '@/hooks/useTracker';
 
 const CaptureAndConfirm = memo(() => {
   const [{ retakeAmount }, setState] = useContext(GameContext);
   const [, setStepState] = useContext(GameWebcamStepsContext);
   const [transition, setTransition] = useState(TransitionType.Unset);
   const [ctaEnd, setCtaEnd] = useState(false);
+
+  useTracker({ pageName: '擷取與確認', type: 'pageView' });
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
@@ -41,6 +44,7 @@ const CaptureAndConfirm = memo(() => {
                     ...S,
                     step: GameWebcamStepsStepType.shootingPosition,
                   }));
+                  track({ pageName: '擷取與確認-再拍一次', type: 'event' });
                 }, 500);
               }}
             >
@@ -74,6 +78,7 @@ const CaptureAndConfirm = memo(() => {
             onClick={() => {
               setTimeout(() => {
                 setStepState((S) => ({ ...S, step: GameWebcamStepsStepType.prompt }));
+                track({ pageName: '擷取與確認-OK!沒問題', type: 'event' });
               }, 500);
             }}
           >

@@ -1,4 +1,4 @@
-import bodyParser from 'body-parser';
+import bodyParser, { json } from 'body-parser';
 import cloudinary from 'cloudinary';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -606,7 +606,7 @@ router.post(`/${REST_PATH.tracking}`, async (req, res) => {
         count: { [dateKey]: 1 },
       };
       const response = await insert({ collection, data: newData });
-      res.status(200).json(response);
+      res.status(200).json({ ...response, msg: newData.pageName });
     } else {
       const normalizedCount = Object.entries(
         (matched.count || {}) as Record<string, number>,
@@ -628,7 +628,7 @@ router.post(`/${REST_PATH.tracking}`, async (req, res) => {
         collection,
         data: { _id: matched._id, data: { count: updatedCount } },
       });
-      res.status(200).json(response);
+      res.status(200).json({ ...response, msg: matched.pageName });
     }
   }
 });

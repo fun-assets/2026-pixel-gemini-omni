@@ -53,6 +53,7 @@ export interface LiquidGlassButtonProps {
   ripple?: boolean;
   className?: string;
   style?: CSSProperties;
+  disabled?: boolean;
   'aria-label'?: string;
 }
 
@@ -201,6 +202,7 @@ export function LiquidGlassButton({
   ripple = true,
   className,
   style,
+  disabled = false,
   ...rest
 }: LiquidGlassButtonProps) {
   // Unique, collision-free ids so multiple buttons can coexist on one page.
@@ -302,8 +304,11 @@ export function LiquidGlassButton({
 
   // Water ripple on click.
   const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [hasClicked, setHasClicked] = useState(false);
+  const isDisabled = disabled || hasClicked;
   const rippleId = useRef(0);
   const handlePointerDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (isDisabled) return;
     if (!ripple) return;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -320,6 +325,12 @@ export function LiquidGlassButton({
     window.setTimeout(() => setRipples((rs) => rs.filter((r) => r.id !== id)), 900);
   };
 
+  const handleClick = () => {
+    if (isDisabled) return;
+    setHasClicked(true);
+    onClick?.();
+  };
+
   const backdrop = `blur(${blur}px) url(#${filterId})`;
   const dropShadow = showShadow ? `drop-shadow(2px 2px 1px rgba(0,0,0,0.28))` : undefined;
 
@@ -328,7 +339,8 @@ export function LiquidGlassButton({
       type='button'
       className={['lgb-pill', className].filter(Boolean).join(' ')}
       style={{ width: w, height: h, ...style }}
-      onClick={onClick}
+      disabled={isDisabled}
+      onClick={handleClick}
       onPointerDown={handlePointerDown}
       {...rest}
     >

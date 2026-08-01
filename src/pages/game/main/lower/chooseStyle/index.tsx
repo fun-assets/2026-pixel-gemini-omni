@@ -2,10 +2,11 @@ import TweenerProvider from '@/components/tweenProvider';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
-import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './index.less';
 import { GameStyles } from '@/settings/config';
+import useTracker, { track } from '@/hooks/useTracker';
 
 type StyleItemProps = {
   data: { name: string; prompt: string };
@@ -16,20 +17,22 @@ type StyleItemProps = {
 };
 
 const StyleItem = memo(({ index, styleSelected, setStyleSelected, transition }: StyleItemProps) => {
+  const [fadeIn, setFadeIn] = useState(false);
+
+  const onClick = useCallback(() => {
+    if (!fadeIn) return;
+    setStyleSelected((prev) => (prev === index ? undefined : index));
+    track({ pageName: `選擇風格-${GameStyles[index].name}`, type: 'event' });
+  }, [fadeIn, index, setStyleSelected]);
   return (
     <TweenerProvider
       initialStyle={{ opacity: 0, y: 50, rotate: -90 }}
-      options={{ duration: 500, delay: 300 + index * 100 }}
+      options={{ duration: 500, delay: 300 + index * 100, onEnd: () => setFadeIn(true) }}
       tweenTo={{ opacity: 1, y: 0, rotate: 0 }}
       shouldFadeIn={transition === TransitionType.FadeIn}
     >
       <div className='item'>
-        <button
-          className={twMerge(styleSelected === index ? 'selected' : '')}
-          onClick={() => {
-            setStyleSelected((prev) => (prev === index ? undefined : index));
-          }}
-        >
+        <button className={twMerge(styleSelected === index ? 'selected' : '')} onClick={onClick}>
           <div className='cover'>
             <div className={`style-${index + 1}`} />
           </div>
@@ -47,6 +50,8 @@ const ChooseStyle = memo(() => {
   const [styleSelected, setStyleSelected] = useState<number | undefined>();
   const [transition, setTransition] = useState(TransitionType.Unset);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useTracker({ pageName: '選擇風格', type: 'pageView' });
 
   useEffect(() => {
     if (styleSelected !== undefined) {

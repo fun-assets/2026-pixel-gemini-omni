@@ -6,11 +6,15 @@ import OnloadProvider from 'lesca-react-onload';
 import { memo, useContext, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './index.less';
+import useTracker, { track } from '@/hooks/useTracker';
 
 const Guide = memo(() => {
   const [, setState] = useContext(GameContext);
   const [transition, setTransition] = useState(TransitionType.Unset);
   const [ctaEnd, setCtaEnd] = useState(false);
+
+  useTracker({ pageName: '歡迎實機體驗', type: 'pageView' });
+
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
       <div className='Guide'>
@@ -60,6 +64,7 @@ const Guide = memo(() => {
             onClick={() => {
               setTimeout(() => {
                 setState((S) => ({ ...S, step: GameLowerStepType.qrcode }));
+                track({ pageName: '歡迎實機體驗-沒問題!下載影片', type: 'event' });
               }, 500);
             }}
           >

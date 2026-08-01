@@ -8,15 +8,21 @@ type TArgument = {
   data: Omit<Extract<TType, { pageName: string }>, 'timestamp' | 'count'>;
 };
 
-const useTracker = (data: Omit<Extract<TType, { pageName: string }>, 'timestamp' | 'count'>) => {
-  const fetch = async (argument: TArgument) => {
-    const respond = (await Fetcher.post(REST_PATH.tracking, argument)) as IRespond;
-    console.log(respond);
-  };
+type TrackerPayload = Omit<Extract<TType, { pageName: string }>, 'timestamp' | 'count'>;
 
+const fetchTracker = async (argument: TArgument) => {
+  const respond = (await Fetcher.post(REST_PATH.tracking, argument)) as IRespond;
+  console.log(respond);
+};
+
+export const track = (data: TrackerPayload) => {
+  const collection = SETTING.mongodb[1].collection;
+  void fetchTracker({ collection, data });
+};
+
+const useTracker = (data: TrackerPayload) => {
   useEffect(() => {
-    const collection = SETTING.mongodb[1].collection;
-    fetch({ collection, data });
+    track(data);
   }, []);
 };
 export default useTracker;
