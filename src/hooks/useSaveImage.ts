@@ -13,8 +13,23 @@ const useSaveImage = () => {
 
   const fetch = async (argument: TArgument) => {
     setContext({ type: ActionType.LoadingProcess, state: { enabled: true } });
-    const respond = (await Fetcher.post(REST_PATH.saveImage, argument)) as IRespond;
-    setState(respond);
+    try {
+      const respond = (await Fetcher.post(REST_PATH.saveImage, argument)) as IRespond;
+      if (!respond.res) {
+        setContext({
+          type: ActionType.Modal,
+          state: { enabled: true, title: '系統訊息', body: '圖片儲存失敗，請洽工作人員。' },
+        });
+        return;
+      }
+      setState(respond);
+    } catch {
+      setContext({
+        type: ActionType.Modal,
+        state: { enabled: true, title: '系統訊息', body: '圖片儲存失敗，請洽工作人員。' },
+      });
+    }
+
     setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
   };
 
