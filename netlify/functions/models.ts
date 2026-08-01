@@ -22,6 +22,12 @@ export default SETTING.mongodb.reduce(
             case IType.Date:
               currentType = Date;
               break;
+            case IType.Array:
+              currentType = Array;
+              break;
+            case IType.Object:
+              currentType = Object;
+              break;
             case IType.String:
             default:
               currentType = String;

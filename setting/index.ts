@@ -18,7 +18,7 @@ export const SETTING = {
       schema: {
         pageName: { type: IType.String, required: true },
         type: { type: IType.String, required: true },
-        count: { type: IType.Number, required: true },
+        count: { type: IType.Object, required: false },
         timestamp: { type: IType.Date, default: 'Date.now()' },
       },
     },
@@ -36,7 +36,7 @@ export type TType =
   | {
       pageName: string;
       type: string;
-      count: number;
+      count: object;
       timestamp: string;
     };
 

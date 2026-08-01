@@ -7,11 +7,14 @@ import { useContext, useState } from 'react';
 import './index.less';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { twMerge } from 'tailwind-merge';
+import useTracker from '@/hooks/useTracker';
 
 const Intro = () => {
   const [, setState] = useContext(GameContext);
   const [ctaEnd, setCtaEnd] = useState(false);
   const [transition, setTransition] = useState(TransitionType.Unset);
+
+  useTracker({ pageName: '首頁', type: 'pageView' });
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>

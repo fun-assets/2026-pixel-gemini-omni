@@ -570,6 +570,69 @@ router.post(`/${REST_PATH.saveImage}`, async (req, res) => {
   }
 });
 
+router.post(`/${REST_PATH.tracking}`, async (req, res) => {
+  const connection = await connect();
+  if (!connection.res) {
+    res.status(200).json({ res: false, msg: messages.connectError });
+  } else {
+    const { collection, data } = req.body as {
+      collection: string;
+      data: Omit<Extract<TType, { pageName: string }>, 'timestamp' | 'count'>;
+    };
+
+    if (!collection || !data) {
+      res.status(200).json({ res: false, msg: 'Collection and data are required' });
+      return;
+    }
+
+    const dateNow = new Date();
+    const dateKey = dateNow.toISOString().slice(0, 10);
+
+    type MatchedType = Extract<TType, { pageName: string }> & {
+      _id: any;
+      count: Record<string, number>;
+    };
+
+    const dataFromDb = await select({ collection });
+    const existingData = dataFromDb.data as Extract<TType, { pageName: string }>[];
+    const matched = existingData.find(
+      (item) => item.pageName === data.pageName && item.type === data.type,
+    ) as MatchedType | undefined;
+
+    if (!matched) {
+      const newData = {
+        ...data,
+        timestamp: dateNow.toISOString(),
+        count: { [dateKey]: 1 },
+      };
+      const response = await insert({ collection, data: newData });
+      res.status(200).json(response);
+    } else {
+      const normalizedCount = Object.entries(
+        (matched.count || {}) as Record<string, number>,
+      ).reduce(
+        (acc, [key, value]) => {
+          const normalizedKey = key.includes('T') ? key.slice(0, 10) : key;
+          const normalizedValue = Number(value) || 0;
+          acc[normalizedKey] = (acc[normalizedKey] || 0) + normalizedValue;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const updatedCount = {
+        ...normalizedCount,
+        [dateKey]: (normalizedCount[dateKey] || 0) + 1,
+      };
+      const response = await update({
+        collection,
+        data: { _id: matched._id, data: { count: updatedCount } },
+      });
+      res.status(200).json(response);
+    }
+  }
+});
+
 app.use('/api/', router);
 
 export const handler = serverless(app);
