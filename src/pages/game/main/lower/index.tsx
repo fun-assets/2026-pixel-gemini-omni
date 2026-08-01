@@ -9,6 +9,7 @@ import Preview from './preview';
 import Error from './error';
 import Guide from './guide';
 import Qrcode from './qrcode';
+import { track } from '@/hooks/useTracker';
 
 const Lower = memo(() => {
   const [state, setState] = useContext(GameContext);
@@ -46,6 +47,7 @@ const Lower = memo(() => {
         className='home'
         onClick={() => {
           setState((S) => ({ ...S, step: GameLowerStepType.entry }));
+          track({ pageName: '回首頁', type: 'event' });
         }}
       />
     </div>
