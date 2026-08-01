@@ -4,13 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=local node scripts/dev.js",
+    "dev": "vite --host",
+    "dev:serve": "concurrently \"npm run dev\" \"npm run serve\"",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "rm": "rm -rf node_modules/ dist/ package-lock.json",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "deploy": "NODE_ENV=production netlify deploy --dir=dist",
-    "deploy:prod": "NODE_ENV=production netlify deploy --dir=dist --prod"
+    "deploy:prod": "NODE_ENV=production netlify deploy --dir=dist --prod",
+    "serve": "cross-env NODE_ENV=local CHOKIDAR_USEPOLLING=true node scripts/dev.js"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.22.1",
@@ -56,7 +58,6 @@
     "@typescript-eslint/parser": "^8.65.0",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.5.4",
-    "child_process": "^1.0.2",
     "concurrently": "^10.0.4",
     "cors": "^2.8.6",
     "cross-env": "^10.1.0",
