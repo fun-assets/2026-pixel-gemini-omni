@@ -15,6 +15,8 @@ export const REST_PATH = {
   generateVideo: 'generateVideo',
   getVideoOperation: 'getVideoOperation',
   saveImage: 'saveImage',
+  // tracking
+  tracking: 'tracking',
 };
 
 export const CAPTURE_PROPERTY = {

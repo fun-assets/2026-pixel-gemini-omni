@@ -119,7 +119,7 @@ router.post(`/${REST_PATH.login}`, async (req, res) => {
   if (!connection.res) {
     res.status(200).json({ res: false, msg: messages.connectError });
   } else {
-    if (body.email === process.env.AMIN_EMAIL) {
+    if (body.email === process.env.ADMIN_EMAIL) {
       const type = UserType.Admin;
       const name = body.name || 'super user';
       const timestamp = new Date().toISOString();
@@ -128,7 +128,7 @@ router.post(`/${REST_PATH.login}`, async (req, res) => {
       res.status(200).json({ res: true, token, type });
     } else {
       const respond = await select({ collection: SETTING.mongodb[0].collection });
-      const data = respond.data as Extract<TType, { type: string }>[];
+      const data = respond.data as Extract<TType, { email: string }>[];
       const matched = data.filter((item) => item.email === body.email);
       if (matched.length === 0) res.status(200).json({ res: false, type: UserType.Guest });
       else {

@@ -13,16 +13,32 @@ export const SETTING = {
         timestamp: { type: IType.Date, default: 'Date.now()' },
       },
     },
+    {
+      collection: 'tracking',
+      schema: {
+        pageName: { type: IType.String, required: true },
+        type: { type: IType.String, required: true },
+        count: { type: IType.Number, required: true },
+        timestamp: { type: IType.Date, default: 'Date.now()' },
+      },
+    },
   ],
 };
 
 // set type for mongodb
-export type TType = {
-  userName: string;
-  email: string;
-  type: string;
-  timestamp: string;
-};
+export type TType =
+  | {
+      userName: string;
+      email: string;
+      type: string;
+      timestamp: string;
+    }
+  | {
+      pageName: string;
+      type: string;
+      count: number;
+      timestamp: string;
+    };
 
 // type for api respond
 export type IRespond = ReadyOnly<{
