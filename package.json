@@ -12,7 +12,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "deploy": "NODE_ENV=production netlify deploy --dir=dist",
     "deploy:prod": "NODE_ENV=production netlify deploy --dir=dist --prod",
-    "serve": "NODE_ENV=local netlify dev --dir=dist"
+    "serve": "cross-env NODE_ENV=local netlify dev --dir=dist"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.22.1",
@@ -60,6 +60,7 @@
     "autoprefixer": "^10.5.4",
     "concurrently": "^10.0.4",
     "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
     "daisyui": "^5.7.7",
     "dotenv": "^17.4.2",
     "eslint": "^10.8.0",
