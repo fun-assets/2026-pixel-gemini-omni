@@ -2,10 +2,13 @@
 @import url('@/settings/config.less');
 
 .Game {
-  padding: @OuterBorder;
-  @apply h-full w-full bg-white;
+  @apply flex h-full w-full items-center justify-center overflow-hidden bg-white;
 
-  .inner {
-    @apply flex h-full w-full flex-col;
+  & > .inner {
+    padding: @OuterBorder;
+    width: 1080px;
+    height: 1920px;
+    transform-origin: center center;
+    @apply absolute flex flex-col;
   }
 }

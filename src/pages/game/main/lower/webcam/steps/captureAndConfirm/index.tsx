@@ -30,8 +30,8 @@ const CaptureAndConfirm = memo(() => {
           >
             <LiquidGlassButton
               shape='pill'
-              size={40}
-              width={210}
+              size={75}
+              width='80%'
               wobbleAmount={0.05}
               wobbleSpeed={2}
               shadow
@@ -68,8 +68,8 @@ const CaptureAndConfirm = memo(() => {
         >
           <LiquidGlassButton
             shape='pill'
-            size={40}
-            width={210}
+            size={75}
+            width='80%'
             wobbleAmount={0.05}
             wobbleSpeed={2}
             shadow

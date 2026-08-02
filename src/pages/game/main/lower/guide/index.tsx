@@ -53,9 +53,10 @@ const Guide = memo(() => {
           shouldFadeIn={transition === TransitionType.FadeIn}
         >
           <LiquidGlassButton
+            className='mt-5'
             shape='pill'
-            size={40}
-            width={240}
+            size={75}
+            width='55%'
             wobbleAmount={0.05}
             wobbleSpeed={2}
             shadow

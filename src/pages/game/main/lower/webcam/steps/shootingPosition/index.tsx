@@ -45,8 +45,9 @@ const ShootingPosition = memo(() => {
         >
           <LiquidGlassButton
             shape='pill'
-            size={40}
-            width={200}
+            className='mt-5'
+            size={75}
+            width='80%'
             wobbleAmount={0.05}
             wobbleSpeed={2}
             shadow

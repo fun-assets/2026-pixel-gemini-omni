@@ -19,24 +19,26 @@
     }
   }
 
-  .inner {
-    width: 670 / 980 * 100%;
+  & > .inner {
+    padding: 7%;
+    width: 850 / 980 * 100%;
 
-    gap: 2%;
-    @apply h-full flex-col items-center justify-center;
+    gap: 3%;
+    @apply flex h-full flex-col items-center justify-center;
 
     & > div {
       @apply w-full;
     }
 
     .codes {
-      @apply flex flex-row items-center justify-between gap-4;
+      @apply flex flex-row items-center justify-between gap-8;
 
       & > div {
         width: 295 / 680 * 100%;
+        @apply flex flex-col gap-4;
 
         .txt {
-          @apply relative flex w-full flex-col items-center justify-center;
+          @apply relative flex w-full flex-col items-center justify-center gap-4;
 
           & > div:nth-child(1) {
             width: 85 / 295 * 100%;
@@ -105,18 +107,18 @@
     }
 
     .countDown {
-      margin-bottom: 2%;
+      margin-bottom: 4%;
       @apply flex w-full justify-center;
 
       & > div {
-        font-size: 5vh;
-        line-height: 5vh;
+        font-size: 9vh;
+        line-height: 9vh;
         @apply font-google-sans font-black text-white;
       }
     }
 
     .footer {
-      bottom: 3%;
+      bottom: 6%;
       width: 273/980 * 100%;
 
       @img: '../../../img/google-logo.svg';

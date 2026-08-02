@@ -53,7 +53,7 @@ const Intro = () => {
           >
             <LiquidGlassButton
               shape='pill'
-              size={40}
+              size={70}
               width='100%'
               wobbleAmount={0.05}
               wobbleSpeed={2}
