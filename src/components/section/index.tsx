@@ -27,7 +27,7 @@ const Section = memo(({ children, width, isButton }: TSectionProps) => {
       className={twMerge(
         `Section`,
         currentWidth,
-        isButton ? 'rounded-t-3xl rounded-bl-3xl' : 'rounded-3xl',
+        isButton ? 'rounded-t-[5%] rounded-bl-[5%]' : 'rounded-[5%]',
       )}
     >
       {children}

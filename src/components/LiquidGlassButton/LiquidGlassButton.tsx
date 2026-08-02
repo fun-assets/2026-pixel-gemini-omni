@@ -22,8 +22,8 @@ export interface LiquidGlassButtonProps {
   shape?: LiquidGlassShape;
   /** For `blob`: the diameter. For `pill`: the height. Fonts/strokes scale from this. */
   size?: number;
-  /** `pill` only: the width. Ignored for `blob`. */
-  width?: number;
+  /** `pill` only: the width. Accepts px or CSS widths like `100%`. Ignored for `blob`. */
+  width?: CSSProperties['width'];
   /** Slowly rotate the blob so its edges "wobble" like liquid. (Blob only.) */
   rotate?: boolean;
   /** Blob rotation speed in degrees per second. */
@@ -218,7 +218,38 @@ export function LiquidGlassButton({
   const showShadow = shadow ?? hasColor;
 
   const h = size;
-  const w = shape === 'pill' ? Math.max(width ?? 340, h) : size;
+  const styleWidth = style?.width;
+  const requestedWidth = styleWidth ?? width;
+  const initialPillWidth =
+    typeof requestedWidth === 'number' ? Math.max(requestedWidth, h) : Math.max(340, h);
+  const [measuredPillWidth, setMeasuredPillWidth] = useState(initialPillWidth);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (shape !== 'pill') return;
+
+    if (typeof requestedWidth === 'number') {
+      setMeasuredPillWidth(Math.max(requestedWidth, h));
+      return;
+    }
+
+    const button = buttonRef.current;
+    if (!button) return;
+
+    const updateWidth = () => {
+      const nextWidth = Math.max(button.getBoundingClientRect().width, h);
+      setMeasuredPillWidth((current) => (current === nextWidth ? current : nextWidth));
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(button);
+    return () => observer.disconnect();
+  }, [h, requestedWidth, shape]);
+
+  const w = shape === 'pill' ? measuredPillWidth : size;
+  const buttonWidth = shape === 'pill' ? (requestedWidth ?? '100%') : size;
 
   const pad = Math.round(Math.min(w, h) * 0.08);
   const filterW = w + pad * 2;
@@ -336,9 +367,10 @@ export function LiquidGlassButton({
 
   return (
     <button
+      ref={buttonRef}
       type='button'
       className={['lgb-pill', className].filter(Boolean).join(' ')}
-      style={{ width: w, height: h, ...style }}
+      style={{ width: buttonWidth, minWidth: h, height: h, ...style }}
       disabled={isDisabled}
       onClick={handleClick}
       onPointerDown={handlePointerDown}
