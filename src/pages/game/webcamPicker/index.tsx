@@ -100,7 +100,11 @@ const WebcamPicker = memo(() => {
       <div className='flex w-fit min-w-[80%] flex-col items-center justify-center'>
         <fieldset className='fieldset w-full'>
           <legend className='fieldset-legend'>Webcam selection</legend>
-          <select defaultValue='Pick a webcam' className='select w-full' onChange={onChange}>
+          <select
+            defaultValue='Pick a webcam'
+            className='select select-xl w-full'
+            onChange={onChange}
+          >
             {devices.map((device, index) => {
               return (
                 <option
@@ -114,7 +118,7 @@ const WebcamPicker = memo(() => {
           </select>
         </fieldset>
         <button
-          className='btn w-full'
+          className='btn btn-xl w-full'
           disabled={!webcamDeviceId}
           onClick={() => {
             setState((S) => ({ ...S, page: GamePagesType.game }));

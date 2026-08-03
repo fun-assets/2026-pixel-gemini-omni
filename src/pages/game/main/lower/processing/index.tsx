@@ -24,13 +24,22 @@ const Processing = memo(() => {
 
   useEffect(() => {
     if (saveImageResponse) {
-      if (saveImageResponse.res) {
-        videoAIOperationFetch();
+      if (saveImageResponse.res && resultBase64) {
+        const image = new Image();
+        image.onload = () => {
+          const imageWidth = image.width;
+          if (imageWidth <= 100) {
+            videoAIOperationFetch();
+          } else {
+            videoAIFetch({ image: resultBase64, prompt: promptText });
+          }
+        };
+        image.src = resultBase64;
       } else {
         setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
     }
-  }, [saveImageResponse]);
+  }, [saveImageResponse, resultBase64]);
 
   useEffect(() => {
     if (videoOperationResponse) {

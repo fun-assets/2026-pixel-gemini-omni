@@ -399,7 +399,17 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
 
   if (!image || !prompt) {
     res.status(200).json({ res: false, msg: 'image and prompt are required' });
+    return;
   }
+
+  let mimeType = 'image/png';
+  let imageBytes = image;
+  const parsedImage = extractImageFromDataUrl(image);
+  if (parsedImage) {
+    mimeType = parsedImage.mimeType;
+    imageBytes = parsedImage.imageBytes;
+  }
+  imageBytes = imageBytes.replace(/\s+/g, '');
 
   const ai = new GoogleGenAI({
     vertexai: true,
@@ -430,8 +440,10 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       console.log(`\n嘗試模型：${candidate}`);
       operation = await ai.models.generateVideos({
         model: candidate,
-        prompt,
-        image: { imageBytes: image, mimeType: 'image/png' },
+        source: {
+          prompt,
+          image: { imageBytes, mimeType },
+        },
         config: {
           numberOfVideos: 1,
           aspectRatio: '9:16',
@@ -463,6 +475,8 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   }
 
   operation = await ai.operations.getVideosOperation({ operation });
+
+  console.log(operation);
 
   const videos = operation.response?.generatedVideos ?? [];
   if (videos.length === 0) {
