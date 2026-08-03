@@ -50,15 +50,6 @@ app.use(express.json());
 
 const router = Router();
 
-const createGeminiClient = () => {
-  return new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    vertexai: false,
-    // Veo predictLongRunning is available on v1alpha for Gemini Developer API.
-    apiVersion: process.env.GEMINI_API_VERSION || 'v1alpha',
-  });
-};
-
 const extractImageFromDataUrl = (dataUrl: string) => {
   const matched = dataUrl.match(/^data:(.+);base64,(.+)$/);
   if (!matched) {
@@ -369,155 +360,28 @@ router.post(`/${REST_PATH.removeMany}`, async (req, res) => {
 });
 
 router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
-  try {
-    const { image, prompt, model } = req.body as {
-      image?: string;
-      prompt?: string;
-      model?: string;
-    };
+  const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
+  const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+  // veo-3.0-fast-generate-001（較便宜）/ veo-3.0-generate-001（品質較高、較貴）
+  const MODEL = process.env.VEO_MODEL || 'veo-3.1-fast-generate-001';
+  const API_VERSION = process.env.VERTEX_API_VERSION; // 例：v1beta1
 
-    if (!process.env.GEMINI_API_KEY) {
-      res.status(200).json({ res: false, msg: 'GEMINI_API_KEY is missing' });
-      return;
-    }
+  const ai = new GoogleGenAI({
+    vertexai: true,
+    project: PROJECT,
+    location: LOCATION,
+    ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
+  });
 
-    if (!image) {
-      res.status(200).json({ res: false, msg: 'image is required' });
-      return;
-    }
-
-    if (!prompt) {
-      res.status(200).json({ res: false, msg: 'prompt is required' });
-      return;
-    }
-
-    const parsed = extractImageFromDataUrl(image);
-    if (!parsed) {
-      res.status(200).json({ res: false, msg: 'image must be a data URL' });
-      return;
-    }
-
-    const ai = createGeminiClient();
-    const preferredModel = model || process.env.GEMINI_VIDEO_MODEL || 'veo-3.1-generate-preview';
-
-    const candidateModels = [
-      preferredModel,
-      'veo-3.1-generate-preview',
-      'veo-3.1-fast-generate-preview',
-      'veo-3.1-lite-generate-preview',
-    ].filter((item, index, arr) => {
-      if (!item) {
-        return false;
-      }
-
-      // generateVideos does not support gemini-* models.
-      if (/^gemini-/i.test(item)) {
-        return false;
-      }
-
-      return arr.indexOf(item) === index;
-    });
-
-    let operation: unknown;
-    let selectedModel = '';
-    let lastError: unknown;
-
-    for (const candidateModel of candidateModels) {
-      try {
-        operation = await ai.models.generateVideos({
-          model: candidateModel,
-          source: {
-            prompt,
-            image: {
-              imageBytes: parsed.imageBytes,
-              mimeType: parsed.mimeType,
-            },
-          },
-          config: {
-            numberOfVideos: 1,
-          },
-        });
-        selectedModel = candidateModel;
-        break;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    if (!operation) {
-      throw lastError;
-    }
-
-    const generated = operation as GenerateVideosOperation;
-
-    res.status(200).json({
-      res: true,
-      msg: messages.generateVideoSuccess,
-      data: {
-        model: preferredModel,
-        selectedModel,
-        operationName: generated.name,
-        done: generated.done,
-        operation: generated,
-      },
-    });
-  } catch (error) {
-    const e = error as {
-      name?: string;
-      message?: string;
-      status?: number;
-      details?: unknown;
-    };
-
-    res.status(200).json({
-      res: false,
-      msg: e?.message || messages.generateVideoError,
-      error: {
-        name: e?.name,
-        status: e?.status,
-        details: e?.details,
-      },
-    });
+  if (!PROJECT || PROJECT === 'your-gcp-project-id') {
+    console.error('請先在 .env 填入 GOOGLE_CLOUD_PROJECT（你的 GCP 專案 ID）');
+    process.exit(1);
   }
-});
 
-router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
-  try {
-    const { operation } = req.body as {
-      operation?: Record<string, unknown>;
-    };
+  const { image, prompt } = req.body as { image?: string; prompt?: string };
 
-    if (!process.env.GEMINI_API_KEY) {
-      res.status(200).json({ res: false, msg: 'GEMINI_API_KEY is missing' });
-      return;
-    }
-
-    if (!operation) {
-      res.status(200).json({ res: false, msg: 'operation is required' });
-      return;
-    }
-
-    const ai = createGeminiClient();
-    const operationObject = new GenerateVideosOperation();
-    Object.assign(operationObject, operation);
-
-    const nextOperation = await ai.operations.getVideosOperation({ operation: operationObject });
-
-    const firstVideo =
-      (nextOperation as any)?.response?.generatedVideos?.[0]?.video ||
-      (nextOperation as any)?.response?.generatedVideos?.[0];
-
-    res.status(200).json({
-      res: true,
-      msg: messages.getVideoOperationSuccess,
-      data: {
-        done: nextOperation.done,
-        operation: nextOperation,
-        video: firstVideo || null,
-      },
-    });
-  } catch (error) {
-    res.status(200).json({ res: false, msg: messages.getVideoOperationError, error });
+  if (!image || !prompt) {
+    res.status(200).json({ res: false, msg: 'image and prompt are required' });
   }
 });
 
