@@ -1,14 +1,18 @@
-import bodyParser, { json } from 'body-parser';
+import { GoogleGenAI } from '@google/genai';
+import bodyParser from 'body-parser';
 import cloudinary from 'cloudinary';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Router } from 'express';
 import fs from 'fs/promises';
-import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 import Atobtoa from 'lesca-atobtoa';
+import BunnyCDN from 'lesca-node-bunnycdn';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'path';
 import serverless from 'serverless-http';
+import sharp from 'sharp';
 import { SETTING, TType } from '../../../setting';
+import { CloudinaryUploadedResult, TUploadRespond } from '../../../setting/type';
 import { REST_PATH } from '../../../src/settings/config';
 import { UserType } from '../../../src/settings/type';
 import { limit, messages } from '../config';
@@ -17,9 +21,6 @@ import deleteOne from './delete';
 import insert, { insertMany } from './insert';
 import select from './select';
 import update from './update';
-import BunnyCDN from 'lesca-node-bunnycdn';
-import { CloudinaryUploadedResult, TUploadRespond } from '../../../setting/type';
-import sharp from 'sharp';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const app = express();
@@ -103,6 +104,29 @@ const createSortableRandomFileName = (extension: string) => {
     dateFolder: formatDateFolder(now),
   };
 };
+
+function normalizeModelName(model: string): string {
+  return model.replace(/^publishers\/google\/models\//, '');
+}
+
+async function getAccessibleVeoModels(ai: GoogleGenAI): Promise<string[]> {
+  const models = [];
+  try {
+    const pager = await ai.models.list();
+    for await (const m of pager) {
+      const raw = m.name || m.displayName || '';
+      if (!/veo/i.test(raw)) continue;
+      models.push(normalizeModelName(raw));
+    }
+  } catch {
+    // 查詢失敗時保留靜態 fallback，避免中斷主流程。
+  }
+  return [...new Set(models)];
+}
+
+function isModelNotFoundError(err: any): boolean {
+  return err?.status === 404 || /NOT_FOUND|model.*not found/i.test(String(err?.message || ''));
+}
 
 router.post(`/${REST_PATH.login}`, async (req, res) => {
   const { body } = req;
@@ -366,13 +390,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   const MODEL = process.env.VEO_MODEL || 'veo-3.1-fast-generate-001';
   const API_VERSION = process.env.VERTEX_API_VERSION; // 例：v1beta1
 
-  const ai = new GoogleGenAI({
-    vertexai: true,
-    project: PROJECT,
-    location: LOCATION,
-    ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
-  });
-
   if (!PROJECT || PROJECT === 'your-gcp-project-id') {
     console.error('請先在 .env 填入 GOOGLE_CLOUD_PROJECT（你的 GCP 專案 ID）');
     process.exit(1);
@@ -383,6 +400,108 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   if (!image || !prompt) {
     res.status(200).json({ res: false, msg: 'image and prompt are required' });
   }
+
+  const ai = new GoogleGenAI({
+    vertexai: true,
+    project: PROJECT,
+    location: LOCATION,
+    ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
+  });
+
+  const requestedModel = normalizeModelName(MODEL);
+  const staticFallbackModels = [
+    'veo-3.1-fast-generate-001',
+    'veo-3.1-generate-001',
+    'veo-3.0-fast-generate-001',
+    'veo-3.0-generate-001',
+    'veo-2.0-generate-001',
+  ];
+  const accessibleVeoModels = await getAccessibleVeoModels(ai);
+  const candidateModels = [
+    ...new Set([requestedModel, ...staticFallbackModels, ...accessibleVeoModels]),
+  ];
+
+  // 1) 送出請求，拿到一個 long-running operation
+  let operation;
+
+  for (const candidate of candidateModels) {
+    const isVeo3 = candidate.startsWith('veo-3');
+    try {
+      console.log(`\n嘗試模型：${candidate}`);
+      operation = await ai.models.generateVideos({
+        model: candidate,
+        prompt,
+        image: { imageBytes: image, mimeType: 'image/png' },
+        config: {
+          numberOfVideos: 1,
+          aspectRatio: '9:16',
+          durationSeconds: 8, // Veo 3 單支最長 8 秒
+          // 輸入圖含真人時需要，否則可能被安全政策擋下
+          personGeneration: 'allow_adult',
+          // Veo 3 才支援音訊（8-bit 配樂 / 音效由 prompt 描述生成）
+          ...(isVeo3 ? { generateAudio: true } : {}),
+          // 若你的專案要求輸出到 Cloud Storage，取消下一行註解並填 bucket：
+          // outputGcsUri: 'gs://your-bucket/veo-output/',
+        },
+      });
+      break;
+    } catch (err) {
+      if (isModelNotFoundError(err)) {
+        res.status(200).json({
+          res: false,
+          msg: `模型 ${candidate} 不存在或無法存取，請確認專案是否有權限使用。`,
+        });
+        return;
+      }
+      throw err;
+    }
+  }
+
+  if (!operation) {
+    res.status(200).json({ res: false, msg: '找不到可用的 Veo 模型' });
+    return;
+  }
+
+  operation = await ai.operations.getVideosOperation({ operation });
+
+  const videos = operation.response?.generatedVideos ?? [];
+  if (videos.length === 0) {
+    res.status(200).json({ res: false, msg: '生成完成但沒有回傳影片' });
+    return;
+  }
+
+  mkdirSync('output', { recursive: true });
+  videos.forEach(async (v, i) => {
+    const bytes = v.video?.videoBytes;
+    const uri = v.video?.uri;
+    if (bytes) {
+      const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
+        ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
+        : path.resolve(process.cwd(), 'saved-video');
+
+      const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
+      const outputDir = path.join(baseLocalPath, dateFolder);
+      await fs.mkdir(outputDir, { recursive: true });
+      const filePath = path.join(outputDir, finalFileName);
+
+      writeFileSync(filePath, Buffer.from(bytes, 'base64'));
+      res.status(200).json({
+        res: true,
+        msg: '影片生成成功',
+        data: {
+          baseLocalPath,
+          subfolder: dateFolder,
+          fileName: finalFileName,
+          filePath,
+          bytes: Buffer.byteLength(bytes, 'base64'),
+        },
+      });
+    } else if (uri) {
+      console.log(`\n✅ 影片已輸出到 Cloud Storage：${uri}`);
+    } else {
+      res.status(200).json({ res: false, msg: '影片生成失敗，請檢查模型輸出' });
+    }
+  });
 });
 
 router.post(`/${REST_PATH.saveImage}`, async (req, res) => {

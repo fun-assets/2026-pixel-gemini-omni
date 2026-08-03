@@ -116,3 +116,15 @@ export type TContext = [IState, Dispatch<IAction>];
 export interface IReactProps {
   readonly children?: ReactNode;
 }
+
+export type TVideoResponse = {
+  res: boolean;
+  message: string;
+  data: {
+    baseLocalPath: string;
+    subfolder: string;
+    fileName: string;
+    filePath: string;
+    bytes: number;
+  };
+};

@@ -14,7 +14,7 @@ const CharTransitionComponent =
 const Prompt = memo(() => {
   const [, setState] = useContext(GameContext);
   const [{ styleSelected }] = useContext(GameContext);
-  const promptText = GameStyles[styleSelected]?.prompt ?? GameStyles[0].prompt;
+  const promptText = GameStyles[styleSelected]?.simplify ?? GameStyles[0].simplify;
   const [transition, setTransition] = useState(TransitionType.Unset);
 
   return (
