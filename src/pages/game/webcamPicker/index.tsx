@@ -99,7 +99,7 @@ const WebcamPicker = memo(() => {
       </div>
       <div className='flex w-fit min-w-[80%] flex-col items-center justify-center'>
         <fieldset className='fieldset w-full'>
-          <legend className='fieldset-legend'>Webcam selection</legend>
+          <legend className='fieldset-legend text-3xl'>Webcam selection</legend>
           <select
             defaultValue='Pick a webcam'
             className='select select-xl w-full'
