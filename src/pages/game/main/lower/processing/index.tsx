@@ -18,7 +18,13 @@ const Processing = memo(() => {
 
   useEffect(() => {
     if (videoAIResponse) {
-      console.log(videoAIResponse);
+      if (videoAIResponse.res) {
+        setState((S) => ({
+          ...S,
+          step: GameLowerStepType.preview,
+          videoURL: videoAIResponse.data.localPath,
+        }));
+      }
     }
   }, [videoAIResponse]);
 

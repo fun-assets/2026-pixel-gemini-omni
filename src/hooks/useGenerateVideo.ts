@@ -13,20 +13,13 @@ const useGenerateVideo = () => {
   const fetch = async (argument: TArgument) => {
     try {
       const respond = (await Fetcher.post(REST_PATH.generateVideo, argument)) as TVideoResponse;
-      console.log(respond);
-
-      if (!respond.res) {
-        if (respond.message !== '影片仍在生成中，請使用 getVideoOperation 查詢結果。') {
-          // 等待
-        } else {
-          setContext({
-            type: ActionType.Modal,
-            state: { enabled: true, title: '系統訊息', body: respond.message },
-          });
-        }
-        return;
+      if (respond.res) setState(respond);
+      else {
+        setContext({
+          type: ActionType.Modal,
+          state: { enabled: true, title: '系統訊息', body: respond.message },
+        });
       }
-      setState(respond);
     } catch {
       setContext({
         type: ActionType.Modal,

@@ -473,13 +473,12 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     return;
   }
 
-  // 官方 SDK 會先回傳 long-running operation；需輪詢到 done 才會有 response.generatedVideos。
-  const pollIntervalMs = 4000;
-  const maxPollAttempts = 3;
-  for (let attempt = 0; attempt < maxPollAttempts; attempt += 1) {
+  let waited = 0;
+  while (!operation.done) {
+    await new Promise((r) => setTimeout(r, 10000));
+    waited += 10;
+    console.log(`  …仍在生成中（已等待 ${waited}s）`);
     operation = await ai.operations.getVideosOperation({ operation });
-    if (operation.done) break;
-    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
   }
 
   console.log('video operation status:', {
@@ -488,15 +487,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     hasResponse: Boolean(operation.response),
     hasError: Boolean(operation.error),
   });
-
-  if (!operation.done) {
-    res.status(200).json({
-      res: false,
-      msg: '影片仍在生成中，請使用 getVideoOperation 查詢結果。',
-      data: { operationName: operation.name },
-    });
-    return;
-  }
 
   if (operation.error) {
     res.status(200).json({
@@ -523,6 +513,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   }
 
   mkdirSync('output', { recursive: true });
+
   for (const [i, v] of videos.entries()) {
     const bytes = v.video?.videoBytes;
     const uri = v.video?.uri;
@@ -548,6 +539,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
           fileName: finalFileName,
           filePath,
           bytes: Buffer.byteLength(bytes, 'base64'),
+          localPath: path.relative(process.cwd(), filePath),
         },
       });
       return;
