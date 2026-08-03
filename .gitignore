@@ -34,8 +34,6 @@ package-lock.json
 # Local Netlify folder
 .netlify
 
-images/*
-videos/*
-output/*
+public/output/**/*
 
 omni-api-504311-7d2c13fc6bde.json

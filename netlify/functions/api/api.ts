@@ -105,6 +105,15 @@ const createSortableRandomFileName = (extension: string) => {
   };
 };
 
+const toPublicPath = (filePath: string) => {
+  const publicRoot = path.resolve(process.cwd(), 'public');
+  if (filePath.includes(publicRoot)) {
+    return `${path.relative(publicRoot, filePath).split(path.sep).join('/')}`;
+  }
+
+  return path.relative(process.cwd(), filePath).split(path.sep).join('/');
+};
+
 function normalizeModelName(model: string): string {
   return model.replace(/^publishers\/google\/models\//, '');
 }
@@ -520,7 +529,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     if (bytes) {
       const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
         ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
-        : path.resolve(process.cwd(), 'saved-video');
+        : path.resolve(process.cwd(), 'public', 'video');
 
       const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
       const outputDir = path.join(baseLocalPath, dateFolder);
@@ -528,18 +537,17 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       const filePath = path.join(outputDir, finalFileName);
       writeFileSync(filePath, Buffer.from(bytes, 'base64'));
 
+      const localPath = toPublicPath(filePath);
       res.status(200).json({
         res: true,
         msg: '影片生成成功',
         data: {
-          index: i,
           operationName: operation.name,
           baseLocalPath,
           subfolder: dateFolder,
           fileName: finalFileName,
           filePath,
-          bytes: Buffer.byteLength(bytes, 'base64'),
-          localPath: path.relative(process.cwd(), filePath),
+          localPath,
         },
       });
       return;
@@ -694,7 +702,7 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
       if (bytes) {
         const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
           ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
-          : path.resolve(process.cwd(), 'saved-video');
+          : path.resolve(process.cwd(), 'public', 'saved-video');
         const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
         const outputDir = path.join(baseLocalPath, dateFolder);
         await fs.mkdir(outputDir, { recursive: true });

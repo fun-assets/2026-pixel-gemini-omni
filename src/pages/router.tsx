@@ -96,9 +96,11 @@ export const UserRoutePages = memo(() => {
     );
   }, []);
   return (
-    <Routes>
-      <Route path='/' element={ComponentLoader()} />
-      <Route path='*' element={<Error />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path='/' element={ComponentLoader()} />
+        <Route path='*' element={<Error />} />
+      </Routes>
+    </>
   );
 });
