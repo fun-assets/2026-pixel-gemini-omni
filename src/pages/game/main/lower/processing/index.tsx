@@ -4,18 +4,28 @@ import { memo, useContext, useEffect } from 'react';
 import './index.less';
 import useVideoOperation from '@/hooks/useVideoOperation';
 import useTracker from '@/hooks/useTracker';
+import useGenerateVideo from '@/hooks/useGenerateVideo';
+import { GameStyles } from '@/settings/config';
 
 const Processing = memo(() => {
-  const [{ resultBase64 }, setState] = useContext(GameContext);
+  const [{ resultBase64, styleSelected }, setState] = useContext(GameContext);
+  const promptText = GameStyles[styleSelected]?.prompt ?? GameStyles[0].prompt;
   const [saveImageResponse, saveImage] = useSaveImage();
-  const [videoAIResponse, videoAIFetch] = useVideoOperation();
+  const [videoOperationResponse, videoAIOperationFetch] = useVideoOperation();
+  const [videoAIResponse, videoAIFetch] = useGenerateVideo();
 
   useTracker({ pageName: '生成動態中', type: 'pageView' });
 
   useEffect(() => {
+    if (videoAIResponse) {
+      console.log(videoAIResponse);
+    }
+  }, [videoAIResponse]);
+
+  useEffect(() => {
     if (saveImageResponse) {
       if (saveImageResponse.res) {
-        videoAIFetch();
+        videoAIOperationFetch();
       } else {
         setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
@@ -23,21 +33,30 @@ const Processing = memo(() => {
   }, [saveImageResponse]);
 
   useEffect(() => {
-    if (videoAIResponse) {
-      if (videoAIResponse.res) {
+    if (videoOperationResponse) {
+      if (videoOperationResponse.res) {
         setState((S) => ({ ...S, step: GameLowerStepType.preview }));
       } else {
         setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
     }
-  }, [videoAIResponse]);
+  }, [videoOperationResponse]);
 
   useEffect(() => {
     if (resultBase64) {
       if (window.location.origin.includes('localhost')) {
         saveImage({ image: resultBase64 });
       } else {
-        videoAIFetch();
+        const image = new Image();
+        image.onload = () => {
+          const imageWidth = image.width;
+          if (imageWidth <= 100) {
+            videoAIOperationFetch();
+          } else {
+            videoAIFetch({ image: resultBase64, prompt: promptText });
+          }
+        };
+        image.src = resultBase64;
       }
     }
   }, [resultBase64]);
