@@ -14,14 +14,23 @@
     @apply flex flex-col items-center justify-center overflow-hidden rounded-2xl;
 
     & > div {
-      font-size: 2.5vh;
-      line-height: 3.5vh;
       @apply font-noto-sans-tc flex w-full flex-row items-start justify-start font-light text-white;
     }
 
     & > div:nth-child(1) {
-      padding: 8%;
-      @apply flex flex-1 flex-wrap items-start justify-start whitespace-normal;
+      padding: 3% 8%;
+      line-height: 0;
+
+      gap: 0;
+
+      & > span {
+        display: block;
+        padding: 0;
+        font-size: 2.5vh;
+        line-height: 1.3;
+      }
+
+      @apply flex flex-1 flex-wrap content-start items-start justify-start leading-1 whitespace-normal;
     }
 
     & > div:nth-child(2) {

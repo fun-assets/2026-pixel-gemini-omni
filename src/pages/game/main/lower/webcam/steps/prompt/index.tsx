@@ -14,7 +14,8 @@ const CharTransitionComponent =
 const Prompt = memo(() => {
   const [, setState] = useContext(GameContext);
   const [{ styleSelected }] = useContext(GameContext);
-  const promptText = GameStyles[styleSelected]?.simplify ?? GameStyles[0].simplify;
+  const promptText =
+    GameStyles[styleSelected % GameStyles.length]?.simplify ?? GameStyles[0].simplify;
   const [transition, setTransition] = useState(TransitionType.Unset);
 
   return (
@@ -32,7 +33,7 @@ const Prompt = memo(() => {
             },
           }}
           fadeOutStyle={{ opacity: 0, y: '-200%' }}
-          shouldFadeOut={transition === TransitionType.FadeOut}
+          // shouldFadeOut={transition === TransitionType.FadeOut}
           optionsFadeOut={{
             duration: 500,
             easing: Bezier.inQuart,
