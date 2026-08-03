@@ -33,7 +33,7 @@ const Prompt = memo(() => {
             },
           }}
           fadeOutStyle={{ opacity: 0, y: '-200%' }}
-          // shouldFadeOut={transition === TransitionType.FadeOut}
+          shouldFadeOut={transition === TransitionType.FadeOut}
           optionsFadeOut={{
             duration: 500,
             easing: Bezier.inQuart,

@@ -24,12 +24,11 @@ export const track = async (data: TrackerPayload) => {
 };
 
 const useTracker = (data: TrackerPayload) => {
-  if (!window.location.origin.includes('localhost')) return;
-
   const [, setContext] = useContext(Context);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!window.location.origin.includes('localhost')) return;
       try {
         const response = await track(data);
         if (response) {
