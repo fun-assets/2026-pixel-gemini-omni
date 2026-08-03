@@ -15,6 +15,7 @@ export const REST_PATH = {
   generateVideo: 'generateVideo',
   getVideoOperation: 'getVideoOperation',
   saveImage: 'saveImage',
+  uploadLocalVideo: 'uploadLocalVideo',
   // tracking
   tracking: 'tracking',
 };

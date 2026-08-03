@@ -6,6 +6,7 @@ import useVideoOperation from '@/hooks/useVideoOperation';
 import useTracker from '@/hooks/useTracker';
 import useGenerateVideo from '@/hooks/useGenerateVideo';
 import { GameStyles } from '@/settings/config';
+import useLocalVideoUpload from '@/hooks/useLocalVideoUpload';
 
 const Processing = memo(() => {
   const [{ resultBase64, styleSelected }, setState] = useContext(GameContext);
@@ -13,17 +14,25 @@ const Processing = memo(() => {
   const [saveImageResponse, saveImage] = useSaveImage();
   const [videoOperationResponse, videoAIOperationFetch] = useVideoOperation();
   const [videoAIResponse, videoAIFetch] = useGenerateVideo();
+  const [videoResponse, uploadLocalVideo] = useLocalVideoUpload();
 
   useTracker({ pageName: '生成動態中', type: 'pageView' });
 
   useEffect(() => {
+    if (videoResponse) {
+      setState((S) => ({
+        ...S,
+        cloudVideoURL: videoResponse.data.url,
+        step: GameLowerStepType.preview,
+      }));
+    }
+  }, [videoResponse]);
+
+  useEffect(() => {
     if (videoAIResponse) {
       if (videoAIResponse.res) {
-        setState((S) => ({
-          ...S,
-          step: GameLowerStepType.preview,
-          videoURL: videoAIResponse.data.localPath,
-        }));
+        setState((S) => ({ ...S, videoURL: videoAIResponse.data.localPath }));
+        uploadLocalVideo({ localPath: videoAIResponse.data.localPath });
       }
     }
   }, [videoAIResponse]);

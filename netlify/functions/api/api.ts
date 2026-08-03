@@ -526,8 +526,8 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       const outputDir = path.join(baseLocalPath, dateFolder);
       await fs.mkdir(outputDir, { recursive: true });
       const filePath = path.join(outputDir, finalFileName);
-
       writeFileSync(filePath, Buffer.from(bytes, 'base64'));
+
       res.status(200).json({
         res: true,
         msg: '影片生成成功',
@@ -564,6 +564,65 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
     data: { operationName: operation.name },
   });
+});
+
+const uploadVideoToBunnyCDN = async (videoLocalPath: string) => {
+  const videoBuffer = await fs.readFile(videoLocalPath);
+  const fileName = path.basename(videoLocalPath);
+  const storageZone = bunnyCdnConfig.storageZone;
+  const accessKey = bunnyCdnConfig.password;
+  const regionHost = bunnyCdnConfig.region
+    ? `${bunnyCdnConfig.region}.storage.bunnycdn.com`
+    : 'storage.bunnycdn.com';
+  const folder = bunnyCdnConfig.folderName.replace(/^\/+|\/+$/g, '');
+  const objectPath = [folder, fileName]
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+
+  const uploadUrl = `https://${regionHost}/${storageZone}/${objectPath}`;
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      AccessKey: accessKey,
+      'Content-Type': 'video/mp4',
+      'Content-Length': videoBuffer.length.toString(),
+    },
+    body: videoBuffer,
+  });
+
+  if (response.status !== 201) {
+    const errorText = await response.text();
+    throw new Error(`BunnyCDN upload failed: ${response.status} ${errorText}`);
+  }
+
+  const url = `https://${storageZone}.b-cdn.net/${objectPath}`;
+  return {
+    url,
+    public_id: fileName,
+    localPath: videoLocalPath,
+  };
+};
+
+router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
+  try {
+    const { localPath } = req.body as { localPath?: string };
+    if (!localPath) {
+      res.status(200).json({ res: false, msg: 'localPath is required' });
+      return;
+    }
+
+    const absoluteVideoPath = path.resolve(localPath);
+    const uploadResult = await uploadVideoToBunnyCDN(absoluteVideoPath);
+
+    res.status(200).json({
+      res: true,
+      msg: '影片上傳成功',
+      data: uploadResult,
+    });
+  } catch (error) {
+    res.status(200).json({ res: false, msg: '影片上傳失敗', error });
+  }
 });
 
 router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
