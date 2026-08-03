@@ -71,16 +71,7 @@ const Processing = memo(() => {
       if (window.location.origin.includes('localhost')) {
         saveImage({ image: resultBase64 });
       } else {
-        const image = new Image();
-        image.onload = () => {
-          const imageWidth = image.width;
-          if (imageWidth <= 100) {
-            videoAIOperationFetch();
-          } else {
-            videoAIFetch({ image: resultBase64, prompt: promptText });
-          }
-        };
-        image.src = resultBase64;
+        videoAIOperationFetch();
       }
     }
   }, [resultBase64]);

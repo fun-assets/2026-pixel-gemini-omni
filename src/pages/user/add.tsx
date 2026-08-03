@@ -9,13 +9,13 @@ const Add = memo(({ update }: { update: React.Dispatch<React.SetStateAction<numb
   const [, setContext] = useContext(Context);
   const [respond, addUser] = useInsert();
   const [users, getUsers] = useSelect();
-  const dataRef = useRef<Extract<TType, { type: string }> | null>(null);
+  const dataRef = useRef<Extract<TType, { email: string }> | null>(null);
 
   const onSubmit = (event: any) => {
     event.preventDefault();
     const formData = [...new FormData(event.target)];
 
-    const data = Object.fromEntries(formData) as Extract<TType, { type: string }>;
+    const data = Object.fromEntries(formData) as Extract<TType, { email: string }>;
     if (formData.length < 3) return;
     dataRef.current = data;
     getUsers({ collection: SETTING.mongodb[0].collection });

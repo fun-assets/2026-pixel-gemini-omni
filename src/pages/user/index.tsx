@@ -16,7 +16,7 @@ const User = memo(() => {
   const [users, getUsers] = useSelect();
   const [forceUpdate, update] = useState(0);
 
-  const currentUsers = users?.data as Extract<TType, { type: string }>[];
+  const currentUsers = users?.data as Extract<TType, { email: string }>[];
 
   useEffect(() => {
     if (user.type !== UserType.Admin) navigate('/home');
