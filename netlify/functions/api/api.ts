@@ -474,18 +474,57 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     return;
   }
 
-  operation = await ai.operations.getVideosOperation({ operation });
+  // 官方 SDK 會先回傳 long-running operation；需輪詢到 done 才會有 response.generatedVideos。
+  const pollIntervalMs = 4000;
+  const maxPollAttempts = 3;
+  for (let attempt = 0; attempt < maxPollAttempts; attempt += 1) {
+    operation = await ai.operations.getVideosOperation({ operation });
+    if (operation.done) break;
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+  }
 
-  console.log(operation);
+  console.log('video operation status:', {
+    name: operation.name,
+    done: operation.done,
+    hasResponse: Boolean(operation.response),
+    hasError: Boolean(operation.error),
+  });
+
+  if (!operation.done) {
+    res.status(200).json({
+      res: false,
+      msg: '影片仍在生成中，請使用 getVideoOperation 查詢結果。',
+      data: { operationName: operation.name },
+    });
+    return;
+  }
+
+  if (operation.error) {
+    res.status(200).json({
+      res: false,
+      msg: '影片生成失敗',
+      error: operation.error,
+      data: { operationName: operation.name },
+    });
+    return;
+  }
 
   const videos = operation.response?.generatedVideos ?? [];
   if (videos.length === 0) {
-    res.status(200).json({ res: false, msg: '生成完成但沒有回傳影片' });
+    res.status(200).json({
+      res: false,
+      msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
+      data: {
+        operationName: operation.name,
+        raiMediaFilteredCount: operation.response?.raiMediaFilteredCount ?? 0,
+        raiMediaFilteredReasons: operation.response?.raiMediaFilteredReasons ?? [],
+      },
+    });
     return;
   }
 
   mkdirSync('output', { recursive: true });
-  videos.forEach(async (v, i) => {
+  for (const [i, v] of videos.entries()) {
     const bytes = v.video?.videoBytes;
     const uri = v.video?.uri;
     if (bytes) {
@@ -503,6 +542,8 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
         res: true,
         msg: '影片生成成功',
         data: {
+          index: i,
+          operationName: operation.name,
           baseLocalPath,
           subfolder: dateFolder,
           fileName: finalFileName,
@@ -510,12 +551,151 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
           bytes: Buffer.byteLength(bytes, 'base64'),
         },
       });
+      return;
     } else if (uri) {
-      console.log(`\n✅ 影片已輸出到 Cloud Storage：${uri}`);
+      res.status(200).json({
+        res: true,
+        msg: '影片生成成功（Cloud Storage）',
+        data: {
+          index: i,
+          operationName: operation.name,
+          uri,
+        },
+      });
+      return;
     } else {
-      res.status(200).json({ res: false, msg: '影片生成失敗，請檢查模型輸出' });
+      continue;
     }
+  }
+
+  res.status(200).json({
+    res: false,
+    msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
+    data: { operationName: operation.name },
   });
+});
+
+router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
+  const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
+  const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+  const API_VERSION = process.env.VERTEX_API_VERSION;
+
+  if (!PROJECT || PROJECT === 'your-gcp-project-id') {
+    res.status(200).json({ res: false, msg: 'GOOGLE_CLOUD_PROJECT is required' });
+    return;
+  }
+
+  const { operationName } = req.body as { operationName?: string };
+  if (!operationName) {
+    res.status(200).json({ res: false, msg: 'operationName is required' });
+    return;
+  }
+
+  try {
+    const ai = new GoogleGenAI({
+      vertexai: true,
+      project: PROJECT,
+      location: LOCATION,
+      ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
+    });
+
+    const operation = await ai.operations.getVideosOperation({
+      operation: { name: operationName } as any,
+    });
+
+    if (!operation.done) {
+      res.status(200).json({
+        res: true,
+        msg: '影片仍在生成中',
+        data: { operationName, done: false },
+      });
+      return;
+    }
+
+    if (operation.error) {
+      res.status(200).json({
+        res: false,
+        msg: '影片生成失敗',
+        error: operation.error,
+        data: { operationName, done: true },
+      });
+      return;
+    }
+
+    const videos = operation.response?.generatedVideos ?? [];
+    if (videos.length === 0) {
+      res.status(200).json({
+        res: false,
+        msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
+        data: {
+          operationName,
+          done: true,
+          raiMediaFilteredCount: operation.response?.raiMediaFilteredCount ?? 0,
+          raiMediaFilteredReasons: operation.response?.raiMediaFilteredReasons ?? [],
+        },
+      });
+      return;
+    }
+
+    for (const [i, v] of videos.entries()) {
+      const bytes = v.video?.videoBytes;
+      const uri = v.video?.uri;
+
+      if (bytes) {
+        const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
+          ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
+          : path.resolve(process.cwd(), 'saved-video');
+        const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
+        const outputDir = path.join(baseLocalPath, dateFolder);
+        await fs.mkdir(outputDir, { recursive: true });
+        const filePath = path.join(outputDir, finalFileName);
+
+        writeFileSync(filePath, Buffer.from(bytes, 'base64'));
+        res.status(200).json({
+          res: true,
+          msg: '影片生成成功',
+          data: {
+            index: i,
+            operationName,
+            done: true,
+            baseLocalPath,
+            subfolder: dateFolder,
+            fileName: finalFileName,
+            filePath,
+            bytes: Buffer.byteLength(bytes, 'base64'),
+          },
+        });
+        return;
+      }
+
+      if (uri) {
+        res.status(200).json({
+          res: true,
+          msg: '影片生成成功（Cloud Storage）',
+          data: {
+            index: i,
+            operationName,
+            done: true,
+            uri,
+          },
+        });
+        return;
+      }
+    }
+
+    res.status(200).json({
+      res: false,
+      msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
+      data: { operationName, done: true },
+    });
+  } catch (error) {
+    res.status(200).json({
+      res: false,
+      msg: '查詢影片任務失敗',
+      error,
+      data: { operationName },
+    });
+  }
 });
 
 router.post(`/${REST_PATH.saveImage}`, async (req, res) => {

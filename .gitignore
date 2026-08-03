@@ -35,5 +35,6 @@ package-lock.json
 .netlify
 
 images/*
+videos/*
 
 omni-api-504311-7d2c13fc6bde.json
