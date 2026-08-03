@@ -4,6 +4,7 @@ import { GameContext, GamePagesType, GameState } from './config';
 import './index.less';
 import Main from './main';
 import WebcamPicker from './webcamPicker';
+import { twMerge } from 'tailwind-merge';
 
 const Router = () => {
   const [state] = useContext(GameContext);
@@ -22,6 +23,7 @@ const Game = () => {
   const innerRef = useRef<HTMLDivElement>(null);
   const value = useState(GameState);
   const [scale, setScale] = useState(1);
+  const [isScaled, setIsScaled] = useState(false);
 
   useEffect(() => {
     const innerWidth = 1080;
@@ -33,6 +35,7 @@ const Game = () => {
         if (outerWidth === 0 || outerHeight === 0) return;
         const nextScale = Math.min(outerWidth / innerWidth, outerHeight / innerHeight);
         setScale(nextScale);
+        setIsScaled(true);
       }
     };
 
@@ -52,7 +55,11 @@ const Game = () => {
     <GameContext.Provider value={value}>
       <Container>
         <div ref={outerRef} className='Game'>
-          <div className='inner' ref={innerRef} style={{ transform: `scale(${scale})` }}>
+          <div
+            className={twMerge('inner', isScaled ? 'visible' : 'invisible')}
+            ref={innerRef}
+            style={{ transform: `scale(${scale})` }}
+          >
             <Router />
           </div>
         </div>
