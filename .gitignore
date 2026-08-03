@@ -36,5 +36,6 @@ package-lock.json
 
 images/*
 videos/*
+output/*
 
 omni-api-504311-7d2c13fc6bde.json
