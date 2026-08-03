@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import { IRespond } from '../../setting';
 import { Context } from '@/settings/constant';
 import Fetcher from 'lesca-fetcher';
 import { REST_PATH } from '@/settings/config';
@@ -12,15 +11,19 @@ const useGenerateVideo = () => {
   const [state, setState] = useState<TVideoResponse | undefined>();
 
   const fetch = async (argument: TArgument) => {
-    setContext({ type: ActionType.LoadingProcess, state: { enabled: true } });
     try {
       const respond = (await Fetcher.post(REST_PATH.generateVideo, argument)) as TVideoResponse;
       console.log(respond);
+
       if (!respond.res) {
-        setContext({
-          type: ActionType.Modal,
-          state: { enabled: true, title: '系統訊息', body: '影片生成失敗，請洽工作人員。' },
-        });
+        if (respond.message !== '影片仍在生成中，請使用 getVideoOperation 查詢結果。') {
+          // 等待
+        } else {
+          setContext({
+            type: ActionType.Modal,
+            state: { enabled: true, title: '系統訊息', body: respond.message },
+          });
+        }
         return;
       }
       setState(respond);
@@ -30,8 +33,6 @@ const useGenerateVideo = () => {
         state: { enabled: true, title: '系統訊息', body: '影片生成失敗，請洽工作人員。' },
       });
     }
-
-    setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
   };
   return [state, fetch] as const;
 };

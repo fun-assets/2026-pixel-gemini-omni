@@ -240,7 +240,6 @@ router.post(`/${REST_PATH.upload}`, async (req, res) => {
       });
     } else {
       const folder = req.body.folder || '';
-      console.log(folder);
       const result = await BunnyCDN.upload({
         buffer,
         folder,
