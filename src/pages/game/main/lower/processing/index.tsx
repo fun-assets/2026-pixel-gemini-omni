@@ -1,12 +1,12 @@
+import useGenerateVideo from '@/hooks/useGenerateVideo';
+import useLocalVideoUpload from '@/hooks/useLocalVideoUpload';
 import useSaveImage from '@/hooks/useSaveImage';
+import useTracker from '@/hooks/useTracker';
+import useVideoOperation from '@/hooks/useVideoOperation';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
+import { GameStyles } from '@/settings/config';
 import { memo, useContext, useEffect } from 'react';
 import './index.less';
-import useVideoOperation from '@/hooks/useVideoOperation';
-import useTracker from '@/hooks/useTracker';
-import useGenerateVideo from '@/hooks/useGenerateVideo';
-import { GameStyles } from '@/settings/config';
-import useLocalVideoUpload from '@/hooks/useLocalVideoUpload';
 
 const Processing = memo(() => {
   const [{ resultBase64, styleSelected }, setState] = useContext(GameContext);
