@@ -1,5 +1,6 @@
 import Blockquote from '@/components/blockquote';
 import Section from '@/components/section';
+import { track } from '@/hooks/useTracker';
 import { useContext, useEffect } from 'react';
 import { GameContext, GameLowerStepType, WebcamForceOpen } from '../config';
 import './index.less';
@@ -40,6 +41,13 @@ const Main = () => {
         <Section width='w-full' isButton>
           <Lower />
         </Section>
+        <button
+          className='home'
+          onClick={() => {
+            setState((S) => ({ ...S, step: GameLowerStepType.entry }));
+            track({ pageName: '回首頁', type: 'event' });
+          }}
+        />
       </Blockquote>
     </div>
   );

@@ -4,4 +4,29 @@
 .Main {
   gap: @InnerBorder;
   @apply flex h-full w-full flex-col;
+
+  .home {
+    right: -1px;
+    bottom: -1px;
+    padding-top: 3%;
+    padding-left: 3%;
+    width: 14.714285714285714%;
+
+    mask-image: url('../img/mask.png');
+    mask-position: right bottom;
+    mask-size: 100% 100%;
+    @img: '../img/home.svg';
+
+    @apply absolute bg-white;
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+      transform: scale(0.7);
+      transform-origin: right bottom;
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
 }

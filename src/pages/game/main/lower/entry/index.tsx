@@ -23,7 +23,7 @@ const Intro = () => {
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
       <div className='flex h-full w-full flex-col items-center justify-center pt-[5%]'>
-        <div className='flex w-full flex-col items-center'>
+        <div className='flex w-full flex-col items-center gap-[3%]'>
           <TweenerProvider
             className='flex w-full flex-row justify-center'
             initialStyle={{ opacity: 0, y: 50 }}
@@ -42,8 +42,17 @@ const Intro = () => {
           >
             <div className='h2' />
           </TweenerProvider>
+          <TweenerProvider
+            className='flex w-full flex-row justify-center'
+            initialStyle={{ opacity: 0, y: 50 }}
+            options={{ duration: 500, delay: 100 }}
+            tweenTo={{ opacity: 1, y: 0 }}
+            shouldFadeIn={transition === TransitionType.FadeIn}
+          >
+            <div className='h3' />
+          </TweenerProvider>
         </div>
-        <div className='mt-[4%] flex w-full justify-center'>
+        <div className='mt-[15%] flex w-full justify-center'>
           <TweenerProvider
             className='flex w-full justify-center'
             initialStyle={{ opacity: 0, x: -50 }}

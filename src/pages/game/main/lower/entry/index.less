@@ -2,6 +2,8 @@
 @import url('@/settings/config.less');
 
 .Entry {
+  padding-right: @InnerBorder;
+
   gap: @InnerBorder;
 
   @apply relative flex h-full w-full flex-row;
@@ -12,7 +14,7 @@
   }
 
   .h1 {
-    width: (unit(image-width(@img))) / 450 * 100%;
+    width: 384 / 420 * 100%;
 
     @img: './img/h1.svg';
 
@@ -26,9 +28,23 @@
   }
 
   .h2 {
-    width: (unit(image-width(@img))) / 450 * 100%;
+    width: 400 / 420 * 100%;
 
     @img: './img/h2.svg';
+
+    &::before {
+      padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+      background-image: url(@img);
+      content: '';
+
+      @apply inline-block w-full bg-contain bg-center bg-no-repeat;
+    }
+  }
+
+  .h3 {
+    width: 236 / 420 * 100%;
+
+    @img: './img/h3.svg';
 
     &::before {
       padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);

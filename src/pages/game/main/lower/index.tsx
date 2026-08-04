@@ -2,17 +2,16 @@ import { memo, useContext, useMemo } from 'react';
 import { GameContext, GameLowerStepType } from '../../config';
 import ChooseStyle from './chooseStyle';
 import Entry from './entry';
-import './index.less';
-import Webcam from './webcam';
-import Processing from './processing';
-import Preview from './preview';
 import Error from './error';
 import Guide from './guide';
+import './index.less';
+import Preview from './preview';
+import Processing from './processing';
 import Qrcode from './qrcode';
-import { track } from '@/hooks/useTracker';
+import Webcam from './webcam';
 
 const Lower = memo(() => {
-  const [state, setState] = useContext(GameContext);
+  const [state] = useContext(GameContext);
   const page = useMemo(() => {
     switch (state.step) {
       case GameLowerStepType.entry:
@@ -40,17 +39,6 @@ const Lower = memo(() => {
         return <Qrcode />;
     }
   }, [state]);
-  return (
-    <div className='Lower'>
-      {page}
-      <button
-        className='home'
-        onClick={() => {
-          setState((S) => ({ ...S, step: GameLowerStepType.entry }));
-          track({ pageName: '回首頁', type: 'event' });
-        }}
-      />
-    </div>
-  );
+  return <div className='Lower'>{page}</div>;
 });
 export default Lower;
