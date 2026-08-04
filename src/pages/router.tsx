@@ -8,12 +8,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { lazy, memo, Suspense, useCallback, useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Album from './album';
-import Apps from './apps/index.tsx';
 import Download from './download/index.tsx';
 import Error from './error';
 import Home from './home';
 import Login from './login';
 import User from './user';
+import Apps from './apps/index.tsx';
 
 const DrawerPage = memo(() => {
   const ComponentLoader = useCallback(() => {
@@ -88,11 +88,22 @@ const RoutePages = memo(() => {
 export default RoutePages;
 
 export const UserRoutePages = memo(() => {
+  const ComponentLoader = useCallback(() => {
+    const Element = lazy(() => import('./game/index.tsx'));
+    if (!Element) return null;
+    return (
+      <Suspense fallback=''>
+        <Element />
+      </Suspense>
+    );
+  }, []);
+
   return (
     <>
       <Routes>
         <Route path='/download' element={<Download />} />
         <Route path='/apps' element={<Apps />} />
+        <Route path='/' element={ComponentLoader()} />
         <Route path='*' element={<Error />} />
       </Routes>
     </>
