@@ -1,12 +1,12 @@
 import TweenerProvider from '@/components/tweenProvider';
+import useTracker from '@/hooks/useTracker';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
-import { APP_URI, APPS_REDIRECT, VIDEO_DOWNLOAD } from '@/settings/config';
+import { APPS_REDIRECT, VIDEO_DOWNLOAD } from '@/settings/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import './index.less';
-import useTracker from '@/hooks/useTracker';
 
 type CountDownProps = {
   transition: TransitionType;

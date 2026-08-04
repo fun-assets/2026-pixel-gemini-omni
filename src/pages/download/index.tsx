@@ -8,18 +8,22 @@ const Download = memo(() => {
   useEffect(() => {}, []);
   const videoURL = QueryString.get('uri');
   return (
-    <div className='Download'>
+    <div className='Download min-h-screen'>
       {videoURL ? (
         <>
-          <div className='mb-10 w-9/12'>
-            <video
-              src={videoURL}
-              className='h-full w-full object-cover'
-              autoPlay
-              loop
-              playsInline
-            />
+          <div className='aspect-9/16 h-[70%] w-auto'>
+            <div className='block h-full w-auto max-w-full object-cover object-center'>
+              <video
+                src={videoURL}
+                className='h-full w-full object-cover'
+                loop
+                playsInline
+                controls
+              />
+            </div>
           </div>
+
+          <div className='relative mb-10 w-9/12'></div>
           <LiquidGlassButton
             shape='pill'
             className='text-black'
@@ -30,7 +34,7 @@ const Download = memo(() => {
             shadow
             blur={0}
             tint={0}
-            onClick={() => downloadMobileMp4(videoURL, 'google-pixel-11.mp4')}
+            onClick={() => downloadMobileMp4(`${videoURL}?download=1`, 'google-pixel-11.mp4')}
           >
             <span className='text-white'>下載 / Download</span>
           </LiquidGlassButton>
