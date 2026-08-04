@@ -119,7 +119,7 @@ export interface IReactProps {
 
 export type TVideoResponse = {
   res: boolean;
-  message: string;
+  msg: string;
   data: {
     baseLocalPath: string;
     subfolder: string;

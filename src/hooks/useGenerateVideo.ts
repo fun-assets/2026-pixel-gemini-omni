@@ -17,7 +17,7 @@ const useGenerateVideo = () => {
       else {
         setContext({
           type: ActionType.Modal,
-          state: { enabled: true, title: '系統訊息', body: respond.message },
+          state: { enabled: true, title: '系統訊息', body: respond.msg },
         });
       }
     } catch {
