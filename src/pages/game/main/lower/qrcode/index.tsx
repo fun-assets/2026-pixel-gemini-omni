@@ -1,6 +1,6 @@
 import TweenerProvider from '@/components/tweenProvider';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
-import { APP_URI } from '@/settings/config';
+import { APP_URI, APPS_REDIRECT, VIDEO_DOWNLOAD } from '@/settings/config';
 import { TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier } from 'lesca-use-tween';
@@ -87,7 +87,7 @@ const Qrcode = memo(() => {
                 shouldFadeIn={transition === TransitionType.FadeIn}
                 className='aspect-square h-full w-full rounded-2xl bg-white bg-contain bg-center bg-no-repeat'
                 style={{
-                  backgroundImage: `url(https://quickchart.io/qr?text=${cloudVideoURL}&size=500)`,
+                  backgroundImage: `url(https://quickchart.io/qr?text=${VIDEO_DOWNLOAD}?uri=${cloudVideoURL}&size=500)`,
                 }}
               />
               <div className='txt'>
@@ -114,7 +114,7 @@ const Qrcode = memo(() => {
                 shouldFadeIn={transition === TransitionType.FadeIn}
                 className='aspect-square h-full w-full rounded-2xl bg-white bg-contain bg-center bg-no-repeat'
                 style={{
-                  backgroundImage: `url(https://quickchart.io/qr?text=${APP_URI.ios}&size=500)`,
+                  backgroundImage: `url(https://quickchart.io/qr?text=${APPS_REDIRECT}&size=500)`,
                 }}
               />
               <div className='txt'>

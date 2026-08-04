@@ -77,3 +77,6 @@ export const GameStyles = [
     prompt: 時尚匹克球,
   },
 ];
+
+export const APPS_REDIRECT = 'https://pixel-gemini.netlify.app/apps';
+export const VIDEO_DOWNLOAD = 'https://pixel-gemini.netlify.app/download';
