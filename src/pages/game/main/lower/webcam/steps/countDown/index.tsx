@@ -3,8 +3,13 @@ import { memo, useContext, useEffect, useState } from 'react';
 import './index.less';
 import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../../config';
 import { GameContext } from '@/pages/game/config';
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 
 const Num = memo(({ index, idx }: { index: number; idx: number }) => {
+  const [context] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
+
   const [{ capture }] = useContext(GameContext);
   const [, setState] = useContext(GameWebcamStepsContext);
   const [style, setStyle] = useTween({ opacity: 0, scale: 3 });
@@ -15,6 +20,9 @@ const Num = memo(({ index, idx }: { index: number; idx: number }) => {
         {
           duration: 200,
           easing: Bezier.outQuart,
+          onStart: () => {
+            tracks?.play('countdown');
+          },
           onEnd: () => {
             setStyle(
               { opacity: 1, scale: 1 },
@@ -34,6 +42,8 @@ const Num = memo(({ index, idx }: { index: number; idx: number }) => {
                             ...S,
                             step: GameWebcamStepsStepType.captureAndConfirm,
                           }));
+                          tracks?.play('camera');
+                          tracks?.stop('countdown');
                         }
                       },
                     },

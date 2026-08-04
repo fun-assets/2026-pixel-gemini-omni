@@ -35,7 +35,7 @@ const Main = () => {
 
   useEffect(() => {
     if (!tracks) return;
-    tracks.play('bgm');
+    tracks.play('bgm', 1, false);
   }, [tracks]);
 
   return (

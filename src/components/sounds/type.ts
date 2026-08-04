@@ -1,4 +1,4 @@
-export type SoundName = 'bgm' | 'button' | 'camera';
+export type SoundName = 'bgm' | 'button' | 'camera' | 'current' | 'countdown';
 
 export type SoundVOName =
   | 'sound1'

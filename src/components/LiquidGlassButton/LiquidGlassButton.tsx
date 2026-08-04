@@ -365,8 +365,8 @@ export function LiquidGlassButton({
   const handleClick = () => {
     if (isDisabled) return;
     setHasClicked(true);
-    onClick?.();
     tracks?.play('button');
+    onClick?.();
   };
 
   const backdrop = `blur(${blur}px) url(#${filterId})`;

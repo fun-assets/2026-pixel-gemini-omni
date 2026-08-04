@@ -4,6 +4,8 @@ import './mobile-audio-unlock';
 import bgm from './mp3/bgm.mp3';
 import camera from './mp3/camera.mp3';
 import button from './mp3/button.mp3';
+import current from './mp3/correct.mp3';
+import countdown from './mp3/countdown.mp3';
 import { SoundName } from './type';
 
 type SoundTrackProps = {
@@ -25,8 +27,16 @@ export default class Sounds {
     }
   > = {
     bgm: { src: [bgm], loop: true, onload: false, track: null, preloadType: 'onStart' },
-    camera: { src: [camera], loop: true, onload: false, track: null, preloadType: 'onStart' },
-    button: { src: [button], loop: true, onload: false, track: null, preloadType: 'onStart' },
+    camera: { src: [camera], loop: false, onload: false, track: null, preloadType: 'onStart' },
+    button: { src: [button], loop: false, onload: false, track: null, preloadType: 'onStart' },
+    current: { src: [current], loop: false, onload: false, track: null, preloadType: 'onStart' },
+    countdown: {
+      src: [countdown],
+      loop: false,
+      onload: false,
+      track: null,
+      preloadType: 'onStart',
+    },
   };
 
   private onload: (type: PreloadType) => void;
@@ -65,18 +75,23 @@ export default class Sounds {
   private unlockAllTracks(): void {
     // 為每個已載入的音軌播放極短的靜音來解鎖
     Object.values(this.track).forEach((trackInfo) => {
-      if (trackInfo.track && trackInfo.onload) {
-        try {
-          const currentVolume = trackInfo.track.volume();
-          trackInfo.track.volume(0);
-          trackInfo.track.play();
-          setTimeout(() => {
-            trackInfo.track?.stop();
-            trackInfo.track?.volume(currentVolume);
-          }, 1);
-        } catch {
-          this.onError('音頻解鎖失敗');
-        }
+      if (!trackInfo.track || !trackInfo.onload) return;
+
+      try {
+        const currentVolume = trackInfo.track.volume();
+        const isPlaying = trackInfo.track.playing();
+
+        // 如果已經在播，不要再去 stop 這個音軌
+        if (isPlaying) return;
+
+        trackInfo.track.volume(0);
+        trackInfo.track.play();
+        setTimeout(() => {
+          trackInfo.track?.stop();
+          trackInfo.track?.volume(currentVolume);
+        }, 1);
+      } catch {
+        this.onError('音頻解鎖失敗');
       }
     });
   }

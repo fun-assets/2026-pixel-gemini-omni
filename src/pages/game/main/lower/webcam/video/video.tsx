@@ -150,7 +150,7 @@ const Video = forwardRef((_, ref) => {
       />
       {showsCapturedFrame && (
         <div
-          className='absolute top-0 h-full w-full bg-cover bg-center'
+          className='animate-camera-flash absolute top-0 h-full w-full bg-cover bg-center'
           style={{ backgroundImage: `url(${state.resultBase64})` }}
         />
       )}

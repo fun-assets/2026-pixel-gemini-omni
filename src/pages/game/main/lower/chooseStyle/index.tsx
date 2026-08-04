@@ -1,12 +1,13 @@
 import TweenerProvider from '@/components/tweenProvider';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
-import { TransitionType } from '@/settings/type';
+import { ActionType, TransitionType } from '@/settings/type';
 import OnloadProvider from 'lesca-react-onload';
 import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './index.less';
 import { GameStyles } from '@/settings/config';
 import useTracker, { track } from '@/hooks/useTracker';
+import { Context } from '@/settings/constant';
 
 type StyleItemProps = {
   data: { name: string; prompt: string };
@@ -17,11 +18,14 @@ type StyleItemProps = {
 };
 
 const StyleItem = memo(({ index, styleSelected, setStyleSelected, transition }: StyleItemProps) => {
+  const [context] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
   const [fadeIn, setFadeIn] = useState(false);
 
   const onClick = useCallback(() => {
     if (!fadeIn) return;
     setStyleSelected((prev) => (prev === index ? undefined : index));
+    tracks?.play('button');
     track({ pageName: `選擇風格-${GameStyles[index].name}`, type: 'event' });
   }, [fadeIn, index, setStyleSelected]);
   return (
@@ -46,6 +50,9 @@ const StyleItem = memo(({ index, styleSelected, setStyleSelected, transition }: 
 });
 
 const ChooseStyle = memo(() => {
+  const [context] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
+
   const [, setState] = useContext(GameContext);
   const [styleSelected, setStyleSelected] = useState<number | undefined>();
   const [transition, setTransition] = useState(TransitionType.Unset);
@@ -59,6 +66,7 @@ const ChooseStyle = memo(() => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         setState((S) => ({ ...S, step: GameLowerStepType.webcam }));
+        tracks?.play('current');
       }, 1000);
     }
   }, [styleSelected]);
