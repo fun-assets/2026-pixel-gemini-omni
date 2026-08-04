@@ -1,5 +1,6 @@
 import { Dispatch, ReactNode } from 'react';
 import { Debug } from './type-unity';
+import Sounds from '@/components/sounds';
 
 export enum ActionType {
   LoadingProcess = 'loadingProcess',
@@ -8,6 +9,7 @@ export enum ActionType {
   Modal = 'modal',
   User = 'user',
   Album = 'album',
+  Sounds = 'sounds',
 }
 
 export enum LoadingProcessType {
@@ -90,6 +92,10 @@ export type TAlbumState = {
   copiedText: string;
 };
 
+export type TSounds = {
+  tracks?: Sounds;
+};
+
 export interface IState {
   [ActionType.LoadingProcess]: TLoadingProcessState;
   [ActionType.Status]: TStatusState;
@@ -97,6 +103,7 @@ export interface IState {
   [ActionType.Modal]: TModalState;
   [ActionType.User]: TUserState;
   [ActionType.Album]: TAlbumState;
+  [ActionType.Sounds]: TSounds;
 }
 
 export interface IAction {
@@ -107,7 +114,8 @@ export interface IAction {
     | Partial<TAlertState>
     | Partial<TModalState>
     | Partial<TUserState>
-    | Partial<TAlbumState>;
+    | Partial<TAlbumState>
+    | Partial<TSounds>;
   type: ActionType;
 }
 

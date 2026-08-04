@@ -7,9 +7,15 @@ import './index.less';
 import Lower from './lower';
 import { getVideoDevices } from './lower/webcam/misc';
 import Upper from './upper';
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 
 const Main = () => {
+  const [context] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
+
   const [{ step }, setState] = useContext(GameContext);
+
   useEffect(() => {
     getVideoDevices()
       .then((devices) => {
@@ -26,6 +32,15 @@ const Main = () => {
         setState((prev) => ({ ...prev, step: GameLowerStepType.error }));
       });
   }, []);
+
+  useEffect(() => {
+    if (tracks) {
+      console.log('a');
+
+      tracks.play('bgm');
+    }
+  }, [tracks]);
+
   return (
     <div className='Main'>
       {step !== GameLowerStepType.preview && (
