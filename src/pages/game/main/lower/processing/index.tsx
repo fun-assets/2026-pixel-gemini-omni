@@ -1,7 +1,7 @@
 import useGenerateVideo from '@/hooks/useGenerateVideo';
 import useLocalVideoUpload from '@/hooks/useLocalVideoUpload';
 import useSaveImage from '@/hooks/useSaveImage';
-import useTracker from '@/hooks/useTracker';
+import useTracker, { track } from '@/hooks/useTracker';
 import useVideoOperation from '@/hooks/useVideoOperation';
 import { GameContext, GameLowerStepType } from '@/pages/game/config';
 import { GameStyles } from '@/settings/config';
@@ -47,6 +47,7 @@ const Processing = memo(() => {
             videoAIOperationFetch();
           } else {
             videoAIFetch({ image: resultBase64, prompt: promptText });
+            track({ pageName: `generate-ai-${GameStyles[styleSelected].name}`, type: 'ai' });
           }
         };
         image.src = resultBase64;
