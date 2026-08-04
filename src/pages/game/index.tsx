@@ -24,6 +24,21 @@ const Game = () => {
   const value = useState(GameState);
   const [scale, setScale] = useState(1);
   const [isScaled, setIsScaled] = useState(false);
+  const [isRightClickLocked] = useState(true);
+
+  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isRightClickLocked) return;
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isRightClickLocked) return;
+    if (event.button === 2) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
 
   useEffect(() => {
     const innerWidth = 1080;
@@ -54,7 +69,12 @@ const Game = () => {
   return (
     <GameContext.Provider value={value}>
       <Container>
-        <div ref={outerRef} className='Game'>
+        <div
+          ref={outerRef}
+          className='Game'
+          onContextMenu={handleContextMenu}
+          onMouseDown={handleMouseDown}
+        >
           <div
             className={twMerge('inner', isScaled ? 'visible' : 'invisible')}
             ref={innerRef}

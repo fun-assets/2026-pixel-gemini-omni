@@ -2,6 +2,11 @@
 @import url('@/settings/config.less');
 
 .Game {
+  position: relative;
+
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
   @apply flex h-full w-full items-center justify-center overflow-hidden bg-white;
 
   & > .inner {
