@@ -1,7 +1,4 @@
 import Container from '@/components/container';
-import Sounds from '@/components/sounds';
-import { Context } from '@/settings/constant';
-import { ActionType } from '@/settings/type';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { GameContext, GamePagesType, GameState } from './config';
@@ -22,7 +19,6 @@ const Router = () => {
 };
 
 const Game = () => {
-  const [, setContext] = useContext(Context);
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const value = useState(GameState);
@@ -84,27 +80,6 @@ const Game = () => {
       observer.disconnect();
       window.removeEventListener('resize', resize);
     };
-  }, []);
-
-  const onError = (message: string) => {
-    setContext({
-      type: ActionType.Modal,
-      state: {
-        enabled: true,
-        title: '系統訊息',
-        body: message,
-        label: ['確定'],
-      },
-    });
-  };
-
-  useEffect(() => {
-    const tracks = new Sounds({
-      onError,
-      onload: () => {},
-    });
-    tracks.preload('onStart');
-    setContext({ type: ActionType.Sounds, state: { tracks } });
   }, []);
 
   return (

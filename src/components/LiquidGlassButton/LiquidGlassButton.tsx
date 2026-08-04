@@ -7,8 +7,11 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  useContext,
 } from 'react';
 import './LiquidGlassButton.css';
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 
 export type LiquidGlassShape = 'blob' | 'pill';
 
@@ -206,6 +209,9 @@ export function LiquidGlassButton({
   ...rest
 }: LiquidGlassButtonProps) {
   // Unique, collision-free ids so multiple buttons can coexist on one page.
+  const [context] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
+
   const uid = useId().replace(/:/g, '');
   const filterId = `lgb-filter-${uid}`;
   const clipId = `lgb-clip-${uid}`;
@@ -360,6 +366,7 @@ export function LiquidGlassButton({
     if (isDisabled) return;
     setHasClicked(true);
     onClick?.();
+    tracks?.play('button');
   };
 
   const backdrop = `blur(${blur}px) url(#${filterId})`;

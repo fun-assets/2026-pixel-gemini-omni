@@ -12,6 +12,7 @@ import {
   TModalState,
   TStatusState,
   TUserState,
+  TSounds,
   UserType,
 } from './type';
 
@@ -54,6 +55,8 @@ export const AlbumState: TAlbumState = {
   copiedText: '',
 };
 
+export const SoundsState: TSounds = {};
+
 export const InitialState: IState = {
   [ActionType.LoadingProcess]: LoadingProcessState,
   [ActionType.Status]: StatusState,
@@ -61,6 +64,7 @@ export const InitialState: IState = {
   [ActionType.Modal]: ModalState,
   [ActionType.User]: UserState,
   [ActionType.Album]: AlbumState,
+  [ActionType.Sounds]: SoundsState,
 };
 
 export const Context = createContext<TContext>([InitialState, () => {}]);

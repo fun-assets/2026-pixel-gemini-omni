@@ -188,39 +188,48 @@ export default class Sounds {
   play(name: SoundName, volume = 1, canPlayTwice = true) {
     const trackInfo = this.track[name];
 
-    if (!trackInfo || !trackInfo.onload || !trackInfo.track) {
+    if (!trackInfo || !trackInfo.track) {
       this.onError(`音頻 ${name} 尚未載入或不存在`);
       return;
     }
 
     const track = trackInfo.track;
 
-    if (!canPlayTwice && track.playing()) {
-      this.onError(`該語音已在播放中，無法重複播放`);
-      return;
-    }
+    const tryPlay = () => {
+      if (!trackInfo.onload || !trackInfo.track) {
+        setTimeout(tryPlay, 100);
+        return;
+      }
 
-    try {
-      // 設定音量並播放
-      track.volume(volume);
-      track.play();
-    } catch {
-      this.onError(`播放 ${name} 失敗，嘗試重新創建`);
-      // 如果播放失敗，嘗試重新創建音軌
-      this.recreateTrack(name);
+      if (!canPlayTwice && track.playing()) {
+        this.onError(`該語音已在播放中，無法重複播放`);
+        return;
+      }
 
-      // 重新嘗試播放
-      setTimeout(() => {
-        if (this.track[name].track) {
-          try {
-            this.track[name].track!.volume(volume);
-            this.track[name].track!.play();
-          } catch (retryError) {
-            this.onError(`重試播放 ${name} 也失敗: ${retryError}`);
+      try {
+        // 設定音量並播放
+        track.volume(volume);
+        track.play();
+      } catch {
+        this.onError(`播放 ${name} 失敗，嘗試重新創建`);
+        // 如果播放失敗，嘗試重新創建音軌
+        this.recreateTrack(name);
+
+        // 重新嘗試播放
+        setTimeout(() => {
+          if (this.track[name].track) {
+            try {
+              this.track[name].track!.volume(volume);
+              this.track[name].track!.play();
+            } catch (retryError) {
+              this.onError(`重試播放 ${name} 也失敗: ${retryError}`);
+            }
           }
-        }
-      }, 100);
-    }
+        }, 100);
+      }
+    };
+
+    tryPlay();
   }
 
   stop(name: SoundName) {

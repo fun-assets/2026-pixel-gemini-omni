@@ -9,6 +9,7 @@ import {
   startWebcam,
   stopWebcam,
 } from '../main/lower/webcam/misc';
+import Sounds from '@/components/sounds';
 
 const WebcamDisplay = memo(() => {
   const [, setContext] = useContext(Context);
@@ -57,9 +58,17 @@ const WebcamPicker = memo(() => {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [webcamDeviceId, setWebcamDeviceId] = useState('');
 
+  const [soundsLoaded, setSoundsLoaded] = useState(false);
+
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setWebcamDeviceId(e.target.value);
   };
+
+  useEffect(() => {
+    if (soundsLoaded) {
+      setState((S) => ({ ...S, page: GamePagesType.game }));
+    }
+  }, [soundsLoaded]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -86,6 +95,18 @@ const WebcamPicker = memo(() => {
     if (!webcamDeviceId) return;
     setState((S) => ({ ...S, webcamDeviceId }));
   }, [webcamDeviceId]);
+
+  const onError = (message: string) => {
+    setContext({
+      type: ActionType.Modal,
+      state: {
+        enabled: true,
+        title: '系統訊息',
+        body: message,
+        label: ['確定'],
+      },
+    });
+  };
 
   return (
     <div className='bg-canyon-medium relative flex h-full w-full flex-col items-center justify-center rounded-3xl'>
@@ -121,8 +142,16 @@ const WebcamPicker = memo(() => {
           className='btn btn-xl w-full'
           disabled={!webcamDeviceId}
           onClick={() => {
-            setState((S) => ({ ...S, page: GamePagesType.game }));
             // full screen
+            const tracks = new Sounds({
+              onError,
+              onload: () => {
+                setSoundsLoaded(true);
+              },
+            });
+            tracks.preload('onStart');
+            setContext({ type: ActionType.Sounds, state: { tracks } });
+
             if (document.documentElement.requestFullscreen) {
               document.documentElement.requestFullscreen();
             }
