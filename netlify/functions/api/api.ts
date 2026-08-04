@@ -538,6 +538,8 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       writeFileSync(filePath, Buffer.from(bytes, 'base64'));
 
       const localPath = toPublicPath(filePath);
+      const relativePath = path.relative(process.cwd(), filePath);
+
       res.status(200).json({
         res: true,
         msg: '影片生成成功',
@@ -548,6 +550,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
           fileName: finalFileName,
           filePath,
           localPath,
+          relativePath,
         },
       });
       return;
@@ -614,13 +617,13 @@ const uploadVideoToBunnyCDN = async (videoLocalPath: string) => {
 
 router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
   try {
-    const { localPath } = req.body as { localPath?: string };
-    if (!localPath) {
-      res.status(200).json({ res: false, msg: 'localPath is required' });
+    const { relativePath } = req.body as { relativePath?: string };
+    if (!relativePath) {
+      res.status(200).json({ res: false, msg: 'relativePath is required' });
       return;
     }
 
-    const absoluteVideoPath = path.resolve(localPath);
+    const absoluteVideoPath = path.resolve(relativePath);
     const uploadResult = await uploadVideoToBunnyCDN(absoluteVideoPath);
 
     res.status(200).json({

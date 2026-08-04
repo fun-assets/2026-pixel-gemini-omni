@@ -127,5 +127,6 @@ export type TVideoResponse = {
     filePath: string;
     bytes: number;
     localPath: string;
+    relativePath: string;
   };
 };

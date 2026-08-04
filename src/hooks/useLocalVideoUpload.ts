@@ -7,14 +7,14 @@ import { useContext, useState } from 'react';
 const useLocalVideoUpload = () => {
   const [, setContext] = useContext(Context);
   const [state, setState] = useState<any | undefined>();
-  const fetch = async (argument: { localPath: string }) => {
+  const fetch = async (argument: { relativePath: string }) => {
     try {
       const respond = (await Fetcher.post(REST_PATH.uploadLocalVideo, argument)) as any;
       if (respond.res) setState(respond);
       else {
         setContext({
           type: ActionType.Modal,
-          state: { enabled: true, title: '系統訊息', body: respond.message },
+          state: { enabled: true, title: '系統訊息', body: respond.msg },
         });
       }
     } catch {

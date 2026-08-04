@@ -32,7 +32,7 @@ const Processing = memo(() => {
     if (videoAIResponse) {
       if (videoAIResponse.res) {
         setState((S) => ({ ...S, videoURL: videoAIResponse.data.localPath }));
-        uploadLocalVideo({ localPath: videoAIResponse.data.localPath });
+        uploadLocalVideo({ relativePath: videoAIResponse.data.relativePath });
       }
     }
   }, [videoAIResponse]);
