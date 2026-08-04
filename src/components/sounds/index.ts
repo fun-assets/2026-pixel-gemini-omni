@@ -253,6 +253,12 @@ export default class Sounds {
     }
   }
 
+  pause(name: SoundName) {
+    if (this.track[name] && this.track[name].onload && this.track[name].track) {
+      this.track[name].track!.pause();
+    }
+  }
+
   // 檢查音頻狀態的方法
   public checkAudioStatus(): { available: boolean; context: string } {
     const sampleTrack = Object.values(this.track).find((track) => track.track);

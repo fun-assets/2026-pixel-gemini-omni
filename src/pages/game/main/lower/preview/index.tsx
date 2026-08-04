@@ -6,7 +6,8 @@ import { ActionType } from '@/settings/type';
 import useTracker from '@/hooks/useTracker';
 
 const Preview = memo(() => {
-  const [, setContext] = useContext(Context);
+  const [context, setContext] = useContext(Context);
+  const { tracks } = context[ActionType.Sounds]!;
   const [{ videoURL }, setState] = useContext(GameContext);
   const hasTriggeredStart = useRef(false);
 
@@ -26,9 +27,11 @@ const Preview = memo(() => {
   };
 
   useEffect(() => {
+    tracks?.pause('bgm');
     setContext({ type: ActionType.LoadingProcess, state: { enabled: true } });
     return () => {
       setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
+      tracks?.play('bgm', 1, false);
     };
   }, []);
 
@@ -38,7 +41,6 @@ const Preview = memo(() => {
         src={videoURL}
         className='h-full w-full object-cover'
         autoPlay
-        muted
         playsInline
         onPlay={handleVideoStart}
         onTimeUpdate={({ currentTarget }) => {
