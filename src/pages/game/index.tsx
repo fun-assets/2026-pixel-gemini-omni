@@ -41,6 +41,19 @@ const Game = () => {
   };
 
   useEffect(() => {
+    const preventDefaultContextMenu = (event: Event) => {
+      event.preventDefault();
+    };
+
+    const preventDefaultMouseDown = (event: MouseEvent) => {
+      if (event.button === 2) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', preventDefaultContextMenu);
+    document.addEventListener('mousedown', preventDefaultMouseDown);
+
     const innerWidth = 1080;
     const innerHeight = 1920;
 
@@ -62,6 +75,8 @@ const Game = () => {
     resize();
     window.addEventListener('resize', resize);
     return () => {
+      document.removeEventListener('contextmenu', preventDefaultContextMenu);
+      document.removeEventListener('mousedown', preventDefaultMouseDown);
       observer.disconnect();
       window.removeEventListener('resize', resize);
     };
