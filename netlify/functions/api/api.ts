@@ -391,6 +391,8 @@ router.post(`/${REST_PATH.removeMany}`, async (req, res) => {
   }
 });
 
+console.log(process.env.VEO_MODEL);
+
 router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
   const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
