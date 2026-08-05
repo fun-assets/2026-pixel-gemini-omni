@@ -97,7 +97,23 @@ const Entry = () => {
   return (
     <div className='lower-inner'>
       <div className='Entry h-full w-full'>
-        <Columns leftNode={<div className='mobile' />} rightNode={<Intro />} />
+        <Columns
+          leftNode={
+            <div className='mobile'>
+              <div className='aspect-9/15 w-full overflow-hidden rounded-3xl'>
+                <video
+                  muted
+                  playsInline
+                  loop
+                  autoPlay
+                  src='videos/entry.mp4'
+                  className='h-full w-full object-cover'
+                />
+              </div>
+            </div>
+          }
+          rightNode={<Intro />}
+        />
       </div>
     </div>
   );
