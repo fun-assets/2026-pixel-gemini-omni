@@ -4,7 +4,7 @@ import useSaveImage from '@/hooks/useSaveImage';
 import { track } from '@/hooks/useTracker';
 import useVideoOperation from '@/hooks/useVideoOperation';
 import { GameStyles } from '@/settings/config';
-import { memo, useContext, useEffect, useMemo } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef } from 'react';
 import { GameContext, GameLowerStepType } from '../../config';
 import ChooseStyle from './chooseStyle';
 import Entry from './entry';
@@ -26,6 +26,7 @@ const Lower = memo(() => {
   const [videoOperationResponse, videoAIOperationFetch] = useVideoOperation();
   const [videoAIResponse, videoAIFetch] = useGenerateVideo();
   const [videoResponse, uploadLocalVideo] = useLocalVideoUpload();
+  const waitingSaveImageResponseRef = useRef(false);
 
   useEffect(() => {
     if (videoResponse) {
@@ -47,7 +48,12 @@ const Lower = memo(() => {
   }, [videoAIResponse]);
 
   useEffect(() => {
+    if (!waitingSaveImageResponseRef.current) {
+      return;
+    }
+
     if (saveImageResponse) {
+      waitingSaveImageResponseRef.current = false;
       if (saveImageResponse.res && resultBase64) {
         const image = new Image();
         image.onload = () => {
@@ -80,6 +86,7 @@ const Lower = memo(() => {
     if (readyToGenerateVideo) {
       if (resultBase64) {
         if (window.location.origin.includes('localhost')) {
+          waitingSaveImageResponseRef.current = true;
           saveImage({ image: resultBase64 });
         } else {
           videoAIOperationFetch();

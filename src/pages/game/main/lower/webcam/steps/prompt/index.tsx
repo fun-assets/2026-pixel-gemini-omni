@@ -102,7 +102,7 @@ const Prompt = memo(() => {
               setTransition(TransitionType.FadeOut);
             }}
           >
-            <div className='font-noto-sans-tc text-3xl font-black'>確認</div>
+            <div className='font-noto-sans-tc text-3xl font-black'>送出</div>
           </LiquidGlassButton>
         </TweenerProvider>
       </div>
