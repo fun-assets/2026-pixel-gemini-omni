@@ -107,7 +107,7 @@ const Entry = () => {
         <Columns
           leftNode={
             <div className='mobile'>
-              <div className='aspect-9/15 w-full overflow-hidden rounded-3xl'>
+              <div className='aspect-9/16 w-full overflow-hidden rounded-3xl'>
                 <video
                   muted
                   playsInline
