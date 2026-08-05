@@ -11,7 +11,7 @@ const Download = memo(() => {
     <div className='Download min-h-screen'>
       {videoURL ? (
         <>
-          <div className='aspect-9/16 h-[70%] w-auto'>
+          <div className='aspect-9/16 h-[70%] w-auto bg-gray-900'>
             <div className='block h-full w-auto max-w-full object-cover object-center'>
               <video
                 src={videoURL}
