@@ -16,7 +16,14 @@ const Intro = () => {
   useTracker({ pageName: '首頁', type: 'pageView' });
 
   const onClick = useCallback(() => {
-    setState((S) => ({ ...S, step: GameLowerStepType.chooseStyle, retakeAmount: 1 }));
+    setState((S) => ({
+      ...S,
+      step: GameLowerStepType.chooseStyle,
+      retakeAmount: 1,
+      readyToGenerateVideo: false,
+      generatedVideo: false,
+      fakeSendPrompt: false,
+    }));
     track({ pageName: '首頁-開始體驗', type: 'event' });
   }, [setState]);
 

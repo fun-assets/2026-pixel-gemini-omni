@@ -87,7 +87,7 @@ const Qrcode = memo(() => {
                 shouldFadeIn={transition === TransitionType.FadeIn}
                 className='aspect-square h-full w-full rounded-2xl bg-white bg-contain bg-center bg-no-repeat'
                 style={{
-                  backgroundImage: `url(https://quickchart.io/qr?text=${VIDEO_DOWNLOAD}?uri=${cloudVideoURL}&size=500)`,
+                  backgroundImage: `url(https://quickchart.io/qr?size=500&text=${VIDEO_DOWNLOAD}?uri=${cloudVideoURL})`,
                 }}
               />
               <div className='txt'>

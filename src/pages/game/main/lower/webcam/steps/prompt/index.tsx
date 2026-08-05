@@ -4,25 +4,29 @@ import { TransitionType } from '@/settings/type';
 import CharTransition from 'lesca-react-char-transition';
 import OnloadProvider from 'lesca-react-onload';
 import { Bezier } from 'lesca-use-tween';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import './index.less';
 import { GameStyles } from '@/settings/config';
+import LiquidGlassButton from '@/components/LiquidGlassButton';
 
 const CharTransitionComponent =
   (CharTransition as unknown as { default?: typeof CharTransition }).default ?? CharTransition;
 
 const Prompt = memo(() => {
-  const [, setState] = useContext(GameContext);
-  const [{ styleSelected }] = useContext(GameContext);
+  const [{ styleSelected }, setState] = useContext(GameContext);
   const promptText =
     GameStyles[styleSelected % GameStyles.length]?.simplify ?? GameStyles[0].simplify;
   const [transition, setTransition] = useState(TransitionType.Unset);
+
+  useEffect(() => {
+    setState((S) => ({ ...S, readyToGenerateVideo: true }));
+  }, []);
 
   return (
     <OnloadProvider onload={() => setTransition(TransitionType.FadeIn)}>
       <div className='Prompt'>
         <TweenerProvider
-          className='flex h-full w-full items-center justify-center'
+          className='flex h-[50%] w-full items-center justify-center'
           initialStyle={{ opacity: 0, y: '200%' }}
           tweenTo={{ opacity: 1, y: '0%' }}
           shouldFadeIn={transition === TransitionType.FadeIn}
@@ -37,7 +41,6 @@ const Prompt = memo(() => {
           optionsFadeOut={{
             duration: 500,
             easing: Bezier.inQuart,
-            delay: 2000,
             onEnd: () => {
               setState((S) => ({ ...S, step: GameLowerStepType.processing }));
             },
@@ -47,15 +50,12 @@ const Prompt = memo(() => {
             <div>
               {transition === TransitionType.Loop || transition === TransitionType.FadeOut ? (
                 <CharTransitionComponent
-                  duration={promptText.length * 50}
+                  duration={promptText.length * 100}
                   delay={0}
                   list={['　']}
                   preChar='　'
                   fps={60}
                   easing={Bezier.linear}
-                  onEnd={() => {
-                    setTransition(TransitionType.FadeOut);
-                  }}
                 >
                   {promptText}
                 </CharTransitionComponent>
@@ -78,6 +78,32 @@ const Prompt = memo(() => {
               <div className='mic' />
             </div>
           </div>
+        </TweenerProvider>
+        <TweenerProvider
+          className='flex w-full justify-center'
+          initialStyle={{ opacity: 0, x: -50 }}
+          options={{ duration: 600, delay: 400 }}
+          tweenTo={{ opacity: 1, x: 0 }}
+          shouldFadeIn={transition === TransitionType.FadeIn}
+          fadeOutStyle={{ opacity: 0 }}
+          shouldFadeOut={transition === TransitionType.FadeOut}
+        >
+          <LiquidGlassButton
+            shape='pill'
+            size={70}
+            width='50%'
+            wobbleAmount={0.05}
+            wobbleSpeed={2}
+            shadow
+            blur={0}
+            tint={0}
+            onClick={() => {
+              setState((S) => ({ ...S, fakeSendPrompt: true }));
+              setTransition(TransitionType.FadeOut);
+            }}
+          >
+            <div className='font-noto-sans-tc text-3xl font-black'>確認</div>
+          </LiquidGlassButton>
         </TweenerProvider>
       </div>
     </OnloadProvider>

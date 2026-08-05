@@ -1,14 +1,14 @@
 import Blockquote from '@/components/blockquote';
 import Section from '@/components/section';
 import { track } from '@/hooks/useTracker';
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 import { useContext, useEffect } from 'react';
 import { GameContext, GameLowerStepType, WebcamForceOpen } from '../config';
 import './index.less';
 import Lower from './lower';
 import { getVideoDevices } from './lower/webcam/misc';
 import Upper from './upper';
-import { Context } from '@/settings/constant';
-import { ActionType } from '@/settings/type';
 
 const Main = () => {
   const [context] = useContext(Context);
@@ -58,6 +58,7 @@ const Main = () => {
           onClick={() => {
             setState((S) => ({ ...S, step: GameLowerStepType.entry }));
             track({ pageName: '回首頁', type: 'event' });
+            tracks?.stop('camera');
           }}
         />
       </Blockquote>
