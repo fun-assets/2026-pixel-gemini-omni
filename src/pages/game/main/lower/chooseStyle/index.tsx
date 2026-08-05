@@ -38,10 +38,19 @@ const StyleItem = memo(({ index, styleSelected, setStyleSelected, transition }: 
       <div className='item'>
         <button className={twMerge(styleSelected === index ? 'selected' : '')} onClick={onClick}>
           <div className='cover'>
-            <div className={`style-${index + 1}`} />
+            <div className='h-full w-full overflow-hidden rounded-xl'>
+              <video
+                muted
+                playsInline
+                loop
+                autoPlay
+                src={GameStyles[index].video}
+                className='h-full w-full object-cover'
+              />
+            </div>
           </div>
           <div className='name'>
-            <div className={`name-${index + 1}`} />
+            <div>{GameStyles[index].name}</div>
           </div>
         </button>
       </div>

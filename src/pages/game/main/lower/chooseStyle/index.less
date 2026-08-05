@@ -81,7 +81,7 @@
             padding: 4%;
 
             aspect-ratio: 133/203;
-            @apply w-full;
+            @apply w-full overflow-hidden rounded-2xl;
 
             & > div {
               @apply bg-canyon-light h-full w-full overflow-hidden rounded-2xl bg-cover bg-center bg-no-repeat;
@@ -113,95 +113,12 @@
           }
 
           .name {
-            padding-bottom: 5%;
+            padding-top: 4%;
+            padding-bottom: 8%;
+            font-size: var(--text-xs);
             line-height: 0;
-            @apply relative flex w-full items-start justify-center;
-
-            & > div {
-              @apply relative;
-              &::before {
-                display: block;
-                content: '';
-
-                mask-position: center;
-                mask-repeat: no-repeat;
-                mask-size: contain;
-
-                @apply bg-canyon-medium inline-block w-full;
-              }
-            }
-
-            .name-1 {
-              width: 78%;
-
-              @img: './img/t1.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
-
-            .name-2 {
-              width: 50%;
-
-              @img: './img/t2.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
-
-            .name-3 {
-              width: 44%;
-
-              @img: './img/t3.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
-
-            .name-4 {
-              width: 38%;
-
-              @img: './img/t4.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
-
-            .name-5 {
-              width: 38%;
-
-              @img: './img/t5.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
-
-            .name-6 {
-              width: 44%;
-
-              @img: './img/t6.svg';
-
-              &::before {
-                padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
-
-                mask-image: url(@img);
-              }
-            }
+            @apply font-noto-sans-tc relative flex w-full items-start justify-center font-black;
+            @apply text-canyon-medium tracking-wide;
           }
         }
 
@@ -209,11 +126,7 @@
           @apply bg-canyon-light;
 
           .name {
-            & > div {
-              &::before {
-                @apply bg-white;
-              }
-            }
+            @apply text-white;
           }
         }
       }
