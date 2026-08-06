@@ -113,10 +113,7 @@ export const startWebcam = async ({
     registerCleanup();
     const normalizedDeviceId = normalizeDeviceId(deviceId);
 
-    if (
-      activeStream &&
-      (!normalizedDeviceId || normalizedDeviceId === activeDeviceId)
-    ) {
+    if (activeStream && (!normalizedDeviceId || normalizedDeviceId === activeDeviceId)) {
       bindStreamToVideo({ video, stream: activeStream, onError });
       return;
     }
