@@ -21,17 +21,28 @@ export const 禮盒3D =
 
 // prettier-ignore
 export const 繽紛蠟筆 = 
-`請根據上傳圖片生成一段 Q版蠟筆彩繪風格的慶祝氛圍影片
+`Prompt:
+10-second animation video, stylized animated transition, celebrating tone.
 
-必要元素：
-請確保人物轉換Q版蠟筆彩繪風格的長相、服裝都參照上傳圖片中的人物。
-上傳圖片中人物有幾位，生成圖片中就必須出現幾位人物。
+Subject & Character Consistency:
 
-絕對禁止：
-影片內禁止生成上傳圖片中沒有出現的人物以及指令中沒有規範的文字。 
+Maintain the exact same count, features, faces, and outfits of the characters from the uploaded reference image [image.png].
 
-呈現內容：
-畫面一開始0-2秒，上傳圖片中的人物延續上傳圖片在原位微幅擺動且呼吸，從第2秒開始，背景流暢的過度成蠟筆筆觸的砂岩粉與橄欖綠背景，且背景上方中央全程寫上黑色蠟筆手寫文字：「Google Pixel 11」，人物也從第二秒開始轉變為Q版蠟筆彩繪風格直到影片結束，Q版蠟筆彩繪風人物興奮地拔開香檳塞，濃密白色的蠟筆質感香檳泡沫戲劇性地從瓶口噴發而出！無數繽紛的手繪五彩紙屑隨之在空中飛揚舞動，最後8-10秒版蠟筆彩繪風人物拿著香檳面對鏡頭歡呼最後定格，畫面充滿歡慶活力。
+Transition characters into a cute chibi, crayon-painted style (Q-version crayon art).
+
+Strict Constraints:
+
+DO NOT include any additional characters not present in the reference image.
+
+DO NOT display any text, watermarks, or words OTHER THAN "Google Pixel 11".
+
+Timeline & Scene Flow:
+
+[0:00 - 0:02]: Characters initially appear in their original form from [image.png], staying in position with subtle micro-movements and gentle breathing animations.
+
+[0:02 - 0:08]: Background smoothly transitions into a crayon-textured sandstone pink and olive green aesthetic. At top-center, black crayon handwritten text reads "Google Pixel 11" and remains fixed throughout. Characters shift into chibi crayon-painted style. The chibi characters excitedly pop open a champagne bottle; thick white crayon-textured champagne foam dramatically fizzes and sprays out. Vibrant hand-drawn colorful confetti flutters in the air.
+
+[0:08 - 0:10]: The chibi characters hold the champagne, face the camera cheering enthusiastically, and freeze in a celebratory pose. Energetic, vibrant celebration atmosphere.
 `
 
 // prettier-ignore

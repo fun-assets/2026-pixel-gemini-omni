@@ -35,9 +35,9 @@ export type TGameState = {
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState: TGameState = {
-  page: GamePagesType.webcamPicker,
-  step: GameLowerStepType.entry,
-  styleSelected: 2,
+  page: GamePagesType.game,
+  step: GameLowerStepType.webcam,
+  styleSelected: 0,
   resultBase64:
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAr0lEQVR4nO3RQQ0AIBDAsAP/nuGNAvZoFSzZOjNnyNi/A3gZEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmD5ppYB4l7cEBoAAAAASUVORK5CYII=',
   videoURL: 'output/videos/2026-08-03/20260803202430798-9sid8gqx.mp4',
