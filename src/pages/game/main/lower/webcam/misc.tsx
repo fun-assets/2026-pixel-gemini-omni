@@ -1,8 +1,23 @@
 export const AUTO_DEVICE_ID = '__auto__';
 
+let activeStream: MediaStream | null = null;
+let activeDeviceId: string | undefined;
+const attachedVideos = new Set<HTMLVideoElement>();
+let cleanupRegistered = false;
+
 export const normalizeDeviceId = (deviceId?: string) => {
   if (!deviceId || deviceId === AUTO_DEVICE_ID) return undefined;
   return deviceId;
+};
+
+const registerCleanup = () => {
+  if (cleanupRegistered) return;
+  cleanupRegistered = true;
+
+  // Keep webcam alive during SPA navigation and release only when page closes.
+  window.addEventListener('beforeunload', () => {
+    shutdownWebcam();
+  });
 };
 
 const assertCameraAvailability = () => {
@@ -41,12 +56,47 @@ export const getVideoDevices = async () => {
   return videoDevices;
 };
 
-export const stopWebcam = (video: HTMLVideoElement) => {
-  const stream = video.srcObject;
-  if (stream instanceof MediaStream) {
-    stream.getTracks().forEach((track) => track.stop());
-  }
+export const detachWebcam = (video: HTMLVideoElement) => {
+  attachedVideos.delete(video);
+  video.pause();
   video.srcObject = null;
+};
+
+export const stopWebcam = detachWebcam;
+
+export const shutdownWebcam = () => {
+  if (activeStream) {
+    activeStream.getTracks().forEach((track) => track.stop());
+  }
+  activeStream = null;
+  activeDeviceId = undefined;
+
+  attachedVideos.forEach((video) => {
+    video.pause();
+    video.srcObject = null;
+  });
+  attachedVideos.clear();
+};
+
+const bindStreamToVideo = ({
+  video,
+  stream,
+  onError,
+}: {
+  video: HTMLVideoElement;
+  stream: MediaStream;
+  onError?: (err: any) => void;
+}) => {
+  attachedVideos.add(video);
+  if (video.srcObject !== stream) {
+    video.srcObject = stream;
+  }
+  video.onloadedmetadata = () => {
+    video.play().catch((err) => {
+      console.error('Error playing webcam stream: ', err);
+      onError?.(err);
+    });
+  };
 };
 
 export const startWebcam = async ({
@@ -60,8 +110,16 @@ export const startWebcam = async ({
 }) => {
   try {
     assertCameraAvailability();
-    stopWebcam(video);
+    registerCleanup();
     const normalizedDeviceId = normalizeDeviceId(deviceId);
+
+    if (
+      activeStream &&
+      (!normalizedDeviceId || normalizedDeviceId === activeDeviceId)
+    ) {
+      bindStreamToVideo({ video, stream: activeStream, onError });
+      return;
+    }
 
     const baseConstraints: MediaTrackConstraints = {
       width: { ideal: 1920 },
@@ -97,13 +155,18 @@ export const startWebcam = async ({
       throw lastError instanceof Error ? lastError : new Error('Failed to access camera stream.');
     }
 
-    video.srcObject = stream;
-    video.onloadedmetadata = () => {
-      video.play().catch((err) => {
-        console.error('Error playing webcam stream: ', err);
-        onError?.(err);
-      });
-    };
+    if (activeStream && activeStream !== stream) {
+      activeStream.getTracks().forEach((track) => track.stop());
+    }
+
+    activeStream = stream;
+    activeDeviceId = normalizedDeviceId;
+
+    attachedVideos.forEach((attachedVideo) => {
+      bindStreamToVideo({ video: attachedVideo, stream, onError });
+    });
+
+    bindStreamToVideo({ video, stream, onError });
   } catch (err) {
     console.error('Error accessing webcam: ', err);
     onError?.(err);

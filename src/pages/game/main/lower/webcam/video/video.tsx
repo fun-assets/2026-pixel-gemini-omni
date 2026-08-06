@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { GameContext } from '../../../../config';
 import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../config';
-import { normalizeDeviceId, startWebcam, stopWebcam } from '../misc';
+import { detachWebcam, normalizeDeviceId, startWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
 
@@ -65,7 +65,7 @@ const Video = forwardRef((_, ref) => {
       videoElement.removeEventListener('playing', handleReady);
       videoElement.removeEventListener('waiting', handleNotReady);
       videoElement.removeEventListener('stalled', handleNotReady);
-      stopWebcam(videoElement);
+      detachWebcam(videoElement);
     };
   }, [state.webcamDeviceId, setContext]);
 

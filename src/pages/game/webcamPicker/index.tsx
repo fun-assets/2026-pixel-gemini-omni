@@ -4,10 +4,10 @@ import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePagesType } from '../config';
 import {
   AUTO_DEVICE_ID,
+  detachWebcam,
   getVideoDevices,
   normalizeDeviceId,
   startWebcam,
-  stopWebcam,
 } from '../main/lower/webcam/misc';
 import Sounds from '@/components/sounds';
 
@@ -36,7 +36,7 @@ const WebcamDisplay = memo(() => {
     }).then(() => {});
 
     return () => {
-      stopWebcam(videoElement);
+      detachWebcam(videoElement);
     };
   }, [state.webcamDeviceId, setContext]);
 
