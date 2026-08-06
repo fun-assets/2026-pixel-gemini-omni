@@ -31,6 +31,8 @@ Transition the characters to a cute, chibi crayon style (Q-style crayon drawing)
 
 Strict Restrictions:
 
+hghgh
+
 No characters not appearing in the reference image are allowed.
 
 No text, watermarks, or words other than "Google Pixel 11" are allowed.
