@@ -21,28 +21,31 @@ export const 禮盒3D =
 
 // prettier-ignore
 export const 繽紛蠟筆 = 
-`Prompt:
-10-second animation video, stylized animated transition, celebrating tone.
+`A 10-second animated video with stylized transitions to create a celebratory atmosphere.
 
-Subject & Character Consistency:
+Theme and Character Consistency:
 
-Maintain the exact same count, features, faces, and outfits of the characters from the uploaded reference image [image.png].
+Maintain complete consistency in the number, features, facial expressions, and clothing of the characters in the uploaded reference image [image.png].
 
-Transition characters into a cute chibi, crayon-painted style (Q-version crayon art).
+Transition the characters to a cute, chibi crayon style (Q-style crayon drawing).
 
-Strict Constraints:
+Strict Restrictions:
 
-DO NOT include any additional characters not present in the reference image.
+No characters not appearing in the reference image are allowed.
 
-DO NOT display any text, watermarks, or words OTHER THAN "Google Pixel 11".
+No text, watermarks, or words other than "Google Pixel 11" are allowed.
 
-Timeline & Scene Flow:
+The entire video is drawn in a crayon style.
 
-[0:00 - 0:02]: Characters initially appear in their original form from [image.png], staying in position with subtle micro-movements and gentle breathing animations.
+Characters must not have a 3D style.
 
-[0:02 - 0:08]: Background smoothly transitions into a crayon-textured sandstone pink and olive green aesthetic. At top-center, black crayon handwritten text reads "Google Pixel 11" and remains fixed throughout. Characters shift into chibi crayon-painted style. The chibi characters excitedly pop open a champagne bottle; thick white crayon-textured champagne foam dramatically fizzes and sprays out. Vibrant hand-drawn colorful confetti flutters in the air.
+Timeline and Scene Flow:
 
-[0:08 - 0:10]: The chibi characters hold the champagne, face the camera cheering enthusiastically, and freeze in a celebratory pose. Energetic, vibrant celebration atmosphere.
+[0:00 - 0:02]: The character appears in their original form as shown in [image.png], maintaining their pose with subtle micro-movements and gentle breathing animations.
+
+[0:02 - 0:08]: The background smoothly transitions to a crayon-textured sandstone pink and olive green hue. At the top center of the image, the handwritten black crayon text "Google Pixel 11" remains unchanged. Then, the character transforms into a chibi crayon-style figure. The chibi character excitedly opens a champagne bottle; thick, white, crayon-textured champagne foam bursts out, creating a lively scene. Colorful hand-painted ribbons float in the air.
+
+[0:08 - 0:10]: The chibi character, holding champagne, faces the camera and cheers enthusiastically, freezing in a celebratory pose. A vibrant and celebratory atmosphere.
 `
 
 // prettier-ignore
