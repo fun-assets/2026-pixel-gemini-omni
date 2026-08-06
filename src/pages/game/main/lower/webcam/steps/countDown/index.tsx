@@ -55,6 +55,9 @@ const Num = memo(({ index, idx }: { index: number; idx: number }) => {
         },
       );
     }
+    return () => {
+      tracks?.stop('countdown');
+    };
   }, [index, idx]);
   return <div className={`n${index}`} style={style} />;
 });

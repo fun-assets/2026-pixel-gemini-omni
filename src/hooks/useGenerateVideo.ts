@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Context } from '@/settings/constant';
 import Fetcher from 'lesca-fetcher';
 import { REST_PATH } from '@/settings/config';
@@ -9,6 +9,7 @@ type TArgument = { image: string; prompt: string };
 const useGenerateVideo = () => {
   const [, setContext] = useContext(Context);
   const [state, setState] = useState<TVideoResponse | undefined>();
+  const fetchTime = useRef<number>(0);
 
   const fetch = async (argument: TArgument) => {
     try {
@@ -23,7 +24,20 @@ const useGenerateVideo = () => {
     } catch {
       setContext({
         type: ActionType.Modal,
-        state: { enabled: true, title: '系統訊息', body: '影片生成失敗，請洽工作人員。' },
+        state: {
+          enabled: true,
+          title: '系統訊息',
+          body: '影片生成失敗，請洽工作人員。',
+          label: ['再試一次'],
+          onClose: () => {
+            if (fetchTime.current < 3) {
+              fetchTime.current += 1;
+              fetch(argument);
+            } else {
+              //
+            }
+          },
+        },
       });
     }
   };
