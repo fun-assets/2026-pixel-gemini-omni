@@ -43,6 +43,8 @@ const Lower = memo(() => {
       if (videoAIResponse.res) {
         setState((S) => ({ ...S, videoURL: videoAIResponse.data.localPath }));
         uploadLocalVideo({ relativePath: videoAIResponse.data.relativePath });
+      } else {
+        setState((S) => ({ ...S, step: GameLowerStepType.error }));
       }
     }
   }, [videoAIResponse]);
