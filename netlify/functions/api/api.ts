@@ -391,8 +391,6 @@ router.post(`/${REST_PATH.removeMany}`, async (req, res) => {
   }
 });
 
-console.log(process.env.VEO_MODEL);
-
 router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
   const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
@@ -491,6 +489,8 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     console.log(`  …仍在生成中（已等待 ${waited}s）`);
     operation = await ai.operations.getVideosOperation({ operation });
   }
+
+  console.log(operation);
 
   console.log('影片生成完成，開始處理結果…');
 
