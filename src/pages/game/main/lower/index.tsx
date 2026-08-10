@@ -68,7 +68,7 @@ const Lower = memo(() => {
           if (imageWidth <= 100) {
             videoAIOperationFetch();
           } else {
-            const seed = seeds[currentName].seed ?? undefined;
+            const seed = seeds[currentName]?.seed ?? undefined;
             videoAIFetch({ image: resultBase64, prompt: promptText, seed });
             track({ pageName: `generate-ai-${GameStyles[styleSelected].name}`, type: 'ai' });
           }
