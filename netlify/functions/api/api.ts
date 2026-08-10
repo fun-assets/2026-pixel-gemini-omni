@@ -490,8 +490,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     operation = await ai.operations.getVideosOperation({ operation });
   }
 
-  console.log(operation);
-
   console.log('影片生成完成，開始處理結果…');
 
   if (operation.error) {
