@@ -10,9 +10,10 @@ import {
   TContext,
   TLoadingProcessState,
   TModalState,
+  TSeedState,
+  TSounds,
   TStatusState,
   TUserState,
-  TSounds,
   UserType,
 } from './type';
 
@@ -57,6 +58,8 @@ export const AlbumState: TAlbumState = {
 
 export const SoundsState: TSounds = {};
 
+export const SeedState: TSeedState = {};
+
 export const InitialState: IState = {
   [ActionType.LoadingProcess]: LoadingProcessState,
   [ActionType.Status]: StatusState,
@@ -65,6 +68,7 @@ export const InitialState: IState = {
   [ActionType.User]: UserState,
   [ActionType.Album]: AlbumState,
   [ActionType.Sounds]: SoundsState,
+  [ActionType.Seed]: SeedState,
 };
 
 export const Context = createContext<TContext>([InitialState, () => {}]);

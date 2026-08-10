@@ -15,12 +15,17 @@ import Preview from './preview';
 import Processing from './processing';
 import Qrcode from './qrcode';
 import Webcam from './webcam';
+import { Context } from '@/settings/constant';
+import { ActionType } from '@/settings/type';
 
 const Lower = memo(() => {
+  const [context] = useContext(Context);
+  const seeds = context[ActionType.Seed]!;
   const [state] = useContext(GameContext);
 
   const [{ resultBase64, styleSelected, readyToGenerateVideo }, setState] = useContext(GameContext);
   const promptText = GameStyles[styleSelected]?.prompt ?? GameStyles[0].prompt;
+  const currentName = GameStyles[styleSelected]?.name ?? GameStyles[0].name;
 
   const [saveImageResponse, saveImage] = useSaveImage();
   const [videoOperationResponse, videoAIOperationFetch] = useVideoOperation();
@@ -63,7 +68,8 @@ const Lower = memo(() => {
           if (imageWidth <= 100) {
             videoAIOperationFetch();
           } else {
-            videoAIFetch({ image: resultBase64, prompt: promptText });
+            const seed = seeds[currentName].seed ?? undefined;
+            videoAIFetch({ image: resultBase64, prompt: promptText, seed });
             track({ pageName: `generate-ai-${GameStyles[styleSelected].name}`, type: 'ai' });
           }
         };

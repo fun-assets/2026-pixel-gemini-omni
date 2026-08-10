@@ -403,7 +403,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     process.exit(1);
   }
 
-  const { image, prompt } = req.body as { image?: string; prompt?: string };
+  const { image, prompt, seed } = req.body as { image?: string; prompt?: string; seed?: number };
 
   if (!image || !prompt) {
     res.status(200).json({ res: false, msg: 'image and prompt are required' });
@@ -445,7 +445,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   for (const candidate of candidateModels) {
     const isVeo3 = candidate.startsWith('veo-3');
     try {
-      console.log(`\n嘗試模型：${candidate}`);
+      console.log(`\n嘗試模型：${candidate}, 種子: ${seed ?? '無'}`);
       operation = await ai.models.generateVideos({
         model: candidate,
         source: {
@@ -453,6 +453,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
           image: { imageBytes, mimeType },
         },
         config: {
+          seed,
           numberOfVideos: 1,
           aspectRatio: '9:16',
           durationSeconds: 8, // Veo 3 單支最長 8 秒

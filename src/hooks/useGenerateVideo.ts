@@ -4,7 +4,7 @@ import Fetcher from 'lesca-fetcher';
 import { REST_PATH } from '@/settings/config';
 import { ActionType, TVideoResponse } from '@/settings/type';
 
-type TArgument = { image: string; prompt: string };
+type TArgument = { image: string; prompt: string; seed?: number };
 
 const useGenerateVideo = () => {
   const [, setContext] = useContext(Context);

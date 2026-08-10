@@ -1,6 +1,6 @@
+import Sounds from '@/components/sounds';
 import { Dispatch, ReactNode } from 'react';
 import { Debug } from './type-unity';
-import Sounds from '@/components/sounds';
 
 export enum ActionType {
   LoadingProcess = 'loadingProcess',
@@ -10,6 +10,7 @@ export enum ActionType {
   User = 'user',
   Album = 'album',
   Sounds = 'sounds',
+  Seed = 'seed',
 }
 
 export enum LoadingProcessType {
@@ -96,6 +97,12 @@ export type TSounds = {
   tracks?: Sounds;
 };
 
+export type TSeedState = {
+  [key: string]: {
+    seed?: number;
+  };
+};
+
 export interface IState {
   [ActionType.LoadingProcess]: TLoadingProcessState;
   [ActionType.Status]: TStatusState;
@@ -104,6 +111,7 @@ export interface IState {
   [ActionType.User]: TUserState;
   [ActionType.Album]: TAlbumState;
   [ActionType.Sounds]: TSounds;
+  [ActionType.Seed]: TSeedState;
 }
 
 export interface IAction {
@@ -115,7 +123,8 @@ export interface IAction {
     | Partial<TModalState>
     | Partial<TUserState>
     | Partial<TAlbumState>
-    | Partial<TSounds>;
+    | Partial<TSounds>
+    | Partial<TSeedState>;
   type: ActionType;
 }
 
