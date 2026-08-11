@@ -1,7 +1,7 @@
 import { GameStyles } from '@/settings/config';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
-import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useContext, useRef, useState } from 'react';
 
 const Keys = [...GameStyles.map((style) => style.name)];
 
