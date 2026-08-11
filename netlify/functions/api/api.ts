@@ -426,7 +426,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       model: OMNI_MODEL,
       input: [
         { type: 'image', data: imageBytes, mime_type: mimeType },
-        { type: 'text', text: prompt },
+        { type: 'text', text: `強制生成9/16的直式影片。${prompt}` },
       ],
       background: true,
       ...(seed !== undefined ? { generation_config: { seed } } : {}),
