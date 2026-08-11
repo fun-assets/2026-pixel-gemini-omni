@@ -7,7 +7,7 @@ import express, { Router } from 'express';
 import fs from 'fs/promises';
 import Atobtoa from 'lesca-atobtoa';
 import BunnyCDN from 'lesca-node-bunnycdn';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import path from 'path';
 import serverless from 'serverless-http';
 import sharp from 'sharp';
@@ -114,27 +114,24 @@ const toPublicPath = (filePath: string) => {
   return path.relative(process.cwd(), filePath).split(path.sep).join('/');
 };
 
-function normalizeModelName(model: string): string {
-  return model.replace(/^publishers\/google\/models\//, '');
-}
+// --- Omni 影片（Interactions API）---
+// omni Interactions 只支援 global/us/eu；此模型固定輸出 720p 16:9、8 秒、含音訊。
+const OMNI_MODEL = 'gemini-omni-flash-preview';
+const OMNI_LOCATION = 'global';
 
-async function getAccessibleVeoModels(ai: GoogleGenAI): Promise<string[]> {
-  const models = [];
-  try {
-    const pager = await ai.models.list();
-    for await (const m of pager) {
-      const raw = m.name || m.displayName || '';
-      if (!/veo/i.test(raw)) continue;
-      models.push(normalizeModelName(raw));
+type OmniVideo = { videoBytes?: string; uri?: string };
+
+// 影片在 interaction.steps[].content[] 的 { type:'video' } 裡（data 為 base64）
+function extractOmniVideos(interaction: any): OmniVideo[] {
+  const videos: OmniVideo[] = [];
+  for (const step of interaction?.steps ?? []) {
+    for (const content of step?.content ?? []) {
+      if (content?.type === 'video' && (content.data || content.uri)) {
+        videos.push({ videoBytes: content.data, uri: content.uri });
+      }
     }
-  } catch {
-    // 查詢失敗時保留靜態 fallback，避免中斷主流程。
   }
-  return [...new Set(models)];
-}
-
-function isModelNotFoundError(err: any): boolean {
-  return err?.status === 404 || /NOT_FOUND|model.*not found/i.test(String(err?.message || ''));
+  return videos;
 }
 
 router.post(`/${REST_PATH.login}`, async (req, res) => {
@@ -393,14 +390,10 @@ router.post(`/${REST_PATH.removeMany}`, async (req, res) => {
 
 router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
-  const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
-  // veo-3.0-fast-generate-001（較便宜）/ veo-3.0-generate-001（品質較高、較貴）
-  const MODEL = process.env.VEO_MODEL || 'veo-3.1-fast-generate-001';
-  const API_VERSION = process.env.VERTEX_API_VERSION; // 例：v1beta1
 
   if (!PROJECT || PROJECT === 'your-gcp-project-id') {
-    console.error('請先在 .env 填入 GOOGLE_CLOUD_PROJECT（你的 GCP 專案 ID）');
-    process.exit(1);
+    res.status(200).json({ res: false, msg: 'GOOGLE_CLOUD_PROJECT is required' });
+    return;
   }
 
   const { image, prompt, seed } = req.body as { image?: string; prompt?: string; seed?: number };
@@ -422,155 +415,114 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: PROJECT,
-    location: LOCATION,
-    ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
+    location: OMNI_LOCATION,
   });
 
-  const requestedModel = normalizeModelName(MODEL);
-  const staticFallbackModels = [
-    'veo-3.1-fast-generate-001',
-    'veo-3.1-generate-001',
-    'veo-3.0-fast-generate-001',
-    'veo-3.0-generate-001',
-    'veo-2.0-generate-001',
-  ];
-  const accessibleVeoModels = await getAccessibleVeoModels(ai);
-  const candidateModels = [
-    ...new Set([requestedModel, ...staticFallbackModels, ...accessibleVeoModels]),
-  ];
+  try {
+    // 1) 建立互動（background 非同步）：input=[圖片, 文字]，omni 收到圖片即輸出影片。
+    //    seed 放在 generation_config.seed → 畫面可重現。
+    console.log(`\nomni 模型：${OMNI_MODEL}, 種子: ${seed ?? '無'}`);
+    let interaction: any = await ai.interactions.create({
+      model: OMNI_MODEL,
+      input: [
+        { type: 'image', data: imageBytes, mime_type: mimeType },
+        { type: 'text', text: prompt },
+      ],
+      background: true,
+      ...(seed !== undefined ? { generation_config: { seed } } : {}),
+    });
 
-  // 1) 送出請求，拿到一個 long-running operation
-  let operation;
+    // 2) 輪詢直到結束（omni 影片約需 40 秒以上）
+    const pendingStatuses = ['in_progress', 'requires_action', 'queued'];
+    let waited = 0;
+    while (pendingStatuses.includes(interaction.status)) {
+      await new Promise((r) => setTimeout(r, 10000));
+      waited += 10;
+      console.log(`  …仍在生成中（已等待 ${waited}s）`);
+      interaction = await ai.interactions.get(interaction.id);
+    }
 
-  for (const candidate of candidateModels) {
-    const isVeo3 = candidate.startsWith('veo-3');
-    try {
-      console.log(`\n嘗試模型：${candidate}, 種子: ${seed ?? '無'}`);
-      operation = await ai.models.generateVideos({
-        model: candidate,
-        source: {
-          prompt,
-          image: { imageBytes, mimeType },
-        },
-        config: {
-          seed,
-          numberOfVideos: 1,
-          aspectRatio: '9:16',
-          durationSeconds: 8, // Veo 3 單支最長 8 秒
-          // 輸入圖含真人時需要，否則可能被安全政策擋下
-          personGeneration: 'allow_adult',
-          // Veo 3 才支援音訊（8-bit 配樂 / 音效由 prompt 描述生成）
-          ...(isVeo3 ? { generateAudio: true } : {}),
-          // 若你的專案要求輸出到 Cloud Storage，取消下一行註解並填 bucket：
-          // outputGcsUri: 'gs://your-bucket/veo-output/',
+    console.log('影片生成完成，開始處理結果…');
+
+    if (interaction.status !== 'completed') {
+      res.status(200).json({
+        res: false,
+        msg: '影片生成失敗',
+        error: interaction.status,
+        data: { operationName: interaction.id },
+      });
+      return;
+    }
+
+    const videos = extractOmniVideos(interaction);
+    if (videos.length === 0) {
+      res.status(200).json({
+        res: false,
+        msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
+        data: {
+          operationName: interaction.id,
+          raiMediaFilteredCount: 0,
+          raiMediaFilteredReasons: [],
         },
       });
-      break;
-    } catch (err) {
-      if (isModelNotFoundError(err)) {
+      return;
+    }
+
+    for (const [i, v] of videos.entries()) {
+      const bytes = v.videoBytes;
+      const uri = v.uri;
+      if (bytes) {
+        const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
+          ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
+          : path.resolve(process.cwd(), 'public', 'video');
+
+        const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
+        const outputDir = path.join(baseLocalPath, dateFolder);
+        await fs.mkdir(outputDir, { recursive: true });
+        const filePath = path.join(outputDir, finalFileName);
+        writeFileSync(filePath, Buffer.from(bytes, 'base64'));
+
+        const localPath = toPublicPath(filePath);
+        const relativePath = path.relative(process.cwd(), filePath);
+
         res.status(200).json({
-          res: false,
-          msg: `模型 ${candidate} 不存在或無法存取，請確認專案是否有權限使用。`,
+          res: true,
+          msg: '影片生成成功',
+          data: {
+            operationName: interaction.id,
+            baseLocalPath,
+            subfolder: dateFolder,
+            fileName: finalFileName,
+            filePath,
+            localPath,
+            relativePath,
+          },
         });
         return;
+      } else if (uri) {
+        res.status(200).json({
+          res: true,
+          msg: '影片生成成功（Cloud Storage）',
+          data: {
+            index: i,
+            operationName: interaction.id,
+            uri,
+          },
+        });
+        return;
+      } else {
+        continue;
       }
-      throw err;
     }
-  }
 
-  if (!operation) {
-    res.status(200).json({ res: false, msg: '找不到可用的 Veo 模型' });
-    return;
-  }
-
-  let waited = 0;
-  while (!operation.done) {
-    await new Promise((r) => setTimeout(r, 10000));
-    waited += 10;
-    console.log(`  …仍在生成中（已等待 ${waited}s）`);
-    operation = await ai.operations.getVideosOperation({ operation });
-  }
-
-  console.log('影片生成完成，開始處理結果…');
-
-  if (operation.error) {
     res.status(200).json({
       res: false,
-      msg: '影片生成失敗',
-      error: operation.error,
-      data: { operationName: operation.name },
+      msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
+      data: { operationName: interaction.id },
     });
-    return;
+  } catch (error) {
+    res.status(200).json({ res: false, msg: '影片生成失敗', error, data: {} });
   }
-
-  const videos = operation.response?.generatedVideos ?? [];
-  if (videos.length === 0) {
-    res.status(200).json({
-      res: false,
-      msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
-      data: {
-        operationName: operation.name,
-        raiMediaFilteredCount: operation.response?.raiMediaFilteredCount ?? 0,
-        raiMediaFilteredReasons: operation.response?.raiMediaFilteredReasons ?? [],
-      },
-    });
-    return;
-  }
-
-  mkdirSync('output', { recursive: true });
-
-  for (const [i, v] of videos.entries()) {
-    const bytes = v.video?.videoBytes;
-    const uri = v.video?.uri;
-    if (bytes) {
-      const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
-        ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
-        : path.resolve(process.cwd(), 'public', 'video');
-
-      const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
-      const outputDir = path.join(baseLocalPath, dateFolder);
-      await fs.mkdir(outputDir, { recursive: true });
-      const filePath = path.join(outputDir, finalFileName);
-      writeFileSync(filePath, Buffer.from(bytes, 'base64'));
-
-      const localPath = toPublicPath(filePath);
-      const relativePath = path.relative(process.cwd(), filePath);
-
-      res.status(200).json({
-        res: true,
-        msg: '影片生成成功',
-        data: {
-          operationName: operation.name,
-          baseLocalPath,
-          subfolder: dateFolder,
-          fileName: finalFileName,
-          filePath,
-          localPath,
-          relativePath,
-        },
-      });
-      return;
-    } else if (uri) {
-      res.status(200).json({
-        res: true,
-        msg: '影片生成成功（Cloud Storage）',
-        data: {
-          index: i,
-          operationName: operation.name,
-          uri,
-        },
-      });
-      return;
-    } else {
-      continue;
-    }
-  }
-
-  res.status(200).json({
-    res: false,
-    msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
-    data: { operationName: operation.name },
-  });
 });
 
 const uploadVideoToBunnyCDN = async (videoLocalPath: string) => {
@@ -634,8 +586,6 @@ router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
 
 router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
   const PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
-  const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
-  const API_VERSION = process.env.VERTEX_API_VERSION;
 
   if (!PROJECT || PROJECT === 'your-gcp-project-id') {
     res.status(200).json({ res: false, msg: 'GOOGLE_CLOUD_PROJECT is required' });
@@ -652,15 +602,12 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
     const ai = new GoogleGenAI({
       vertexai: true,
       project: PROJECT,
-      location: LOCATION,
-      ...(API_VERSION ? { httpOptions: { apiVersion: API_VERSION } } : {}),
+      location: OMNI_LOCATION,
     });
 
-    const operation = await ai.operations.getVideosOperation({
-      operation: { name: operationName } as any,
-    });
+    const interaction: any = await ai.interactions.get(operationName);
 
-    if (!operation.done) {
+    if (['in_progress', 'requires_action', 'queued'].includes(interaction.status)) {
       res.status(200).json({
         res: true,
         msg: '影片仍在生成中',
@@ -669,17 +616,17 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
       return;
     }
 
-    if (operation.error) {
+    if (interaction.status !== 'completed') {
       res.status(200).json({
         res: false,
         msg: '影片生成失敗',
-        error: operation.error,
+        error: interaction.status,
         data: { operationName, done: true },
       });
       return;
     }
 
-    const videos = operation.response?.generatedVideos ?? [];
+    const videos = extractOmniVideos(interaction);
     if (videos.length === 0) {
       res.status(200).json({
         res: false,
@@ -687,16 +634,16 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
         data: {
           operationName,
           done: true,
-          raiMediaFilteredCount: operation.response?.raiMediaFilteredCount ?? 0,
-          raiMediaFilteredReasons: operation.response?.raiMediaFilteredReasons ?? [],
+          raiMediaFilteredCount: 0,
+          raiMediaFilteredReasons: [],
         },
       });
       return;
     }
 
     for (const [i, v] of videos.entries()) {
-      const bytes = v.video?.videoBytes;
-      const uri = v.video?.uri;
+      const bytes = v.videoBytes;
+      const uri = v.uri;
 
       if (bytes) {
         const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
