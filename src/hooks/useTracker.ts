@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import { IRespond, SETTING, TType } from '../../setting';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
+import QueryString from 'lesca-url-parameters';
 
 type TArgument = {
   collection: string;
@@ -13,6 +14,8 @@ type TArgument = {
 type TrackerPayload = Omit<Extract<TType, { pageName: string }>, 'timestamp' | 'count'>;
 
 const fetchTracker = async (argument: TArgument) => {
+  if (QueryString.get('db')) return;
+
   const respond = (await Fetcher.post(REST_PATH.tracking, argument)) as IRespond;
   return respond;
 };
