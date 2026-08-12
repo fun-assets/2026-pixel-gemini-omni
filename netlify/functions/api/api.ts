@@ -444,8 +444,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
 
     console.log('影片生成完成，開始處理結果…');
 
-    console.log(interaction);
-
     if (interaction.status !== 'completed') {
       res.status(200).json({
         res: false,
@@ -457,7 +455,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     }
 
     const videos = extractOmniVideos(interaction);
-    console.log(videos);
 
     if (videos.length === 0) {
       res.status(200).json({
