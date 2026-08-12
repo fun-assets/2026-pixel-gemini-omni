@@ -571,6 +571,8 @@ router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
       return;
     }
 
+    console.log('影片上傳中...');
+
     const absoluteVideoPath = path.resolve(relativePath);
     const uploadResult = await uploadVideoToBunnyCDN(absoluteVideoPath);
 
