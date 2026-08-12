@@ -1,12 +1,10 @@
 // prettier-ignore
 export const 禮盒3D = 
 `請根據上傳圖片生成一段3D 數位渲染Q版公仔驚喜從禮物盒跳出來的影片
-【人物與風格鎖定】
-[最高系統指令] 畫面為 100% 一鏡到底（Single unbroken shot），無跳接 。畫面中從第二秒開始僅限原人物轉換之 3D Q版公仔，絕對鎖定並嚴格保留參考圖中人物的五官、神韻與髮型細節 。風格為Q版 3D 數位渲染圖（3D Digital Rendering），展現光滑如矽膠般的高清光澤與質感，充滿活力的玩具樂趣氛圍。
-
-【10秒時間軸腳本與運鏡】
-• 00:00 - 00:02（完美延續原圖與禮物盒登場）：影片開場第 0 秒完美無縫銜接上傳圖片 ，人物在原位微幅擺動呼吸
-• 00:02 - 00:04【運鏡：正面中景特寫固定（Static Medium Close-Up Shot）】畫面中央為一個黃色矽膠質感、貼滿笑臉與星星貼紙且印有黑色文字寫作「Google Pixel 11」的禮物盒，字體使用：Google Sans Bold。
+必要元素：畫面中從第二秒開始僅限原人物轉換之 3D Q版公仔，絕對鎖定並嚴格保留參考圖中人物的五官、神韻與髮型細節 。風格為Q版 3D 數位渲染（3D Digital Rendering），展現光滑如矽膠般的高清光澤與質感，充滿活力的玩具樂趣氛圍。上傳圖片中人物有幾位，生成圖片中就必須出現幾位人物。
+絕對禁止：絕對禁止出現指令中沒有指定及規範的文字。絕對禁止生成上傳圖片中沒有出現的人物。
+• 00:00 - 00:02（完美延續原圖與。禮物盒登場）：影片開場第 0 秒完美無縫銜接上傳圖片 ，人物在原位微幅擺動呼吸
+• 00:02 - 00:04【運鏡：正面中景特寫固定（Static Medium Close-Up Shot）】背景流暢過渡至柔和夢幻的清澈天空，畫面中央為一個黃色矽膠質感、貼上笑臉與星星貼紙且僅有一面印有黑色文字寫作「Google Pixel 11」的禮物盒，字體使用：Google Sans Bold。
 • 00:04 - 00:06（驚喜蹦出與禮花噴發）：【運鏡：順暢微仰推近跟拍（Smooth Low-Angle Push-In Shot）】禮物盒盒蓋彈開，與上傳圖片長相與服裝完全一致的 3D Q版人物帶著光滑細緻的矽膠質感，活潑地從盒中高高蹦出！周圍同時噴發出矽膠質感黃色星星、彩色拉炮彩帶與白色立體文字「Ask more.」。
 • 00:06 - 00:08（空中的活潑互動）：【運鏡：環繞微距軌道運鏡（Arc Orbiting Macro Shot）】Q版主角懸浮於禮物盒上方，在飄散的星星與彩帶之間輕盈旋轉，對著鏡頭展示活潑驚喜的表情與靈動肢體動作。
 • 00:08 - 00:10（勝利 Pose 與定格收尾）：【運鏡：正面中景拉遠定格（Frontal Medium Hold Shot）】Q版主角穩穩落定於禮物盒邊緣，面向鏡頭開心地揮手並擺出經典勝利定格姿態，周圍漂浮中的矽膠質感黃色星星、彩色拉炮彩帶與白色立體文字「Ask more.」也定格。
@@ -15,58 +13,18 @@ export const 禮盒3D =
 • 場景：柔和夢幻的清澈天空背景，聚焦於黃色矽膠禮物盒、粉紅蝴蝶結禮物蓋與蹦出的 Q版主角。
 • 氛圍/光影：柔和通透的高級工作室日光，呈現矽膠材質的光滑反光與立體圓潤陰影。
 • 音訊：歡快輕快的 3D 動畫開場音樂，夾雜著禮物盒開啟聲、清脆彈跳聲（Boing Sound）、禮花噴發音效與歡樂的驚喜歡呼聲。 
- 
-上傳圖片中人物有幾位，生成圖片中就必須出現幾位人物。絕對禁止生成上傳圖片中額外的人物及指令中沒有出現的文字。
 `;
 
 // prettier-ignore
 export const 繽紛蠟筆 = 
-`A 10-second animated video with stylized transitions to create a celebratory atmosphere.
+`請根據上傳圖片生成一段Q版蠟筆插圖人物的慶祝影片，畫面一開始0-2秒，人物延續上傳圖片在原位微幅擺動且呼吸，從第2秒開始，背景流暢的過度成蠟筆筆觸的砂岩粉與橄欖綠背景，且上方中央2-10秒都維持寫上黑色蠟筆手寫文字：「Google Pixel 11」，人物也從第二秒開始轉變為Q版蠟筆插圖人物直到影片結束，Q版蠟筆插圖人物興奮地拔開香檳塞，濃密白色的蠟筆質感香檳泡沫戲劇性地從瓶口噴發而出！無數繽紛的手繪五彩紙屑隨之在空中飛揚舞動，Q版蠟筆插圖人物開心跳躍，整體充滿歡慶活力。 
 
-Theme and Character Consistency:
-
-Maintain complete consistency in the number, features, facial expressions, and clothing of the characters in the uploaded reference image [image.png].
-
-Transition the characters to a cute, chibi crayon style (Q-style crayon drawing).
-
-Strict Restrictions:
-
-hghgh
-
-No characters not appearing in the reference image are allowed.
-
-No text, watermarks, or words other than "Google Pixel 11" are allowed.
-
-The entire video is drawn in a crayon style.
-
-Characters must not have a 3D style.
-
-Timeline and Scene Flow:
-
-[0:00 - 0:02]: The character appears in their original form as shown in [image.png], maintaining their pose with subtle micro-movements and gentle breathing animations.
-
-[0:02 - 0:08]: The background smoothly transitions to a crayon-textured sandstone pink and olive green hue. At the top center of the image, the handwritten black crayon text "Google Pixel 11" remains unchanged. Then, the character transforms into a chibi crayon-style figure. The chibi character excitedly opens a champagne bottle; thick, white, crayon-textured champagne foam bursts out, creating a lively scene. Colorful hand-painted ribbons float in the air.
-
-[0:08 - 0:10]: The chibi character, holding champagne, faces the camera and cheers enthusiastically, freezing in a celebratory pose. A vibrant and celebratory atmosphere.
+上傳圖片中人物有幾位，生成圖片中就必須出現幾位人物。絕對禁止生成上傳圖片中額外的人物及指令中沒有出現的文字。
 `
 
 // prettier-ignore
-export const 夏日網頁 = 
-`請根據上傳圖片生成一段在網頁上跑來跑去的可愛公仔
-【人物與風格鎖定】
-[最高系統指令] 畫面為 100% 一鏡到底（Single unbroken shot），無跳接。畫面中從第二秒開始僅限原人物轉換之 3D Q版公仔，參考圖中人物的五官、神韻與髮型細節。風格為 3D 數位簡約夏日風格（3D Digital Summer Aesthetic），質感光滑精緻，光影明亮透亮。
-
-【10秒時間軸腳本與運鏡】
-• 00:00 - 00:02（完美延續原圖與頂視登場）：影片開場第 0 秒完美無縫銜接上傳圖片，人物在原位微幅擺動呼吸
-• 00:02 - 00:04【運鏡：正上方頂視中景固定（Static Top-Down Medium Shot）】畫面俯視漂浮在波光粼粼水面上的 3D Google 搜尋網頁（Chrome 介面），搜尋欄打上「Google Pixel 11」。3D Q版主角躺在網頁空白處自然呼吸，周圍擺著一顆 3D 沙灘排球、一支陽傘、一個衝浪板、一雙夾腳拖與一個游泳圈，網頁左下角空白處有純黑色文字寫作「Google Pixel 11」，字體使用：Google Sans Bold，文字顏色：純黑色。
-• 00:04 - 00:06（夏日互動與水波盪漾）：【運鏡：順暢微幅俯衝推近（Smooth Top-Down Push-In）】水面輕柔泛起波紋，漂浮的網頁微幅搖曳。Q版主角在網頁上悠閒眨眼伸懶腰，伸手拿起旁邊的 3D 沙灘排球輕輕拋接玩耍。
-• 00:06 - 00:08（俏皮姿勢與沙灘道具）：【運鏡：頂視】主角順勢坐起靠在 3D 衝浪板邊，向鏡頭熱情揮手，展現活潑俏皮的夏日度假風格。
-• 00:08 - 00:10（度假定格與收尾）：【運鏡：定焦拉遠全景定格（Pull-Back Top-Down Hold Shot）】主角站起來在網頁中央向鏡頭露出燦爛笑容，擺出經典 V 字手勢，漂浮網頁與水面光影微動，畫面最後定格。
-
-【環境與氛圍】
-• 場景：波光粼粼的湛藍水面，上頭漂浮著白色 3D Google Chrome 搜尋頁面與夏日海灘 Q版道具。
-• 氛圍/光影：通透清澈的夏日陽光與波光水影反射，呈現高動態範圍與亮麗色彩。
-• 音訊：背景音樂為輕快放鬆的夏日 Lo-Fi 潮流音樂，夾雜著柔和水波盪漾聲、沙灘排球彈跳聲與夏日海風鳥鳴。 
+export const 迷你分身 = 
+`把這張照片轉換成動畫影片，並在主體旁邊添加一個可愛Q版公仔版（迷你分身），要求其表情、髮型和服裝與原主體相似。加入細微的動畫，讓人物與Q版公仔兩者之間有可愛的互動，且不要改變原始主體的臉部特徵或服裝。最後，在背景加上可愛的白色手繪塗鴉（off-white doodle）元素與手寫文字「Google Pixel 11」。 上傳圖片中人物有幾位，生成影片中就必須出現幾位人物。絕對禁止生成上傳圖片中額外的人物及指令中沒有出現的文字。 
 `
 
 // prettier-ignore
@@ -76,7 +34,7 @@ export const 空降城市 =
 【10秒時間軸腳本與運鏡】
  • 00:00 - 00:02（完美延續原圖與直升機登場）：影片開場第 0 秒完美無縫銜接上傳圖片 。物品在原位揮揮手
  • 00:02 - 00:04【運鏡：仰角高空運鏡（High-Angle Aerial Tracking Shot）】畫面為繁榮市中心高空，兩架雙螺旋槳重型直升機吊掛著被巨型化（Giant-sized）的上傳物品，從藍天中緩慢且穩定地飛入畫面中央。 
-• 00:04 - 00:06（巨物吊掛與下降）：【運鏡：順暢環繞俯衝降落（Smooth Orbiting Descent Shot）】鏡頭跟隨巨型物品環繞下降，展現大樓與周邊繁華高樓大廈的宏偉背景。直升機將巨型物品精準且優雅地降落放置在市中心最熱鬧的廣場中央，物品表面折射出周圍摩天大樓與陽光的精緻倒影。 
+• 00:04 - 00:06（巨物吊掛與下降）：【運鏡：順暢環俯衝降落（Smooth Orbiting Descent Shot）】鏡頭跟隨巨型物品下降，展現大樓與周邊繁華高樓大廈的宏偉背景。直升機將巨型物品精準且優雅地降落放置在市中心最熱鬧的廣場中央，物品表面折射出周圍摩天大樓與陽光的精緻倒影。 
 • 00:06 - 00:08（成功安置與視覺震撼）：【運鏡：低角度微仰推近（Low-Angle Slow Push-In）】物品穩穩放置於廣場，直升機解開吊纜並向高空飛離。巨型物品如同一座巨大的現代時尚雕塑地標立於市中心廣場前，展現極致的超現實時尚廣告震撼感。
  • 00:08 - 00:10（時尚廣告定格與收尾）：【運鏡：鏡頭定焦全景（Wide Architectural Hold Shot）】畫面呈現巨型時尚物品在市中心空地震撼全景，畫面上方出現文字寫作「Google Pixel 11」 ，純白無襯線，字體為 Google Sans Bold，最後畫面定格在此完美的時尚 CGI 廣告畫面上。 
 
@@ -86,19 +44,19 @@ export const 空降城市 =
 // prettier-ignore
 export const 時尚雜誌 =
 `根據上傳圖片生成一段時尚拍攝最後印出雜誌封面的影片
-【人物與風格鎖定】
-[最高系統指令] 100% 一鏡到底無跳接。畫面僅限原人物，絕對鎖定參考圖中人物五官、神韻與服裝細節。風格為高訂時尚攝影棚雜誌廣告風格，畫面具備極致質感與閃光燈光影張力。
+
+必要元素：畫面僅限上傳原人物，務必確保人物五官、神韻與服裝細節與上傳圖片人物一致。整體風格為高訂時尚攝影棚雜誌廣告風格，畫面具備極致質感與閃光燈光影張力。
+絕對禁止：最後雜誌封面絕對禁止出現指令中沒有指定且規範的文字。絕對禁止出現上傳圖片中額外的人物。
 
 【10秒時間軸腳本與運鏡】
-• 00:00 - 00:02（原圖無縫延續）：影片開場無縫銜接上傳圖片，人物微幅擺動呼吸
-• 00:02 - 00:04【運鏡：正面中景固定（Static Medium Shot）】人物穿著原圖服裝站在極簡時尚攝影棚中央，自然擺動與呼吸。
-• 00:04 - 00:06（極速時尚擺拍）：【運鏡：動態微幅推近（Smooth Slow Push-In）】伴隨頻繁閃爍的相機閃光燈，人物快速連續擺出 3 個極具自信的時尚模特 Pose，展現超模氣場。
-• 00:06 - 00:10（影印掃描與雜誌封面）：【運鏡：定焦拉遠全景定格（Frontal Hold Shot）】畫面保持第三個 Pose，從畫面頂部向下滑動以影印機掃描方式印出一張雜誌封面。封面上方中央為純白「Google Pixel 11」文字，左側為較小文字「Google Pixel Space」與下方「2026」，以及在雜誌右下角上上條碼標籤（字體皆為 Google Sans Bold），雜誌上嚴格禁止出現指令額外的文字，最後定格。
+• 00:00 - 00:02（原圖無縫延續）：影片開場無縫銜接上傳圖片，人物微幅擺動呼吸揮手
+• 00:02 - 00:06【運鏡：正面中景固定（Static Medium Shot）】背景流暢過渡至極簡時尚攝影棚中央，人物後方左右各有一盞攝影燈，伴隨頻繁閃爍的相機閃光燈，人物快速連續擺出 3 個極具自信的時尚模特 Pose，展現超模氣場。
+• 00:06 - 00:10（影印掃描與雜誌封面）：【【運鏡：正面中景固定（Static Medium Shot）】畫面維持人物第三個 Pose，從畫面頂部向下滑動以影印機掃描方式印出一本時尚的人物雜誌封面。封面上方中央僅出現純白無襯線文字「Google Pixel 11」文字，左側為較小純白無襯線文字「Google Pixel Space」與下方純白無襯線文字「2026」，以及在雜誌右下角上上條碼標籤（字體皆為 Google Sans Bold），雜誌上嚴格禁止出現指令額外的文字，最後定格。
 
 【環境與氛圍】
 • 場景：極簡灰白無縫時尚攝影棚背景，最後結合影印掃描的雜誌封面效果。
 • 氛圍/光影：棚拍聚光燈與強烈閃光燈（Studio Strobes & Flashes），呈現高對比時尚光影。
-• 音訊：節奏感的時尚電音，夾雜著密集清脆的相機快門聲（Shutter Clicks）、閃光燈充電音與影印機掃描列印聲（Scanner Printing 
+• 音訊：節奏感的時尚純音樂，夾雜著密集清脆的相機快門聲（Shutter Clicks）、閃光燈充電音與影印機掃描列印聲（Scanner Printing )
 `
 
 export const 經典Chrome小恐龍 = `主題：以上傳圖片中的主角為核心角色，與一隻Google 經典 Chrome 小恐龍組成冒險搭檔，並伴隨幾隻仙人掌小精靈。整體是像素風
