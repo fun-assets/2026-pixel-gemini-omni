@@ -12,7 +12,6 @@ const useSaveImage = () => {
   const [state, setState] = useState<IRespond | undefined>();
 
   const fetch = async (argument: TArgument) => {
-    setContext({ type: ActionType.LoadingProcess, state: { enabled: true } });
     try {
       const respond = (await Fetcher.post(REST_PATH.saveImage, argument)) as IRespond;
       if (!respond.res) {
@@ -29,8 +28,6 @@ const useSaveImage = () => {
         state: { enabled: true, title: '系統訊息', body: '圖片儲存失敗，請洽工作人員。' },
       });
     }
-
-    setContext({ type: ActionType.LoadingProcess, state: { enabled: false } });
   };
 
   return [state, fetch] as const;
