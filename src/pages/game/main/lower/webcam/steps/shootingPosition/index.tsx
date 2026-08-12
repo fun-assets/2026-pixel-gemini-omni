@@ -66,9 +66,17 @@ const ShootingPosition = memo(() => {
             </div>
           </LiquidGlassButton>
         </TweenerProvider>
-        <div className='font-noto-sans-tc w-full text-center text-2xl text-white'>
-          （ 建議不要佩戴帽子或墨鏡 ）
-        </div>
+        <TweenerProvider
+          className='flex w-full flex-row justify-center'
+          initialStyle={{ opacity: 0, y: 50 }}
+          tweenTo={{ opacity: 1, y: 0 }}
+          options={{ duration: 500, delay: 1300, onEnd: () => setCtaEnd(true) }}
+          shouldFadeIn={transition === TransitionType.FadeIn}
+        >
+          <div className='font-noto-sans-tc w-full text-center text-2xl text-white'>
+            （ 建議不要佩戴帽子或墨鏡 ）
+          </div>
+        </TweenerProvider>
       </div>
     </OnloadProvider>
   );
