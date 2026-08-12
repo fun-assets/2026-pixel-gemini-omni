@@ -66,6 +66,9 @@ const ShootingPosition = memo(() => {
             </div>
           </LiquidGlassButton>
         </TweenerProvider>
+        <div className='font-noto-sans-tc w-full text-center text-2xl text-white'>
+          （ 建議不要佩戴帽子或墨鏡 ）
+        </div>
       </div>
     </OnloadProvider>
   );
