@@ -443,6 +443,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     }
 
     console.log('影片生成完成，開始處理結果…');
+    console.log(JSON.stringify(interaction.steps[1].error, null, 2));
 
     if (interaction.status !== 'completed') {
       res.status(200).json({
