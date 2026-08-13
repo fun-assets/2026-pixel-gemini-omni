@@ -541,27 +541,34 @@ const uploadVideoToBunnyCDN = async (videoLocalPath: string) => {
     .join('/');
 
   const uploadUrl = `https://${regionHost}/${storageZone}/${objectPath}`;
-  const response = await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: {
-      AccessKey: accessKey,
-      'Content-Type': 'video/mp4',
-      'Content-Length': videoBuffer.length.toString(),
-    },
-    body: videoBuffer,
-  });
+  console.log('影片上傳中...');
 
-  if (response.status !== 201) {
-    const errorText = await response.text();
-    throw new Error(`BunnyCDN upload failed: ${response.status} ${errorText}`);
+  try {
+    const response = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        AccessKey: accessKey,
+        'Content-Type': 'video/mp4',
+        'Content-Length': videoBuffer.length.toString(),
+      },
+      body: videoBuffer,
+    });
+
+    if (response.status !== 201) {
+      const errorText = await response.text();
+      throw new Error(`BunnyCDN upload failed: ${response.status} ${errorText}`);
+    }
+
+    const url = `https://${storageZone}.b-cdn.net/${objectPath}`;
+    return {
+      url,
+      public_id: fileName,
+      localPath: videoLocalPath,
+    };
+  } catch (error) {
+    console.error('Error uploading video to BunnyCDN:', error);
+    throw error;
   }
-
-  const url = `https://${storageZone}.b-cdn.net/${objectPath}`;
-  return {
-    url,
-    public_id: fileName,
-    localPath: videoLocalPath,
-  };
 };
 
 router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
@@ -571,8 +578,6 @@ router.post(`/${REST_PATH.uploadLocalVideo}`, async (req, res) => {
       res.status(200).json({ res: false, msg: 'relativePath is required' });
       return;
     }
-
-    console.log('影片上傳中...');
 
     const absoluteVideoPath = path.resolve(relativePath);
     const uploadResult = await uploadVideoToBunnyCDN(absoluteVideoPath);
