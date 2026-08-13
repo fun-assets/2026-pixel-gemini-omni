@@ -56,7 +56,7 @@ export const 時尚雜誌 =
 【環境與氛圍】
 • 場景：極簡灰白無縫時尚攝影棚背景，最後結合影印掃描的雜誌封面效果。
 • 氛圍/光影：棚拍聚光燈與強烈閃光燈（Studio Strobes & Flashes），呈現高對比時尚光影。
-• 音訊：節奏感的時尚純音樂，夾雜著密集清脆的相機快門聲（Shutter Clicks）、閃光燈充電音與影印機掃描列印聲（Scanner Printing )
+• 音訊：節奏感的時尚純音樂，夾雜著密集清脆的相機快門聲（Shutter Clicks）、閃光燈充電音與影印機掃描列印聲（Scanner Printing)
 `
 
 export const 經典Chrome小恐龍 = `主題：以上傳圖片中的主角為核心角色，與一隻Google 經典 Chrome 小恐龍組成冒險搭檔，並伴隨幾隻仙人掌小精靈。整體是像素風
