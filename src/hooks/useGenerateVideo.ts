@@ -72,9 +72,9 @@ const useGenerateVideo = () => {
             type: ActionType.Modal,
             state: {
               enabled: true,
-              title: '',
-              body: 'Responsible AI Policy Block',
-              label: ['換一個風格再試一次'],
+              title: 'Responsible AI Policy Block',
+              body: 'AI生成內容違反政策，請換一個風格再試一次',
+              label: ['確認'],
               onClose: () => {},
             },
           });
