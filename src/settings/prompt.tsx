@@ -1,18 +1,24 @@
 // prettier-ignore
 export const 禮盒3D = 
-`請根據上傳圖片生成一段3D 數位渲染Q版公仔驚喜從禮物盒跳出來的影片
-必要元素：畫面中從第二秒開始僅限原人物轉換之 3D Q版公仔，絕對鎖定並嚴格保留參考圖中人物的五官、神韻與髮型細節 。風格為Q版 3D 數位渲染（3D Digital Rendering），展現光滑如矽膠般的高清光澤與質感，充滿活力的玩具樂趣氛圍。上傳圖片中人物有幾位，生成圖片中就必須出現幾位人物。
-絕對禁止：絕對禁止出現指令中沒有指定及規範的文字。絕對禁止生成上傳圖片中沒有出現的人物。
-• 00:00 - 00:02（完美延續原圖與。禮物盒登場）：影片開場第 0 秒完美無縫銜接上傳圖片 ，人物在原位微幅擺動呼吸
-• 00:02 - 00:04【運鏡：正面中景特寫固定（Static Medium Close-Up Shot）】背景流暢過渡至柔和夢幻的清澈天空，畫面中央為一個黃色矽膠質感、貼上笑臉與星星貼紙且僅有一面印有黑色文字寫作「Google Pixel 11」的禮物盒，字體使用：Google Sans Bold。
-• 00:04 - 00:06（驚喜蹦出與禮花噴發）：【運鏡：順暢微仰推近跟拍（Smooth Low-Angle Push-In Shot）】禮物盒盒蓋彈開，與上傳圖片長相與服裝完全一致的 3D Q版人物帶著光滑細緻的矽膠質感，活潑地從盒中高高蹦出！周圍同時噴發出矽膠質感黃色星星、彩色拉炮彩帶與白色立體文字「Ask more.」。
-• 00:06 - 00:08（空中的活潑互動）：【運鏡：環繞微距軌道運鏡（Arc Orbiting Macro Shot）】Q版主角懸浮於禮物盒上方，在飄散的星星與彩帶之間輕盈旋轉，對著鏡頭展示活潑驚喜的表情與靈動肢體動作。
-• 00:08 - 00:10（勝利 Pose 與定格收尾）：【運鏡：正面中景拉遠定格（Frontal Medium Hold Shot）】Q版主角穩穩落定於禮物盒邊緣，面向鏡頭開心地揮手並擺出經典勝利定格姿態，周圍漂浮中的矽膠質感黃色星星、彩色拉炮彩帶與白色立體文字「Ask more.」也定格。
+`Generate a 3D digitally rendered animation of a surprise chibi figurine popping out of a gift box based on the uploaded image.
 
-【環境與氛圍】
-• 場景：柔和夢幻的清澈天空背景，聚焦於黃色矽膠禮物盒、粉紅蝴蝶結禮物蓋與蹦出的 Q版主角。
-• 氛圍/光影：柔和通透的高級工作室日光，呈現矽膠材質的光滑反光與立體圓潤陰影。
-• 音訊：歡快輕快的 3D 動畫開場音樂，夾雜著禮物盒開啟聲、清脆彈跳聲（Boing Sound）、禮花噴發音效與歡樂的驚喜歡呼聲。 
+Essential Elements:
+Starting from the 2nd second, the scene features exclusively the 3D chibi figurine transformed from the original person. Strictly lock and preserve the facial features, expression, and hairstyle details of the person in the reference image. Style: Chibi 3D Digital Rendering, showcasing a smooth, silicone-like high-definition gloss and texture with a vibrant toy-like aesthetic. The number of characters generated must strictly match the number of people in the uploaded image.
+
+Negative Restrictions:
+Absolute prohibition of any text not specified or regulated in the instructions. Absolute prohibition of generating characters not present in the uploaded image.
+
+Timeline & Camera Work:
+• 00:00 - 00:02 (Seamless Continuation & Gift Box Entrance): The video opens seamlessly continuing from the uploaded image, with the character subtly swaying and breathing in place.
+• 00:02 - 00:04 (Static Medium Close-Up Shot): The background smoothly transitions into a soft, dreamy clear sky. In the center of the frame is a yellow silicone-textured gift box with smiley face and star stickers, printed with black text "Google Pixel 11" in Google Sans Bold font on one side only.
+• 00:04 - 00:06 (Surprise Pop-out & Confetti Eruption - Smooth Low-Angle Push-In Shot): The gift box lid pops open. The 3D chibi character, matching the appearance and outfit of the uploaded image with a smooth, delicate silicone texture, lively jumps high out of the box! Yellow silicone stars, colorful confetti ribbons, and white 3D text "Ask more." erupt into the air around it.
+• 00:06 - 00:08 (Airborne Interactive Motion - Arc Orbiting Macro Shot): The chibi protagonist floats above the gift box, rotating weightlessly among drifting stars and ribbons, showing a lively, surprised expression and dynamic gestures toward the camera.
+• 00:08 - 00:10 (Victory Pose & Freeze Frame Ending - Frontal Medium Hold Shot): The chibi protagonist lands stably on the edge of the gift box, happily waving at the camera and striking a classic victory freeze pose. Floating yellow silicone stars, colorful confetti ribbons, and the white 3D text "Ask more." freeze in mid-air.
+
+Environment & Atmosphere:
+• Scene: Soft dreamy clear sky background, focusing on the yellow silicone gift box, pink bow lid, and the popping chibi protagonist.
+• Lighting & Atmosphere: Soft, translucent studio daylight, presenting glossy silicone reflections and rounded, three-dimensional shadows.
+• Audio: Upbeat and lively 3D animated intro music, mixed with gift box opening sounds, crisp popping sounds, confetti explosion SFX, and joyful cheers of delight.
 `;
 
 // prettier-ignore
@@ -43,25 +49,23 @@ export const 空降城市 =
 
 // prettier-ignore
 export const 時尚雜誌 =
-`根據上傳圖片生成一段時尚拍攝最終呈現雜誌封面的影片
+`Generate a high-fashion studio video based on the uploaded image, ending with a magazine cover print effect.
 
-必要元素： 整體風格為高訂時尚攝影棚雜誌廣告風格，畫面具備極致質感與閃光燈光影張力。畫面需保持與上傳圖片中人物的主體一致性。
+Essential Elements:
+The scene strictly features only the person in the uploaded reference image. Ensure that the facial features, expression, and outfit details precisely match the original image. Style: High-fashion studio magazine commercial style, featuring high-end texture and dramatic flash lighting.
 
-【10秒時間軸腳本與運鏡】
+Negative Restrictions:
+Absolute prohibition of any text on the final magazine cover that is not specified or regulated in the instructions. Absolute prohibition of generating extra characters not present in the uploaded image.
 
-00:00 - 00:02（原圖無縫延續）： 影片開場無縫銜接上傳圖片，人物微幅擺動呼吸揮手。
+10-Second Timeline Script & Camera Work:
+• 00:00 - 00:02 (Seamless Continuation): The video opens seamlessly continuing from the uploaded image, with the character subtly swaying, breathing, and waving.
+• 00:02 - 00:06 (Static Medium Shot): The background smoothly transitions to the center of a minimalist high-fashion studio, with studio lights positioned on both sides behind the subject. Accompanied by frequent camera flashes, the subject rapidly and fluently strikes 3 confident fashion model poses, showcasing a supermodel aura.
+• 00:06 - 00:10 (Scanner Printing & Magazine Cover - Static Medium Shot): The scene maintains the subject's third pose. A magazine cover featuring the subject is printed out from top to bottom like a photocopy scanner effect. The cover strictly features large, bold white sans-serif text "Ask more." occupying the upper half, with "Ask" directly above "more.". On the left side is a smaller white sans-serif text "2026", and a barcode sticker is placed at the bottom right corner of the magazine (all using Google Sans Bold font). Strictly no additional text is allowed on the magazine cover, ending with a freeze frame.
 
-00:02 - 00:06【運鏡：正面中景固定（Static Medium Shot）】： 背景流暢過渡至極簡時尚攝影棚中央，人物後方左右各有一盞攝影燈，伴隨頻繁閃爍的相機閃光燈，人物快速連續擺出 3 個極具自信的時尚模特 Pose，展現超模氣場。
-
-00:06 - 00:10（影印掃描與雜誌封面）：【運鏡：正面中景固定（Static Medium Shot）】： 畫面維持人物第三個 Pose，從畫面頂部向下滑動以影印機掃描方式印出一本時尚的人物雜誌封面。封面上方中央僅出現純白粗體無襯線文字「Ask more.」，左側為較小純白粗體無襯線文字「2026」，以及在雜誌右下角標上條碼標籤（字體皆為清晰粗體無襯線字體）。請確保雜誌封面不出現任何指令中未指定的其他文字元素，最後定格。
-
-【環境與氛圍】
-
-場景： 極簡灰白無縫時尚攝影棚背景，最後結合影印掃描的雜誌封面效果。
-
-氛圍/光影： 棚拍聚光燈與強烈閃光燈（Studio Strobes & Flashes），呈現高對比時尚光影。
-
-音訊： 節奏感的時尚純音樂，夾雜著密集清脆的相機快門聲（Shutter Clicks）、閃光燈充電音與影印機掃描列印聲（Scanner Printing）。
+Environment & Atmosphere:
+• Scene: Minimalist gray and white seamless photo studio background, combining a photocopy scanner printing effect for the final magazine cover.
+• Lighting & Atmosphere: Studio spotlights and intense camera flashes, creating high-contrast high-fashion lighting.
+• Audio: Rhythmic high-fashion instrumental music, mixed with dense, crisp camera shutter clicks, flash recharge sounds, and scanner printing audio effects.
 `
 
 export const 經典Chrome小恐龍 = `主題：以上傳圖片中的主角為核心角色，與一隻Google 經典 Chrome 小恐龍組成冒險搭檔，並伴隨幾隻仙人掌小精靈。整體是像素風
