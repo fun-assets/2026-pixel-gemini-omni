@@ -444,7 +444,16 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
 
     console.log('影片生成完成，開始處理結果…');
     const error = interaction.steps[1].error;
-    if (error) console.log(JSON.stringify(interaction.steps[1].error, null, 2));
+    if (error) {
+      console.log(JSON.stringify(interaction.steps[1].error, null, 2));
+      res.status(200).json({
+        res: false,
+        msg: '版權或安全策略過濾，影片生成失敗',
+        error: interaction.steps[1].error,
+        data: { operationName: interaction.id },
+      });
+      return;
+    }
 
     if (interaction.status !== 'completed') {
       res.status(200).json({

@@ -59,12 +59,12 @@ export const AlbumState: TAlbumState = {
 export const SoundsState: TSounds = {};
 
 export const SeedState: TSeedState = {
-  '3D禮盒': { seed: 2147483647 / 2 },
-  繽紛蠟筆: { seed: 2147483647 / 2 },
-  時尚雜誌: { seed: 2147483647 / 2 },
-  迷你分身: { seed: 2147483647 / 2 },
-  空降城市: { seed: 2147483647 / 2 },
-  經典Chrome小恐龍: { seed: 2147483647 / 2 },
+  '3D禮盒': { seed: Math.floor(2147483647 / 2) },
+  繽紛蠟筆: { seed: Math.floor(2147483647 / 2) },
+  時尚雜誌: { seed: 1073741823 },
+  迷你分身: { seed: Math.floor(2147483647 / 2) },
+  空降城市: { seed: Math.floor(2147483647 / 2) },
+  經典Chrome小恐龍: { seed: Math.floor(2147483647 / 2) },
 };
 
 export const InitialState: IState = {

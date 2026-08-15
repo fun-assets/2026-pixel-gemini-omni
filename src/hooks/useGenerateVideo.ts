@@ -1,8 +1,9 @@
 import { useContext, useRef, useState } from 'react';
 import { Context } from '@/settings/constant';
 import Fetcher from 'lesca-fetcher';
-import { REST_PATH } from '@/settings/config';
+import { GameStyles, REST_PATH } from '@/settings/config';
 import { ActionType, TVideoResponse } from '@/settings/type';
+import { track } from './useTracker';
 
 type TArgument = { image: string; prompt: string; seed?: number };
 
@@ -61,6 +62,24 @@ const useGenerateVideo = () => {
       const respond = (await Fetcher.post(REST_PATH.generateVideo, argument)) as TVideoResponse;
       if (respond.res) setState(respond);
       else {
+        if (respond.msg.includes('版權')) {
+          track({
+            pageName: 'Ai生成錯誤',
+            type:
+              GameStyles.filter((item) => item.prompt === argument.prompt)[0].name || '未知風格',
+          });
+          setContext({
+            type: ActionType.Modal,
+            state: {
+              enabled: true,
+              title: '',
+              body: 'Responsible AI Policy Block',
+              label: ['換一個風格再試一次'],
+              onClose: () => {},
+            },
+          });
+          return;
+        }
         onError(argument);
       }
     } catch {
