@@ -57,7 +57,10 @@ const Main = () => {
           className='home'
           onClick={() => {
             setState((S) => ({ ...S, step: GameLowerStepType.entry }));
-            track({ pageName: '回首頁', type: 'event' });
+            track({
+              pageName: `回首頁-${Object.entries(GameLowerStepType).find(([_, value]) => value === step)?.[0] || ''}`,
+              type: 'event',
+            });
             tracks?.stop('camera');
           }}
         />

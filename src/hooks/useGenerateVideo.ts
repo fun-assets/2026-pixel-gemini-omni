@@ -68,19 +68,18 @@ const useGenerateVideo = () => {
             type:
               GameStyles.filter((item) => item.prompt === argument.prompt)[0].name || '未知風格',
           });
-          setContext({
-            type: ActionType.Modal,
-            state: {
-              enabled: true,
-              title: 'Responsible AI Policy Block',
-              body: 'AI生成內容違反政策，請換一個風格再試一次',
-              label: ['確認'],
-              onClose: () => {},
-            },
-          });
-          return;
-        }
-        onError(argument);
+          // setContext({
+          //   type: ActionType.Modal,
+          //   state: {
+          //     enabled: true,
+          //     title: 'Responsible AI Policy Block',
+          //     body: 'AI生成內容違反政策，請換一個風格再試一次',
+          //     label: ['確認'],
+          //     onClose: () => {},
+          //   },
+          // });
+          setState(respond);
+        } else onError(argument);
       }
     } catch {
       onError(argument);

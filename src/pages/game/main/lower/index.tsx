@@ -21,9 +21,9 @@ import { ActionType } from '@/settings/type';
 const Lower = memo(() => {
   const [context] = useContext(Context);
   const seeds = context[ActionType.Seed]!;
-  const [state] = useContext(GameContext);
 
-  const [{ resultBase64, styleSelected, readyToGenerateVideo }, setState] = useContext(GameContext);
+  const [{ step, resultBase64, styleSelected, readyToGenerateVideo }, setState] =
+    useContext(GameContext);
   const promptText = GameStyles[styleSelected]?.prompt ?? GameStyles[0].prompt;
   const currentName = GameStyles[styleSelected]?.name ?? GameStyles[0].name;
 
@@ -49,7 +49,11 @@ const Lower = memo(() => {
         setState((S) => ({ ...S, videoURL: videoAIResponse.data.localPath }));
         uploadLocalVideo({ relativePath: videoAIResponse.data.relativePath });
       } else {
-        setState((S) => ({ ...S, step: GameLowerStepType.error }));
+        if (videoAIResponse.msg.includes('版權')) {
+          setState((S) => ({ ...S, step: GameLowerStepType.entry }));
+        } else {
+          setState((S) => ({ ...S, step: GameLowerStepType.error }));
+        }
       }
     }
   }, [videoAIResponse]);
@@ -104,7 +108,7 @@ const Lower = memo(() => {
   }, [resultBase64, readyToGenerateVideo]);
 
   const page = useMemo(() => {
-    switch (state.step) {
+    switch (step) {
       case GameLowerStepType.entry:
         return <Entry />;
 
@@ -129,7 +133,7 @@ const Lower = memo(() => {
       case GameLowerStepType.qrcode:
         return <Qrcode />;
     }
-  }, [state]);
+  }, [step]);
   return <div className='Lower'>{page}</div>;
 });
 export default Lower;
