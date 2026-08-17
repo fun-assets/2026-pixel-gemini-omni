@@ -10,5 +10,9 @@
 
   .video {
     @apply relative flex h-full w-full items-center justify-center overflow-hidden rounded-4xl object-cover object-center;
+
+    & > video {
+      transform: scaleX(-1);
+    }
   }
 }
