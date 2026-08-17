@@ -164,6 +164,10 @@ export const startWebcam = async ({
     });
 
     bindStreamToVideo({ video, stream, onError });
+
+    const track = stream.getVideoTracks()[0];
+    const settings = track.getSettings();
+    console.log(settings.width, settings.height);
   } catch (err) {
     console.error('Error accessing webcam: ', err);
     onError?.(err);
