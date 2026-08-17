@@ -96,61 +96,28 @@ const Video = forwardRef((_, ref) => {
           sy = (sourceHeight - sHeight) / 2;
         }
 
-        // Match the preview's extra zoom: sample a smaller, centered region of the same crop.
-        if (WEBCAM_ZOOM_SCALE !== 1) {
-          const zoomedWidth = sWidth / WEBCAM_ZOOM_SCALE;
-          const zoomedHeight = sHeight / WEBCAM_ZOOM_SCALE;
-          sx += (sWidth - zoomedWidth) / 2;
-          sy += (sHeight - zoomedHeight) / 2;
-          sWidth = zoomedWidth;
-          sHeight = zoomedHeight;
-        }
-
         const maxScaleFromSource = Math.min(sWidth / targetWidth, sHeight / targetHeight);
         const actualScale = Math.min(CAPTURE_SCALE, maxScaleFromSource);
 
         const outputWidth = Math.max(1, Math.round(targetWidth * actualScale));
         const outputHeight = Math.max(1, Math.round(targetHeight * actualScale));
 
-        const sourceCanvas = document.createElement('canvas');
-        sourceCanvas.width = outputWidth;
-        sourceCanvas.height = outputHeight;
-        const sourceCtx = sourceCanvas.getContext('2d');
-        if (sourceCtx) {
-          sourceCtx.imageSmoothingEnabled = true;
-          sourceCtx.imageSmoothingQuality = 'high';
+        const canvas = document.createElement('canvas');
+        canvas.width = outputWidth;
+        canvas.height = outputHeight;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
 
           // Keep capture direction consistent with preview transform: scaleX(-1).
-          sourceCtx.translate(sourceCanvas.width, 0);
-          sourceCtx.scale(-1, 1);
-          sourceCtx.drawImage(
-            videoElement,
-            sx,
-            sy,
-            sWidth,
-            sHeight,
-            0,
-            0,
-            sourceCanvas.width,
-            sourceCanvas.height,
-          );
-
-          // Rotate -90deg (CCW) to match preview transform, swapping output dimensions.
-          const canvas = document.createElement('canvas');
-          canvas.width = sourceCanvas.height;
-          canvas.height = sourceCanvas.width;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.drawImage(sourceCanvas, -sourceCanvas.width / 2, -sourceCanvas.height / 2);
-            const imageData = canvas.toDataURL('image/png');
-            // window.open(imageData, '_blank')?.document.write(`<img src="${imageData}" />`);
-            setState((prev) => ({ ...prev, resultBase64: imageData }));
-            return imageData;
-          }
+          ctx.translate(canvas.width, 0);
+          ctx.scale(-1, 1);
+          ctx.drawImage(videoElement, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
+          const imageData = canvas.toDataURL('image/png');
+          // window.open(imageData, '_blank')?.document.write(`<img src="${imageData}" />`);
+          setState((prev) => ({ ...prev, resultBase64: imageData }));
+          return imageData;
         }
       }
     }
@@ -172,22 +139,15 @@ const Video = forwardRef((_, ref) => {
       {!showsCapturedFrame && !isStreamReady && (
         <div className='skeleton absolute top-0 h-full w-full' />
       )}
-      <div
-        className='video-rotator'
-        style={{
-          transform: `translate(-50%, -50%) rotate(-90deg) scaleX(-1) scale(${WEBCAM_ZOOM_SCALE})`,
-        }}
-      >
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className={`transition-opacity duration-200 ${
-            showsCapturedFrame ? 'opacity-0' : isStreamReady ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      </div>
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className={`absolute top-0 h-full w-full object-cover transition-opacity duration-200 ${
+          showsCapturedFrame ? 'opacity-0' : isStreamReady ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
       {showsCapturedFrame && (
         <div
           className='animate-camera-flash absolute top-0 h-full w-full bg-cover bg-center'
