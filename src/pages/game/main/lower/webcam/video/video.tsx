@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { GameContext } from '../../../../config';
-import { GameWebcamStepsContext, GameWebcamStepsStepType } from '../config';
+import { GameWebcamStepsContext, GameWebcamStepsStepType, WEBCAM_ZOOM_SCALE } from '../config';
 import { detachWebcam, normalizeDeviceId, startWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
@@ -96,6 +96,16 @@ const Video = forwardRef((_, ref) => {
           sy = (sourceHeight - sHeight) / 2;
         }
 
+        // Match the preview's extra zoom: sample a smaller, centered region of the same crop.
+        if (WEBCAM_ZOOM_SCALE !== 1) {
+          const zoomedWidth = sWidth / WEBCAM_ZOOM_SCALE;
+          const zoomedHeight = sHeight / WEBCAM_ZOOM_SCALE;
+          sx += (sWidth - zoomedWidth) / 2;
+          sy += (sHeight - zoomedHeight) / 2;
+          sWidth = zoomedWidth;
+          sHeight = zoomedHeight;
+        }
+
         const maxScaleFromSource = Math.min(sWidth / targetWidth, sHeight / targetHeight);
         const actualScale = Math.min(CAPTURE_SCALE, maxScaleFromSource);
 
@@ -162,7 +172,12 @@ const Video = forwardRef((_, ref) => {
       {!showsCapturedFrame && !isStreamReady && (
         <div className='skeleton absolute top-0 h-full w-full' />
       )}
-      <div className='video-rotator'>
+      <div
+        className='video-rotator'
+        style={{
+          transform: `translate(-50%, -50%) rotate(-90deg) scaleX(-1) scale(${WEBCAM_ZOOM_SCALE})`,
+        }}
+      >
         <video
           ref={videoRef}
           autoPlay
