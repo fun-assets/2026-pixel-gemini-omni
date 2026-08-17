@@ -19,27 +19,10 @@ const Video = forwardRef((_, ref) => {
   const [, setContext] = useContext(Context);
   const [state, setState] = useContext(GameContext);
   const [webcamState] = useContext(GameWebcamStepsContext);
-  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isStreamReady, setIsStreamReady] = useState(false);
-  // Video is rendered rotated -90deg (CCW), so it's laid out swapped (h x w) then rotated back to fill the container.
-  const [videoBoxSize, setVideoBoxSize] = useState<{ width: number; height: number } | null>(null);
   const showsCapturedFrame =
     webcamState.step >= GameWebcamStepsStepType.captureAndConfirm && !!state.resultBase64;
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const updateSize = () => {
-      setVideoBoxSize({ width: container.clientWidth, height: container.clientHeight });
-    };
-    updateSize();
-
-    const observer = new ResizeObserver(updateSize);
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!state.webcamDeviceId) return;
@@ -175,28 +158,21 @@ const Video = forwardRef((_, ref) => {
   }));
 
   return (
-    <div className='video' ref={containerRef}>
+    <div className='video'>
       {!showsCapturedFrame && !isStreamReady && (
         <div className='skeleton absolute top-0 h-full w-full' />
       )}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        muted
-        className={`absolute top-1/2 left-1/2 object-cover transition-opacity duration-200 ${
-          showsCapturedFrame ? 'opacity-0' : isStreamReady ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={
-          videoBoxSize
-            ? {
-                width: videoBoxSize.height,
-                height: videoBoxSize.width,
-                transform: 'translate(-50%, -50%) rotate(-90deg) scaleX(-1)',
-              }
-            : undefined
-        }
-      />
+      <div className='video-rotator'>
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className={`transition-opacity duration-200 ${
+            showsCapturedFrame ? 'opacity-0' : isStreamReady ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      </div>
       {showsCapturedFrame && (
         <div
           className='animate-camera-flash absolute top-0 h-full w-full bg-cover bg-center'
