@@ -33,7 +33,9 @@ const WebcamDisplay = memo(() => {
           },
         });
       },
-    }).then(() => {});
+    }).then(() => {
+      console.log(videoRef.current?.clientHeight, videoRef.current?.clientWidth);
+    });
 
     return () => {
       detachWebcam(videoElement);
