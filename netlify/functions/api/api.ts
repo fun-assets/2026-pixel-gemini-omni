@@ -422,15 +422,20 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     // 1) 建立互動（background 非同步）：input=[圖片, 文字]，omni 收到圖片即輸出影片。
     //    seed 放在 generation_config.seed → 畫面可重現。
     console.log(`\nomni 模型：${OMNI_MODEL}, 種子: ${seed ?? '無'}`);
-    let interaction: any = await ai.interactions.create({
-      model: OMNI_MODEL,
-      input: [
-        { type: 'image', data: imageBytes, mime_type: mimeType },
-        { type: 'text', text: `強制生成9/16的直式影片。${prompt}` },
-      ],
-      background: true,
-      ...(seed !== undefined ? { generation_config: { seed } } : {}),
-    });
+    let interaction: any;
+    try {
+      interaction = await ai.interactions.create({
+        model: OMNI_MODEL,
+        input: [
+          { type: 'image', data: imageBytes, mime_type: mimeType },
+          { type: 'text', text: `強制生成9/16的直式影片。${prompt}` },
+        ],
+        background: true,
+        ...(seed !== undefined ? { generation_config: { seed } } : {}),
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     // 2) 輪詢直到結束（omni 影片約需 40 秒以上）
     const pendingStatuses = ['in_progress', 'requires_action', 'queued'];
@@ -620,8 +625,9 @@ router.post(`/${REST_PATH.getVideoOperation}`, async (req, res) => {
   try {
     const ai = new GoogleGenAI({
       vertexai: true,
-      project: PROJECT,
-      location: OMNI_LOCATION,
+      project: 'omni-506202',
+      location: 'global',
+      httpOptions: { headers: { 'Api-Revision': '2026-05-20' } },
     });
 
     const interaction: any = await ai.interactions.get(operationName);
