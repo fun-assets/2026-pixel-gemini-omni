@@ -5,6 +5,11 @@ let activeDeviceId: string | undefined;
 const attachedVideos = new Set<HTMLVideoElement>();
 let cleanupRegistered = false;
 
+// Bumped by every startWebcam and every shutdownWebcam. A pending getUserMedia
+// whose generation is stale must throw its stream away instead of installing it,
+// otherwise a shutdown that lands mid-request leaves the camera light on forever.
+let streamGeneration = 0;
+
 export const normalizeDeviceId = (deviceId?: string) => {
   if (!deviceId || deviceId === AUTO_DEVICE_ID) return undefined;
   return deviceId;
@@ -65,6 +70,8 @@ export const detachWebcam = (video: HTMLVideoElement) => {
 export const stopWebcam = detachWebcam;
 
 export const shutdownWebcam = () => {
+  streamGeneration += 1;
+
   if (activeStream) {
     activeStream.getTracks().forEach((track) => track.stop());
   }
@@ -118,6 +125,8 @@ export const startWebcam = async ({
       return;
     }
 
+    const generation = ++streamGeneration;
+
     const baseConstraints: MediaTrackConstraints = {
       width: { ideal: 1920 },
       height: { ideal: 1080 },
@@ -140,12 +149,20 @@ export const startWebcam = async ({
     let stream: MediaStream | undefined;
     let lastError: unknown;
     for (const constraints of constraintsCandidates) {
+      if (generation !== streamGeneration) break;
       try {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         break;
       } catch (err) {
         lastError = err;
       }
+    }
+
+    // A shutdown or a newer start landed while getUserMedia was pending: this
+    // stream has no owner, so release it instead of leaving the camera lit.
+    if (generation !== streamGeneration) {
+      stream?.getTracks().forEach((track) => track.stop());
+      return;
     }
 
     if (!stream) {

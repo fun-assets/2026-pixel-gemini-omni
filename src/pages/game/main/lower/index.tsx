@@ -15,6 +15,7 @@ import Preview from './preview';
 import Processing from './processing';
 import Qrcode from './qrcode';
 import Webcam from './webcam';
+import { shutdownWebcam } from './webcam/misc';
 import { Context } from '@/settings/constant';
 import { ActionType } from '@/settings/type';
 
@@ -32,6 +33,13 @@ const Lower = memo(() => {
   const [videoAIResponse, videoAIFetch] = useGenerateVideo();
   const [videoResponse, uploadLocalVideo] = useLocalVideoUpload();
   const waitingSaveImageResponseRef = useRef(false);
+
+  // Webcam only exists during the webcam step; Lower outlives it, so the release
+  // has to live here. Video's own unmount cleanup would never see the new step.
+  useEffect(() => {
+    if (step === GameLowerStepType.webcam) return;
+    shutdownWebcam();
+  }, [step]);
 
   useEffect(() => {
     if (videoResponse) {
