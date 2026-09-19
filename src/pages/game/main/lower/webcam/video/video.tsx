@@ -10,7 +10,12 @@ import {
   useState,
 } from 'react';
 import { GameContext } from '../../../../config';
-import { GameWebcamStepsContext, GameWebcamStepsStepType, WEBCAM_ZOOM_SCALE } from '../config';
+import {
+  GameWebcamStepsContext,
+  GameWebcamStepsStepType,
+  WEBCAM_ROTATE_90,
+  WEBCAM_ZOOM_SCALE,
+} from '../config';
 import { detachWebcam, normalizeDeviceId, startWebcam } from '../misc';
 
 const CAPTURE_SCALE = 3;
@@ -135,6 +140,12 @@ const Video = forwardRef((_, ref) => {
             sourceCanvas.height,
           );
 
+          if (!WEBCAM_ROTATE_90) {
+            const imageData = sourceCanvas.toDataURL('image/png');
+            setState((prev) => ({ ...prev, resultBase64: imageData }));
+            return imageData;
+          }
+
           // Rotate -90deg (CCW) to match preview transform, swapping output dimensions.
           const canvas = document.createElement('canvas');
           canvas.width = sourceCanvas.height;
@@ -168,14 +179,16 @@ const Video = forwardRef((_, ref) => {
   }));
 
   return (
-    <div className='video'>
+    <div className={`video${WEBCAM_ROTATE_90 ? ' is-rotated' : ''}`}>
       {!showsCapturedFrame && !isStreamReady && (
         <div className='skeleton absolute top-0 h-full w-full' />
       )}
       <div
         className='video-rotator'
         style={{
-          transform: `translate(-50%, -50%) rotate(-90deg) scaleX(-1) scale(${WEBCAM_ZOOM_SCALE})`,
+          transform: WEBCAM_ROTATE_90
+            ? `translate(-50%, -50%) rotate(-90deg) scaleX(-1) scale(${WEBCAM_ZOOM_SCALE})`
+            : `scaleX(-1) scale(${WEBCAM_ZOOM_SCALE})`,
         }}
       >
         <video
