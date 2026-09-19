@@ -60,8 +60,6 @@ const useGenerateVideo = () => {
   const fetch = async (argument: TArgument) => {
     try {
       const respond = (await Fetcher.post(REST_PATH.generateVideo, argument)) as TVideoResponse;
-      console.log(respond);
-
       if (respond.res) setState(respond);
       else {
         if (respond.msg.includes('版權')) {
