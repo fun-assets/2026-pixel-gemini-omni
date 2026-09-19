@@ -419,65 +419,67 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   });
 
   try {
-    // 1) 建立互動（background 非同步）：input=[圖片, 文字]，omni 收到圖片即輸出影片。
-    //    seed 放在 generation_config.seed → 畫面可重現。
+    // 必須用 stream 接收：background 模式的 interaction 完成後只保存 user_input，
+    // model_output 不會被寫入，影片僅出現在事件流的 step.delta。
     console.log(`\nomni 模型：${OMNI_MODEL}, 種子: ${seed ?? '無'}`);
-    let interaction: any;
+    const startedAt = Date.now();
+    const stream = (await ai.interactions.create({
+      model: OMNI_MODEL,
+      input: [
+        { type: 'image', data: imageBytes, mime_type: mimeType },
+        { type: 'text', text: `強制生成9/16的直式影片。${prompt}` },
+      ],
+      stream: true,
+      ...(seed !== undefined ? { generation_config: { seed } } : {}),
+    })) as any;
+
+    const ticker = setInterval(() => {
+      process.stdout.write(`\r  …生成中（${Math.round((Date.now() - startedAt) / 1000)}s）`);
+    }, 1000);
+
+    let interactionId = '';
+    let videoBytes = '';
+    let videoUri = '';
+    let failure: any;
+
     try {
-      interaction = await ai.interactions.create({
-        model: OMNI_MODEL,
-        input: [
-          { type: 'image', data: imageBytes, mime_type: mimeType },
-          { type: 'text', text: `強制生成9/16的直式影片。${prompt}` },
-        ],
-        background: true,
-        ...(seed !== undefined ? { generation_config: { seed } } : {}),
-      });
-    } catch (error) {
-      console.log(error);
+      for await (const event of stream) {
+        if (event.event_type === 'interaction.created') {
+          interactionId = event.interaction?.id ?? '';
+        } else if (event.event_type === 'step.delta' && event.delta?.type === 'video') {
+          if (event.delta.data) videoBytes += event.delta.data;
+          if (event.delta.uri) videoUri = event.delta.uri;
+        } else if (event.event_type === 'step.stop' && event.step?.error) {
+          failure = event.step.error;
+        }
+        if (event.error) failure = event.error;
+      }
+    } finally {
+      clearInterval(ticker);
+      process.stdout.write('\n');
     }
 
-    // 2) 輪詢直到結束（omni 影片約需 40 秒以上）
-    const pendingStatuses = ['in_progress', 'requires_action', 'queued'];
-    let waited = 0;
-    while (pendingStatuses.includes(interaction.status)) {
-      await new Promise((r) => setTimeout(r, 10000));
-      waited += 10;
-      console.log(`  …仍在生成中（已等待 ${waited}s）`);
-      interaction = await ai.interactions.get(interaction.id);
-    }
+    console.log(
+      `影片生成完成（${((Date.now() - startedAt) / 1000).toFixed(1)}s，${interactionId}），開始處理結果…`,
+    );
 
-    console.log('影片生成完成，開始處理結果…');
-    const error = interaction.steps[1].error;
-    if (error) {
-      console.log(JSON.stringify(interaction.steps[1].error, null, 2));
+    if (failure) {
+      const isContentBlocked = failure.code === 'content_blocked';
       res.status(200).json({
         res: false,
-        msg: '版權或安全策略過濾，影片生成失敗',
-        error: interaction.steps[1].error,
-        data: { operationName: interaction.id },
+        msg: isContentBlocked ? '版權或安全策略過濾，影片生成失敗' : '影片生成失敗',
+        error: failure,
+        data: { operationName: interactionId },
       });
       return;
     }
 
-    if (interaction.status !== 'completed') {
-      res.status(200).json({
-        res: false,
-        msg: '影片生成失敗',
-        error: interaction.status,
-        data: { operationName: interaction.id },
-      });
-      return;
-    }
-
-    const videos = extractOmniVideos(interaction);
-
-    if (videos.length === 0) {
+    if (!videoBytes && !videoUri) {
       res.status(200).json({
         res: false,
         msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
         data: {
-          operationName: interaction.id,
+          operationName: interactionId,
           raiMediaFilteredCount: 0,
           raiMediaFilteredReasons: [],
         },
@@ -485,59 +487,41 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       return;
     }
 
-    for (const [i, v] of videos.entries()) {
-      const bytes = v.videoBytes;
-      const uri = v.uri;
-      if (bytes) {
-        const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
-          ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
-          : path.resolve(process.cwd(), 'public', 'video');
+    if (videoBytes) {
+      const baseLocalPath = process.env.SAVE_VIDEO_BASE_PATH
+        ? path.resolve(process.env.SAVE_VIDEO_BASE_PATH)
+        : path.resolve(process.cwd(), 'public', 'video');
 
-        const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
-        const outputDir = path.join(baseLocalPath, dateFolder);
-        await fs.mkdir(outputDir, { recursive: true });
-        const filePath = path.join(outputDir, finalFileName);
-        writeFileSync(filePath, Buffer.from(bytes, 'base64'));
+      const { fileName: finalFileName, dateFolder } = createSortableRandomFileName('mp4');
+      const outputDir = path.join(baseLocalPath, dateFolder);
+      await fs.mkdir(outputDir, { recursive: true });
+      const filePath = path.join(outputDir, finalFileName);
+      writeFileSync(filePath, Buffer.from(videoBytes, 'base64'));
 
-        const localPath = toPublicPath(filePath);
-        const relativePath = path.relative(process.cwd(), filePath);
-
-        res.status(200).json({
-          res: true,
-          msg: '影片生成成功',
-          data: {
-            operationName: interaction.id,
-            baseLocalPath,
-            subfolder: dateFolder,
-            fileName: finalFileName,
-            filePath,
-            localPath,
-            relativePath,
-          },
-        });
-        return;
-      } else if (uri) {
-        res.status(200).json({
-          res: true,
-          msg: '影片生成成功（Cloud Storage）',
-          data: {
-            index: i,
-            operationName: interaction.id,
-            uri,
-          },
-        });
-        return;
-      } else {
-        continue;
-      }
+      res.status(200).json({
+        res: true,
+        msg: '影片生成成功',
+        data: {
+          operationName: interactionId,
+          baseLocalPath,
+          subfolder: dateFolder,
+          fileName: finalFileName,
+          filePath,
+          localPath: toPublicPath(filePath),
+          relativePath: path.relative(process.cwd(), filePath),
+        },
+      });
+      return;
     }
 
     res.status(200).json({
-      res: false,
-      msg: '影片生成完成，但沒有可儲存的 videoBytes 或 uri',
-      data: { operationName: interaction.id },
+      res: true,
+      msg: '影片生成成功（Cloud Storage）',
+      data: { operationName: interactionId, uri: videoUri },
     });
   } catch (error) {
+    console.log(error);
+
     res.status(200).json({ res: false, msg: '影片生成失敗', error, data: {} });
   }
 });
