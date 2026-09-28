@@ -2,7 +2,7 @@ import { createContext, Dispatch, SetStateAction } from 'react';
 
 // Rotate the preview and the captured image -90deg (CCW), for landscape webcams feeding
 // a portrait layout. false = show the stream in its native orientation.
-export const WEBCAM_ROTATE_90: boolean = false;
+export const WEBCAM_ROTATE_90: boolean = true;
 
 // Extra zoom applied on top of object-fit: cover, for webcams whose stream already has
 // black bars baked in (e.g. near-square sensors letterboxed to a wider aspect by the driver).

@@ -1,3 +1,4 @@
+import QueryString from 'lesca-url-parameters';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 export enum GameLowerStepType {
@@ -35,8 +36,8 @@ export type TGameState = {
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState: TGameState = {
-  page: GamePagesType.webcamPicker,
-  step: GameLowerStepType.entry,
+  page: QueryString.get('error') ? GamePagesType.game : GamePagesType.webcamPicker,
+  step: QueryString.get('error') ? GameLowerStepType.error : GameLowerStepType.entry,
   styleSelected: 0,
   resultBase64:
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAr0lEQVR4nO3RQQ0AIBDAsAP/nuGNAvZoFSzZOjNnyNi/A3gZEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmBJgCUBlgRYEmD5ppYB4l7cEBoAAAAASUVORK5CYII=',
