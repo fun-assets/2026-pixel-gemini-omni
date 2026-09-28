@@ -36,7 +36,7 @@ export type TGameState = {
 export type TGameContext = [TGameState, Dispatch<SetStateAction<TGameState>>];
 
 export const GameState: TGameState = {
-  page: QueryString.get('error') ? GamePagesType.game : GamePagesType.webcamPicker,
+  page: GamePagesType.webcamPicker,
   step: QueryString.get('error') ? GameLowerStepType.error : GameLowerStepType.entry,
   styleSelected: 0,
   resultBase64:
