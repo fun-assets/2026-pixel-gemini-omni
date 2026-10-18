@@ -441,9 +441,15 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     let videoBytes = '';
     let videoUri = '';
     let failure: any;
+    let modelText = '';
+    let finalStatus = '';
 
     try {
       for await (const event of stream) {
+        const preview = JSON.stringify(event, (_k, v) =>
+          typeof v === 'string' && v.length > 200 ? `${v.slice(0, 50)}…(${v.length} chars)` : v,
+        );
+        console.log(`\n[omni event] ${preview}`);
         if (event.event_type === 'interaction.created') {
           interactionId = event.interaction?.id ?? '';
         } else if (event.event_type === 'step.delta' && event.delta?.type === 'video') {
@@ -451,6 +457,12 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
           if (event.delta.uri) videoUri = event.delta.uri;
         } else if (event.event_type === 'step.stop' && event.step?.error) {
           failure = event.step.error;
+        }
+        if (event.event_type === 'step.delta' && event.delta?.type === 'text' && event.delta.text) {
+          modelText += event.delta.text;
+        }
+        if (event.event_type?.startsWith('interaction.') && event.interaction?.status) {
+          finalStatus = event.interaction.status;
         }
         if (event.error) failure = event.error;
       }
@@ -475,11 +487,14 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
     }
 
     if (!videoBytes && !videoUri) {
+      console.log(`沒有影片，status=${finalStatus}，模型文字：${modelText}`);
       res.status(200).json({
         res: false,
-        msg: '生成完成但沒有回傳影片（可能被安全策略過濾）',
+        msg: modelText || `生成完成但沒有回傳影片（status: ${finalStatus || '未知'}）`,
         data: {
           operationName: interactionId,
+          status: finalStatus,
+          modelText,
           raiMediaFilteredCount: 0,
           raiMediaFilteredReasons: [],
         },
