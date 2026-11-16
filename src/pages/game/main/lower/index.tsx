@@ -56,6 +56,9 @@ const Lower = memo(() => {
       if (videoAIResponse.res) {
         setState((S) => ({ ...S, videoURL: videoAIResponse.data.localPath }));
         uploadLocalVideo({ relativePath: videoAIResponse.data.relativePath });
+      } else if (videoAIResponse.code === 'no_video') {
+        // 訊息由 useGenerateVideo 以 Modal 呈現，這裡只負責把畫面帶回首頁
+        setState((S) => ({ ...S, step: GameLowerStepType.entry }));
       } else {
         if (videoAIResponse.msg.includes('版權')) {
           setState((S) => ({ ...S, step: GameLowerStepType.entry }));

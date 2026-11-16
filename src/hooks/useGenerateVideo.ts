@@ -61,7 +61,27 @@ const useGenerateVideo = () => {
     try {
       const respond = (await Fetcher.post(REST_PATH.generateVideo, argument)) as TVideoResponse;
       if (respond.res) setState(respond);
-      else {
+      else if (respond.code === 'no_video') {
+        // 生成流程跑完但沒有回傳影片。不佔用 onError 的重試額度，
+        // 也不進 error 頁，直接給專屬訊息並讓畫面回到首頁。
+        track({
+          pageName: 'Ai生成無影片',
+          type: GameStyles.filter((item) => item.prompt === argument.prompt)[0]?.name || '未知風格',
+        });
+        // 先更新 state：Modal 的 ✕ 與點背景不會觸發 onClose，
+        // 切 step 不能綁在 onClose 上，否則會卡在 processing 頁。
+        setState(respond);
+        setContext({
+          type: ActionType.Modal,
+          state: {
+            enabled: true,
+            title: '系統訊息',
+            body: '雲端 AI 運算錯誤回報，麻煩重新體驗一次',
+            label: ['確認'],
+            onClose: () => {},
+          },
+        });
+      } else {
         if (respond.msg.includes('版權')) {
           track({
             pageName: 'Ai生成錯誤',

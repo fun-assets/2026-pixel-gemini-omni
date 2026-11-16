@@ -134,16 +134,34 @@ export interface IReactProps {
   readonly children?: ReactNode;
 }
 
-export type TVideoResponse = {
-  res: boolean;
-  msg: string;
-  data: {
-    baseLocalPath: string;
-    subfolder: string;
-    fileName: string;
-    filePath: string;
-    bytes: number;
-    localPath: string;
-    relativePath: string;
-  };
+/** API 回傳的狀態碼，用來區分失敗原因（不要用 msg 字串判斷，msg 可能是模型原始文字） */
+export type TVideoResponseCode = 'no_video' | 'content_blocked' | 'generate_failed';
+
+type TVideoSuccessData = {
+  baseLocalPath: string;
+  subfolder: string;
+  fileName: string;
+  filePath: string;
+  bytes: number;
+  localPath: string;
+  relativePath: string;
 };
+
+export type TVideoResponse =
+  | {
+      res: true;
+      msg: string;
+      code?: TVideoResponseCode;
+      data: TVideoSuccessData;
+    }
+  | {
+      res: false;
+      msg: string;
+      code?: TVideoResponseCode;
+      /** 失敗時不會有影片檔案資訊，改帶生成過程的診斷欄位 */
+      data: Partial<TVideoSuccessData> & {
+        operationName?: string;
+        status?: string;
+        modelText?: string;
+      };
+    };

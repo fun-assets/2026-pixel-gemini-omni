@@ -446,10 +446,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
 
     try {
       for await (const event of stream) {
-        const preview = JSON.stringify(event, (_k, v) =>
-          typeof v === 'string' && v.length > 200 ? `${v.slice(0, 50)}…(${v.length} chars)` : v,
-        );
-        console.log(`\n[omni event] ${preview}`);
         if (event.event_type === 'interaction.created') {
           interactionId = event.interaction?.id ?? '';
         } else if (event.event_type === 'step.delta' && event.delta?.type === 'video') {
@@ -479,6 +475,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       const isContentBlocked = failure.code === 'content_blocked';
       res.status(200).json({
         res: false,
+        code: isContentBlocked ? 'content_blocked' : 'generate_failed',
         msg: isContentBlocked ? '版權或安全策略過濾，影片生成失敗' : '影片生成失敗',
         error: failure,
         data: { operationName: interactionId },
@@ -490,6 +487,7 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
       console.log(`沒有影片，status=${finalStatus}，模型文字：${modelText}`);
       res.status(200).json({
         res: false,
+        code: 'no_video',
         msg: modelText || `生成完成但沒有回傳影片（status: ${finalStatus || '未知'}）`,
         data: {
           operationName: interactionId,
