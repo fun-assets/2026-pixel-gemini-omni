@@ -1,4 +1,5 @@
-import { useContext, useRef, useState } from 'react';
+import { createElement, useContext, useRef, useState } from 'react';
+import CountdownMessage from '@/components/countdownMessage';
 import { Context } from '@/settings/constant';
 import Fetcher from 'lesca-fetcher';
 import { GameStyles, REST_PATH } from '@/settings/config';
@@ -76,7 +77,10 @@ const useGenerateVideo = () => {
           state: {
             enabled: true,
             title: '系統訊息',
-            body: '雲端 AI 運算錯誤回報，麻煩重新體驗一次',
+            body: createElement(CountdownMessage, {
+              body: '雲端 AI 運算錯誤回報，麻煩重新體驗一次',
+              seconds: 30,
+            }),
             label: ['確認'],
             onClose: () => {},
           },
