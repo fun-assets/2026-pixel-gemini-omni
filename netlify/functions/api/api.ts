@@ -412,19 +412,6 @@ router.post(`/${REST_PATH.generateVideo}`, async (req, res) => {
   }
   imageBytes = imageBytes.replace(/\s+/g, '');
 
-  // 測試用：MOCK_NO_VIDEO=1 時直接回「生成完成但沒有回傳影片」，不打 Google。
-  // 用來重現前台的 no_video 狀態，不要把正式邏輯註解掉。
-  if (process.env.MOCK_NO_VIDEO === '1') {
-    console.log('MOCK_NO_VIDEO=1，直接回傳 no_video，未呼叫 Google');
-    res.status(200).json({
-      res: false,
-      code: 'no_video',
-      msg: '模擬：生成完成但沒有回傳影片',
-      data: { operationName: '', status: 'mock', modelText: '' },
-    });
-    return;
-  }
-
   const ai = new GoogleGenAI({
     vertexai: true,
     project: PROJECT,
